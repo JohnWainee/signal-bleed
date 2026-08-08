@@ -1,6 +1,7 @@
 const {JSDOM}=require("jsdom");
 const fs=require("fs");
 const html=fs.readFileSync("table/index.html","utf8");
+let failed=false;
 const dom=new JSDOM(html,{url:"https://example.com/table/?room=TEST1",runScripts:"dangerously",
   beforeParse(w){
     // stub canvas + audio + matchMedia + sw
@@ -9,10 +10,10 @@ const dom=new JSDOM(html,{url:"https://example.com/table/?room=TEST1",runScripts
     w.matchMedia=()=>({matches:false,addEventListener(){}});
     w.navigator.serviceWorker={register:()=>Promise.resolve()};
     w.requestAnimationFrame=()=>0;
-    w.console.error=(...a)=>console.log("PAGE ERROR:",...a);
+    w.console.error=(...a)=>{failed=true;console.log("PAGE ERROR:",...a);};
   }});
 const w=dom.window,d=w.document;
-w.addEventListener("error",e=>console.log("UNCAUGHT:",e.message));
+w.addEventListener("error",e=>{failed=true;console.log("UNCAUGHT:",e.message);});
 setTimeout(()=>{
   const errs=[];
   const click=sel=>{const el=d.querySelector(sel); if(!el){errs.push("missing "+sel);return;} el.dispatchEvent(new w.Event("click",{bubbles:true}));};
@@ -49,7 +50,7 @@ setTimeout(()=>{
           console.log("export valid JSON:",!!parsed,"| corps in export:",parsed&&parsed.shared.corps&&parsed.shared.corps.length===1,"| corp n:",parsed&&parsed.shared.corps[0].n);
           console.log("localStorage keys:",Object.keys(w.localStorage).filter(k=>k.startsWith("SB:")).join(", ")||"(async writes pending)");
           console.log("errors:",errs.length?errs:"none");
-          process.exit(0);
+          process.exit(failed||errs.length?1:0);
         },150);
       },100);
     },100);
