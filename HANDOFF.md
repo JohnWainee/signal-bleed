@@ -44,6 +44,29 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Claude (Opus 4.8, Claude Code) — independent fresh-eyes review of
+the governance PR (#1), one fix-forward, then merge. Verified: no build step,
+ubuntu/Node 22, all four CI jobs (smoke / cases-validate / html-sanity /
+handoff-freshness) green locally; the smoke gate now has teeth (a `PAGE
+ERROR`/`UNCAUGHT`/missing-selector run exits non-zero); no game/rules/case/PWA
+content touched; no secrets in the diff; the stray brace-expansion dir is
+gone (was never git-tracked). **Fix:** the `no-secrets-in-firebase-config`
+hook was inverted — it blocked the *public* Firebase web config (7 fields +
+`AIza…` key, all public-by-design and gated by `firebase.rules.json`) while
+missing an actual service-account key, and AGENTS.md line 61 ("never commit
+real key values / keep `{}` empty") contradicted HANDOFF.md step 3 ("commit,
+push" the config), which the Cloudflare-Pages-from-`main` no-build deploy
+*requires*. Refocused the hook to block genuine server-side secrets (PEM
+private keys, `service_account` JSON, `client_secret`/`refresh_token`,
+`…iam.gserviceaccount.com` emails) and allow the public web config;
+reconciled AGENTS.md's `firebase-config.js` bullet and Hooks description to
+match HANDOFF.md and the app's stated security model. Tested the hook both
+ways (public config → exit 0, service-account key → exit 2). Re-ran all CI
+scripts green after the change. Note: same session both wrote this small
+fix and merged it — acceptable per the task's explicit fix-forward-and-merge
+authorization, but flagged here for the record.
+**Branch:** `feat/governance-layer` — merged
+
 **Agent:** Claude (Sonnet 5, Claude Code) — folded two approved fixes into
 the governance layer before the PR merges. (1) `smoke-test.js` used to
 `process.exit(0)` unconditionally even when it logged `PAGE ERROR:`,

@@ -56,11 +56,18 @@ see [Handoff protocol](#handoff-protocol) below.
 - **`firebase-config.js` is public by design** — the Firebase web config is
   not a secret; RTDB rules are what actually gates access. Even so:
   - **Never rename it.** It's referenced by exact path from `/table/index.html`.
-  - **Never commit real Firebase key values.** The committed file must keep
-    its commented placeholders (`// apiKey: "..."`, etc.) with the
-    `window.SB_FIREBASE_CONFIG = {}` object left empty. Filling it in with a
-    live project's values is the sponsor's step (see `HANDOFF.md`), done
-    locally, on purpose, not by an agent mid-task.
+  - **Commit the public web config; never commit a real secret.** Pasting the
+    live project's web config (`apiKey`, `authDomain`, `databaseURL`,
+    `projectId`, `storageBucket`, `messagingSenderId`, `appId`) into this file
+    and committing it is an expected deploy step (see `HANDOFF.md` step 3) —
+    those values ship to every browser and are gated by `firebase.rules.json`,
+    not by secrecy. What must **never** land here is a genuine server-side
+    secret: a service-account JSON / private key, an OAuth `client_secret`, or
+    any admin credential — those belong in the Firebase console, never the
+    client. Because touching this file still risks breaking deploy, an agent
+    confirms before editing it (see Confirm-Before-Execute below); the
+    `no-secrets-in-firebase-config` hook is the backstop that blocks a real
+    secret slipping in.
 - **Don't move `sw.js` or `manifest.json`.** Both are referenced with paths
   relative to `/table/index.html`; relocating either breaks the PWA install
   or the service worker's cache scope.
@@ -150,12 +157,13 @@ Two local Claude Code hooks carry over from Hatch Havoc, adapted — nothing
 canvas/deterministic-core-specific applies here:
 
 - **no-secrets-in-firebase-config** (PreToolUse, `Edit|Write|MultiEdit` on
-  `firebase-config.js`) — blocks a write that would replace the placeholder
-  config with what looks like a real Firebase key (an `apiKey` value
-  matching Google's `AIza…` key shape, or any of the placeholder fields
-  filled in with a non-empty, non-comment value). Local, fast, and backed up
-  by the fact that CI doesn't independently re-check this — review any
-  intentional exception carefully.
+  `firebase-config.js`) — blocks an agent write that pastes a genuine
+  server-side secret (a PEM private key, a service-account credential, or an
+  OAuth `client_secret`/`refresh_token`). The public Firebase *web* config is
+  not a secret and is intentionally allowed through — committing it is a normal
+  deploy step (see `HANDOFF.md`). Local, fast, and backed up by the fact that
+  CI doesn't independently re-check this — review any intentional exception
+  carefully.
 - **handoff-freshness-gate** (Stop) — local mirror of the CI job: blocks
   ending a turn with tracked, uncommitted changes outside `HANDOFF.md` and
   no matching `HANDOFF.md` update staged alongside them. Escape hatches:
