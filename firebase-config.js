@@ -1,17 +1,13 @@
 /* SIGNAL BLEED — Firebase configuration
- * Until you fill this in, the table runs in single-device mode (localStorage).
- *
- * To go multiplayer:
- * 1. console.firebase.google.com → Add project (analytics off)
- * 2. Build → Realtime Database → Create (locked mode) → paste rules from firebase.rules.json
- * 3. Build → Authentication → enable Anonymous provider
- * 4. Project settings → Your apps → Web → copy the config object below
- * These values are safe to publish; the database rules are the security layer.
+ * These values are safe to publish; the database rules (firebase.rules.json)
+ * plus Anonymous-only auth are the security layer, not secrecy of this object.
  */
 window.SB_FIREBASE_CONFIG = {
-  // apiKey: "...",
-  // authDomain: "signal-bleed-xxxxx.firebaseapp.com",
-  // databaseURL: "https://signal-bleed-xxxxx-default-rtdb.firebaseio.com",
-  // projectId: "signal-bleed-xxxxx",
-  // appId: "..."
+  apiKey: "AIzaSyDsnKhiTUMBOaUz9SQw1X-3qhNgPdeN49k",
+  authDomain: "signal-bleed.firebaseapp.com",
+  databaseURL: "https://signal-bleed-default-rtdb.firebaseio.com",
+  projectId: "signal-bleed",
+  storageBucket: "signal-bleed.firebasestorage.app",
+  messagingSenderId: "775092510544",
+  appId: "1:775092510544:web:b807698b63192b46e2d655"
 };
