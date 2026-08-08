@@ -1,0 +1,78 @@
+# No-build static site: CI runs plain Node scripts, no bundler/build step.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm i
+      - run: npm run smoke
+
+  cases-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm i
+      - run: npm run cases:validate
+
+  html-sanity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm i
+      - run: npm run html:sanity
+
+  handoff-freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fail if code changed but HANDOFF.md didn't
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -eu
+          if [ -z "${BASE_SHA}" ] || [ "${BASE_SHA}" = "0000000000000000000000000000000000000000" ]; then
+            echo "No usable base commit (new branch or first push) — skipping HANDOFF-freshness check."
+            exit 0
+          fi
+          if ! git cat-file -e "${BASE_SHA}" 2>/dev/null; then
+            echo "Base commit ${BASE_SHA} not available locally — skipping HANDOFF-freshness check."
+            exit 0
+          fi
+          CHANGED="$(git diff --name-only "${BASE_SHA}" "${HEAD_SHA}")"
+          if [ -z "${CHANGED}" ]; then
+            echo "No changed files — nothing to check."
+            exit 0
+          fi
+          if echo "${CHANGED}" | grep -qx 'HANDOFF.md'; then
+            echo "HANDOFF.md was updated — gate satisfied."
+            exit 0
+          fi
+          OTHER="$(echo "${CHANGED}" | grep -vx 'HANDOFF.md' || true)"
+          if [ -n "${OTHER}" ]; then
+            echo "::error::Tracked files changed outside HANDOFF.md, but HANDOFF.md was not updated. Update the session handoff log before merging:"
+            echo "${OTHER}"
+            exit 1
+          fi

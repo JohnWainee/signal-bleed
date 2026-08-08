@@ -35,3 +35,22 @@ Nothing here needs authoring — only pushing, wiring, and one config paste.
 Game content edits, the case loader patch described in `rules/signal-bleed-case-format.md`
 (a five-edit Portal "Case" tab — nice-to-have, not required for alpha), and any
 per-field sync refactor.
+
+---
+
+## Session log (two-model handoff)
+
+Cross-session state for whichever runtime picks this repo up next — see
+`AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
+convention. Newest entry on top.
+
+**Agent:** Claude (Sonnet 5, Claude Code) — unpacked the repo from the
+sponsor's archive (git history preserved, 2 commits on `main`), confirmed
+the alpha smoke-tests clean (`node smoke-test.js`, no errors), and added the
+governance layer: `AGENTS.md`, `.github/workflows/ci.yml`
+(smoke / cases-validate / html-sanity / handoff-freshness), and two local
+Claude Code hooks (`no-secrets-in-firebase-config`,
+`handoff-freshness-gate`) wired in `.claude/settings.json`. Did not touch
+game content, `firebase-config.js` values, or the case-loader patch — all
+still the sponsor's / a future session's to do.
+**Branch:** `main` — merged
