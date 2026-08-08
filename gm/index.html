@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SIGNAL BLEED — GM Reference</title>
+<style>
+:root{
+  --void:#07050F; --deck:#0E0B1C; --panel:#151228; --edge:#282243;
+  --bone:#E9E6F5; --soft:#9A93B8; --dim:#5D5680;
+  --lens:#E04CFF; --lens2:#00E5FF; --warn:#FF4A5E; --gold:#FFB627;
+  --mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--void);color:var(--bone);font-family:var(--mono);
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+body.light{--void:#EFECE2;--deck:#F7F5EE;--panel:#FDFCF7;--edge:#CBC4B2;
+  --bone:#171620;--soft:#565144;--dim:#8B8577;--lens:#8E2AA8;--lens2:#0A6E86;
+  --warn:#A82838;--gold:#8A5E00;}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0;}
+input{font:inherit;color:var(--bone);background:transparent;border:none;outline:none;width:100%;}
+::placeholder{color:var(--dim);}
+a{color:var(--lens2);}
+
+/* header */
+header{position:sticky;top:0;z-index:30;background:var(--deck);
+  border-bottom:1px solid var(--edge);padding:0 16px;
+  padding-top:env(safe-area-inset-top);}
+.hrow{display:flex;align-items:center;gap:14px;height:52px;max-width:1100px;margin:0 auto;}
+.brand{font-size:13px;letter-spacing:.28em;text-transform:uppercase;font-weight:700;white-space:nowrap;}
+.brand i{color:var(--lens);font-style:normal;}
+.sub{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);}
+.sp{flex:1;}
+.srch{flex:0 1 240px;border:1px solid var(--edge);padding:6px 10px;display:flex;gap:7px;align-items:center;}
+.srch span{color:var(--dim);font-size:12px;}
+.ico{width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--edge);
+  color:var(--dim);font-size:12px;flex:none;}
+.ico:hover{border-color:var(--bone);color:var(--bone);}
+
+nav{display:flex;gap:0;overflow-x:auto;max-width:1100px;margin:0 auto;
+  scrollbar-width:none;-ms-overflow-style:none;}
+nav::-webkit-scrollbar{display:none;}
+nav button{padding:11px 14px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);border-bottom:2px solid transparent;white-space:nowrap;}
+nav button.sel{color:var(--lens);border-bottom-color:var(--lens);}
+nav button:hover{color:var(--bone);}
+
+main{max-width:1100px;margin:0 auto;padding:26px 16px 90px;
+  padding-bottom:max(90px,env(safe-area-inset-bottom));}
+section{display:none;} section.sel{display:block;}
+body.searching section{display:block;}
+
+h2{font-size:11px;letter-spacing:.24em;text-transform:uppercase;margin:34px 0 12px;
+  padding-bottom:5px;border-bottom:1px solid var(--edge);color:var(--lens);}
+h2:first-child{margin-top:0;}
+h3{font-size:13px;letter-spacing:.13em;text-transform:uppercase;margin:20px 0 6px;}
+p{margin:0 0 11px;}
+.fic{font-family:var(--serif);font-style:italic;font-size:16px;line-height:1.5;color:var(--soft);}
+.big{font-family:var(--serif);font-size:17px;line-height:1.55;}
+ul{margin:0 0 12px;padding-left:18px;} li{margin-bottom:5px;}
+.soft{color:var(--soft);} .dim{color:var(--dim);}
+strong{color:var(--bone);}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+.card{background:var(--panel);border:1px solid var(--edge);border-left:3px solid var(--lens);padding:14px 16px;}
+.card.k2{border-left-color:var(--lens2);} .card.kw{border-left-color:var(--warn);}
+.card.kg{border-left-color:var(--gold);}
+.card h4{margin:0 0 4px;font-size:12.5px;letter-spacing:.13em;text-transform:uppercase;}
+.card .tag{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);}
+.card p{margin:6px 0 0;font-size:13px;}
+
+.rule{background:var(--panel);border:1px solid var(--edge);border-left:3px solid var(--warn);
+  padding:12px 15px;margin:12px 0;}
+.rule b{color:var(--warn);}
+
+.mv{border-bottom:1px solid var(--edge);padding:12px 0;}
+.mv:last-child{border:none;}
+.mvh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;text-align:left;}
+.mvh .n{font-size:12.5px;letter-spacing:.13em;text-transform:uppercase;}
+.mvh .s{font-size:10px;letter-spacing:.08em;color:var(--lens);white-space:nowrap;}
+.mvb{display:none;padding-top:8px;} .mv.open .mvb{display:block;}
+.band{display:flex;gap:11px;padding:3px 0;font-size:13px;}
+.band b{min-width:34px;color:var(--lens2);}
+.band.m b{color:var(--bone);} .band.l b{color:var(--warn);}
+
+table{width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13px;}
+th,td{text-align:left;padding:7px 10px 7px 0;border-bottom:1px solid var(--edge);vertical-align:top;}
+th{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);font-weight:400;}
+td.k{white-space:nowrap;color:var(--lens);width:1%;}
+
+.hit{display:none;}
+body.searching .hit{display:block;}
+body.searching .nohit{display:none;}
+.count{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:18px;}
+body:not(.searching) .count{display:none;}
+
+.foot{border-top:1px solid var(--edge);margin-top:40px;padding-top:16px;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+@media(max-width:640px){.srch{flex:1;} .brand .sub{display:none;}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hrow">
+    <div class="brand">Signal <i>Bleed</i></div>
+    <div class="sub">GM Reference</div>
+    <div class="sp"></div>
+    <label class="srch"><span>⌕</span><input id="q" placeholder="Search everything…" autocomplete="off"></label>
+    <button class="ico" id="mode" aria-label="Light or dark">☾</button>
+  </div>
+  <nav id="nav">
+    <button class="sel" data-s="run">Run it</button>
+    <button data-s="moves">Moves</button>
+    <button data-s="stand">The Stand</button>
+    <button data-s="chain">The Chain</button>
+    <button data-s="port">Port Vespers</button>
+    <button data-s="powers">Powers</button>
+    <button data-s="people">People</button>
+    <button data-s="case">Build a case</button>
+    <button data-s="gloss">Glossary</button>
+  </nav>
+</header>
+
+<main>
+<div class="count" id="count"></div>
+
+<!-- ============ RUN IT ============ -->
+<section class="sel" id="s-run">
+  <h2>Agenda</h2>
+  <ul class="big">
+    <li>Make the chain feel used up and lived in.</li>
+    <li>Make the unknown genuinely unknown — including to you.</li>
+    <li>Be a fan of these people, right up until they're gone.</li>
+    <li>Play to find out what it costs them.</li>
+  </ul>
+
+  <h2>Principles</h2>
+  <ul>
+    <li>Ask questions and build on the answers.</li>
+    <li>Address the character, not the player.</li>
+    <li>Sensory detail over exposition. Never explain the Stand — describe what it does to a room.</li>
+    <li>Name every NPC and give them one want.</li>
+    <li>Never decide what's really happening. Decide what's <em>strange</em>.</li>
+    <li>Everything on the Hours was brought here by somebody, for money.</li>
+    <li>It is unfailingly polite. Every offer is generous.</li>
+    <li>The water comes from below. Nobody built a wall that helps.</li>
+    <li>Nobody is a villain. That's the problem.</li>
+  </ul>
+
+  <h2>Your moves</h2>
+  <p class="dim">On a 6−, or whenever they look at you.</p>
+  <ul>
+    <li>Reveal an unwelcome truth.</li>
+    <li>Show a sign of the Stand.</li>
+    <li>Take something away — a contact, a room, a record, a body part.</li>
+    <li>Put someone from Low Town in it.</li>
+    <li>Make an Offer.</li>
+    <li>Advance a company clock, and say how they noticed.</li>
+    <li>Have it be helpful. By name.</li>
+    <li>Announce a ship, a shipment, or a shift that didn't report.</li>
+  </ul>
+
+  <h2>The eleven things to hold</h2>
+  <table>
+    <tr><td class="k">1</td><td>Nobody is a villain.</td></tr>
+    <tr><td class="k">2</td><td>The help always works.</td></tr>
+    <tr><td class="k">3</td><td>Never define what the Stand is. Only how it behaves.</td></tr>
+    <tr><td class="k">4</td><td>Violence never closes a case.</td></tr>
+    <tr><td class="k">5</td><td>The licence is the brake, and it belongs to someone kind.</td></tr>
+    <tr><td class="k">6</td><td>The Long Count is a condition, not a conspiracy.</td></tr>
+    <tr><td class="k">7</td><td>Read the list aloud every interlude.</td></tr>
+    <tr><td class="k">8</td><td>Never explain number 11.</td></tr>
+    <tr><td class="k">9</td><td>Say the water sentence every session.</td></tr>
+    <tr><td class="k">10</td><td>Let people leave for ordinary reasons.</td></tr>
+    <tr><td class="k">11</td><td>Don't gloat at the end. This is grief, not punishment.</td></tr>
+  </table>
+
+  <h2>The five rings</h2>
+  <p class="dim">You cannot advance a ring until you've landed one <strong>Terror</strong> and one <strong>Temptation</strong> in it.</p>
+  <table>
+    <tr><td class="k">1 · Normal</td><td>A job. Money, a client, a deadline. Exactly one detail is wrong, and nobody comments on it.</td></tr>
+    <tr><td class="k">2 · First Sign</td><td>The wrong detail isn't isolated. Something is repeating.</td></tr>
+    <tr><td class="k">3 · Escalation</td><td>People start lying to them specifically. Something is now being helpful.</td></tr>
+    <tr><td class="k">4 · Revelation</td><td>The rules are visibly broken. Theorize usually happens here.</td></tr>
+    <tr><td class="k">5 · Dissolution</td><td>Consequences. Who is observed. What the Port doesn't remember by morning.</td></tr>
+  </table>
+
+  <h2>The clocks</h2>
+  <p><strong>The Bleed</strong> — six segments, per case. The hour arriving at this location. Advance on a missed roll that touched the other side, a 7–9 choice that says so, a new ring, or any hard move you want made visible. <strong>When it fills, it arrives</strong> — not a monster, an event. Something becomes true that cannot be untrue.</p>
+  <p><strong>The Aperture</strong> — eight segments, the season. Eight islands were named; the last three segments are the ones that were never on the chart. Advance when a case ends, when someone is observed, on a failed Theorize, and whenever the Tide Watch loses a record.</p>
+
+  <h2>Time and the water</h2>
+  <p><strong>Weeks pass between cases.</strong> Open every session with one sentence about the water — same shape, one increment worse.</p>
+  <p class="fic">"The third step down from the Row is under now. Nobody's mentioned it."<br>
+  "The chandlery's put its stock on pallets. It didn't used to need to."<br>
+  "They've stopped repainting the lower units on the Strand."</p>
+  <p>Weeks also mean <strong>people can just leave.</strong> A name on the list emigrates, or takes a berth on a container run, or dies of something entirely ordinary, and the crew finds out late and secondhand. Losing someone to nothing in particular is sadder than losing them to the Stand. Do it at least twice before the finale.</p>
+
+  <h2>Violence</h2>
+  <div class="rule"><b>Always available. Always a mistake.</b> It never closes a case. It can only make the next scene harder. When the crew uses force, advance the Bleed and make someone on the list worse off. Serious violence gets the plate <em>looked at</em>.</div>
+  <p>The punishment for violence is not death. It's <strong>becoming useless to the people you owe.</strong></p>
+
+  <h2>The berths</h2>
+  <p>Finale only. Read the list aloud, then count in front of them, slowly.</p>
+  <table>
+    <tr><td class="k">Base</td><td>6</td></tr>
+    <tr><td class="k">+</td><td>2 × unburned Bonds across the whole crew</td></tr>
+    <tr><td class="k">−</td><td>Every task the Watch crossed off the list</td></tr>
+    <tr><td class="k">+</td><td>Final Theorize: 10+ → +4 · 7–9 → +2 · 6− → 0</td></tr>
+  </table>
+  <p>Every Bond burned to dodge a Static mark cost two people a place on a boat. Nobody lied — the rule always said burning a Bond spends a person. <strong>Put the Tide Watch in the room</strong> to say <em>you don't get to do this to us</em>, and let them be completely right, and let the crew do it anyway.</p>
+</section>
+
+<!-- ============ MOVES ============ -->
+<section id="s-moves">
+  <h2>Basic moves</h2>
+  <div id="moves"></div>
+
+  <h2>Special</h2>
+  <div class="mv"><button class="mvh"><span class="n">The Offer</span><span class="s">anyone</span></button>
+    <div class="mvb"><p>Anyone at the table may offer a specific complication in exchange for <strong>+1</strong> to a roll about to happen. Take it or refuse it freely. If taken, the complication happens whether you succeed or not.</p>
+    <p class="fic">"+1 if the Landing logs your badge."<br>"+1 if you go back down without a tender."</p></div></div>
+
+  <div class="mv"><button class="mvh"><span class="n">Say It Yourself</span><span class="s">static 3+</span></button>
+    <div class="mvb"><p>When you catch your character having been helpful in a way you can't account for, <strong>name it out loud at the table.</strong> Mark XP.</p>
+    <p>If you don't say it and the GM notices first, <strong>mark Static instead.</strong></p>
+    <p class="dim">Confession is protective. Silence compounds.</p></div></div>
+
+  <div class="mv"><button class="mvh"><span class="n">Playing What You Lost</span><span class="s">claimed</span></button>
+    <div class="mvb"><p>You lose the character. <strong>You keep the voice.</strong> Roll up someone new; when the GM decides your claimed character appears, <strong>you</strong> play them and you decide what help they offer.</p>
+    <p>The help has to be real. Concrete, correct, generous. No riddles.</p></div></div>
+
+  <h2>Static</h2>
+  <p>0–5, add to VEIL and anything touching the other side. Take a Symptom each mark. Static Moves unlock at 1, 3 and 5. <strong>It never clears.</strong> At 5 the character is observed — one final scene, one impossible thing, no roll, then the GM has them.</p>
+  <p><strong>Burning a Bond</strong> stops one Static mark. Two Bonds each, once apiece. In the finale, every unburned Bond is two berths.</p>
+
+  <h2>Symptoms <span class="dim">(d6)</span></h2>
+  <table>
+    <tr><td class="k">1</td><td>You are eleven minutes ahead of every clock on the island, and you can prove it.</td></tr>
+    <tr><td class="k">2</td><td>You've stopped hearing the surf. It's still there. Everyone else hears it.</td></tr>
+    <tr><td class="k">3</td><td>Standing water tilts slightly toward you.</td></tr>
+    <tr><td class="k">4</td><td>You know the name of the ninth hour. It hurts to hold.</td></tr>
+    <tr><td class="k">5</td><td>There's a day missing and you can feel the edge of it, like a seam.</td></tr>
+    <tr><td class="k">6</td><td>Someone has started calling you by a name nobody gave you, and correcting themselves, and doing it again.</td></tr>
+  </table>
+  <p class="dim">Rolled a duplicate? It gets worse. Say how.</p>
+
+  <h2>Signs of the Stand <span class="dim">(d6)</span></h2>
+  <table>
+    <tr><td class="k">1</td><td>Every clock in the room agrees, and all of them are wrong by the same amount.</td></tr>
+    <tr><td class="k">2</td><td>The surf stops. Not quietens — stops. For as long as it takes to notice.</td></tr>
+    <tr><td class="k">3</td><td>Standing water is tilted, very slightly, toward something.</td></tr>
+    <tr><td class="k">4</td><td>A count comes out at eleven when there are nine of you.</td></tr>
+    <tr><td class="k">5</td><td>Someone repeats a thing you thought thirty seconds ago — and apologises.</td></tr>
+    <tr><td class="k">6</td><td>A door, a stair, a corridor that is on the plan and has never been there.</td></tr>
+  </table>
+</section>
+
+<!-- ============ THE STAND ============ -->
+<section id="s-stand">
+  <h2>The specification</h2>
+  <div class="rule"><b>Unfailingly helpful. Never explains itself. Always gives you slightly more than you asked for.</b></div>
+  <p class="big">That is the entire definition. Hold that line and it stays unknowable across a whole campaign — which is the only way cosmic horror survives contact with a table that invents its own answers.</p>
+  <p class="fic">It's only the stand. It'll turn.</p>
+  <p>That’s what everyone on the chain says, without thinking, and has said for a hundred and forty years. It has never once been a lie. That is not the same as it being true.</p>
+  <p><strong>Never decide what it is.</strong> Not in your notes, not in your head. The Theorize move means the players' winning theory becomes the truth, and if you're carrying a private answer you will steer toward it and they will feel the rails.</p>
+
+  <h2>The help always works</h2>
+  <p class="big">When the Stand helps, <strong>the help is real.</strong> Concrete, correct, generous, and it solves the problem. No riddles. No monkey's paw. No ironic reversal. It does exactly what it offered to do.</p>
+  <p>The horror isn't that it lies. <strong>The horror is that it doesn't — and you take the help anyway, and so did everyone before you.</strong></p>
+  <div class="rule"><b>If you make its help a trap, you have written a different and much smaller game.</b> Refusing the Stand has to be a real sacrifice, made against the character's own immediate interest, for reasons they can't fully articulate. That's the only version where saying no means anything.</div>
+
+  <h2>Why it's polite</h2>
+  <p class="big">Every extraction in the history of the Hours arrived as help. The Provident Society built housing. The cannery gave people work. The registry gave a flag to anyone who asked, in forty minutes, no questions.</p>
+  <p>All of it was offered kindly. All of it worked exactly as promised. All of it took a hundred and forty years to finish collecting.</p>
+  <p><strong>The thing in the deep water learned its manner from the paperwork.</strong></p>
+
+  <h2>The Long Count</h2>
+  <p>Not a cult. Not a faction. <strong>A condition.</strong> No leadership to cut off, no meeting to infiltrate, no headquarters to raid — which is one more reason violence solves nothing.</p>
+  <p><strong>The diagnostic criterion is the manner.</strong> Someone has started being helpful in that particular way: obliging, unexplaining, generous past the point of the request. That's how you know.</p>
+  <p>Anyone can develop it. NPCs the crew loves. NPCs the crew relies on. <strong>Player characters at high Static.</strong></p>
+  <p>The phrase people use for someone who has gone all the way is <strong>off soundings</strong> — water too deep to measure. <em>She’s gone off soundings.</em> Nobody says it unkindly.</p>
+
+  <h2>The missing hour</h2>
+  <p>Eleven islands. Eight names. A Spanish navigator charted the chain in 1587, named eight for the canonical hours, counted eleven, and never came back. Every chart since, in every language, carries some version of the same annotation over the water southeast of Compline:</p>
+  <p class="fic">Do not anchor. Do not sound. No bottom found.</p>
+  <p>The Sounding Company is currently sounding it.</p>
+
+  <h2>What never gets explained</h2>
+  <ul>
+    <li>What the Stand is or wants.</li>
+    <li>Why the chain has eleven islands and eight names.</li>
+    <li>Why Provident Row has no number 11.</li>
+    <li>Who Grandmother is.</li>
+    <li>Why it's always eleven.</li>
+  </ul>
+  <p class="dim">These are load-bearing. The moment one gets an answer, the rest stop working.</p>
+</section>
+
+<!-- ============ THE CHAIN ============ -->
+<section id="s-chain">
+  <h2>The chain</h2>
+  <p>Eleven islands, roughly three hundred kilometres northwest to southeast. Charted 1587. Eight named for the canonical hours.</p>
+  <div class="grid">
+    <div class="card"><span class="tag">1 · northernmost</span><h4>Matins</h4><p>Wet, forested, steep and unfriendly to landing. Never developed. An automated lighthouse and a bird colony that outnumbers the human population of the entire chain.</p></div>
+    <div class="card"><span class="tag">2 · atoll</span><h4>Lauds</h4><p>Twenty-two motu on a ring reef. Six are above water at high tide now; there were fourteen in 1980. People from the drowned ones live on the ones that are left, which is not a solution, only a delay.</p></div>
+    <div class="card"><span class="tag">3</span><h4>Prime</h4><p>The first place anyone built anything — 1840s whaling anchorage, then the coaling station. Now mostly a graveyard of tanks and a good place to buy fuel with no paperwork.</p></div>
+    <div class="card"><span class="tag">4 · private</span><h4>Terce</h4><p>Small and dry. Privately owned since 1998 by an entity registered in three countries. There is a strip, a house, and a staff who signed something.</p></div>
+    <div class="card kg"><span class="tag">5 · the quarry</span><h4>Sext</h4><p>Sixty years of phosphate took the interior down to bedrock — coral pinnacles standing in a scraped grey basin, visible from orbit. The company town, <strong>Calder Field</strong>, has been empty since 1979 and is almost perfectly preserved, because nothing grows there to bury it. Its swimming pool still holds water. Nobody knows why.</p></div>
+    <div class="card kw"><span class="tag">6 · closed</span><h4>None</h4><p><em>Say it "known."</em> The ninth hour, when the light changes. Closed since 1961 under an order renewed thirteen times by three administrations, each citing a different reason. There are still people on it. Their descendants are still on it. Mail goes in. Nothing comes out but the mail boat.</p></div>
+    <div class="card k2"><span class="tag">7 · the big one</span><h4>Vespers</h4><p>High, volcanic, thirty-eight kilometres, a ridge down its spine, a barrier reef and a lagoon to leeward. <strong>Port Vespers</strong> is here. Ninety percent of everyone lives here.</p></div>
+    <div class="card"><span class="tag">8 · last named</span><h4>Compline</h4><p>Low and hooked. The naval station was here. The munitions and fuel bunkers are still here. So is whatever leaked out of them.</p></div>
+    <div class="card kw"><span class="tag">9 · 10 · 11</span><h4>The Unnumbered</h4><p>Three basalt stacks southeast of Compline, too small and too sheer to land on. Soundings put the water at 4,100 metres almost immediately. <strong>Do not anchor. Do not sound. No bottom found.</strong></p></div>
+  </div>
+
+  <h2>What was taken, in order</h2>
+  <table>
+    <tr><th>Era</th><th>What they came for</th><th>What's left</th></tr>
+    <tr><td class="k">1840s–80s</td><td>Whales and coal</td><td>Stone jetties. A cemetery of sailors from nine countries.</td></tr>
+    <tr><td class="k">1889–1979</td><td>Phosphate</td><td>The Quarry. Calder Field. Half the surnames on the islands.</td></tr>
+    <tr><td class="k">1903</td><td>The cable</td><td>The old cable house, still standing, still owned.</td></tr>
+    <tr><td class="k">1941–46</td><td>Position</td><td>Bunkers. Wrecks in the lagoon. Six weeks of fighting nobody outside the Hours remembers.</td></tr>
+    <tr><td class="k">1950s–70s</td><td>Storage — fuel and munitions</td><td>The tank farm. The plume in the aquifer. The lawsuit.</td></tr>
+    <tr><td class="k">1954–90</td><td>Tuna</td><td>Cannery Row. The union hall. The recipes.</td></tr>
+    <tr><td class="k">1961–now</td><td>Registry — a flag of convenience</td><td>Eleven thousand vessels flagged to a place with no shipyard.</td></tr>
+    <tr><td class="k">1968–2031</td><td>The view</td><td>Flooded lobbies.</td></tr>
+    <tr><td class="k">2040s–now</td><td>The Signal, and the seabed</td><td>You're playing in this one.</td></tr>
+  </table>
+</section>
+
+<!-- ============ PORT VESPERS ============ -->
+<section id="s-port">
+  <h2>Districts</h2>
+  <div class="grid">
+    <div class="card"><h4>The Strand</h4><span class="tag">dead resort front</span><p>Six towers on a beach that is now a seawall. The water table came up under them: every ground floor is a <em>second lobby</em>, ankle- to knee-deep depending on the moon, still lit, still air-conditioned, still playing music, because turning the systems off costs more than running them. People live upstairs illegally and in numbers.</p></div>
+    <div class="card k2"><h4>Low Town</h4><span class="tag">officially Cannery Row</span><p>The working heart. Three generations to a house, laundry across the alleys, the best food on the chain, the union hall that still meets, the seawall the neighbourhood built themselves. If the Hours have a soul it lives here and it is not for sale, though the offer is standing.</p></div>
+    <div class="card"><h4>The Ladder</h4><span class="tag">market quarter</span><p>Stacked up the hillside on stairs too narrow for vehicles. Everything is available and nothing is on a register. Fixers, chandlers, unlicensed clinics, the night market. Frying oil, wet stone, diesel.</p></div>
+    <div class="card kg"><h4>The Crown</h4><span class="tag">government hill</span><p>Colonial stone with modern glass grafted on. The courts, the Administration, the registry offices with their thousands of brass plates. <strong>Halloran &amp; Vey is here</strong>, third floor above a chandlery. The Governor's House has a lawn that is watered.</p></div>
+    <div class="card"><h4>The Terraces</h4><span class="tag">new money</span><p>Sealed, climate-controlled, positive air pressure, own desalination, built above the flood line for people who bought residency. Residents do not descend. Staff ascend daily and are scanned on the way in.</p></div>
+    <div class="card"><h4>Cold Harbour</h4><span class="tag">the port</span><p>Container terminal, fuel dock, crane gantries, bonded warehouses. Everything on the Hours comes through one wharf. Everyone knows exactly how many days of food are in the warehouses, the way people elsewhere know the weather.</p></div>
+    <div class="card k2"><h4>The Landing</h4><span class="tag">transpelagic</span><p>The cable head. Fenced, floodlit, cooled, drawing more power than the rest of the island combined. This is where the wire comes ashore.</p></div>
+    <div class="card"><h4>The Skyway</h4><span class="tag">never opened</span><p>An elevated transit line funded in 2038, eleven stations, never opened. The guideway runs the length of the harbour front on concrete piers. Four stations were finished to the tile. The trains were delivered and are in a shed. At night it's the only straight line on the island.</p></div>
+    <div class="card"><h4>Windward</h4><span class="tag">over the ridge</span><p>Rain, valleys, streams that still run. Farms, off-grid households, people who left Port Vespers on purpose. The only part of the chain that could feed itself, and it knows it.</p></div>
+    <div class="card kw"><h4>The Tank Farm</h4><span class="tag">above the aquifer</span><p>Twenty-two bulk fuel tanks cut into the ridge directly above the island's only freshwater lens. In 2049 something failed. The Water Board says the plume is in the aquifer. The Administration says the testing was flawed. Everyone in Low Town buys water in jugs and has for two years.</p></div>
+  </div>
+
+  <h2>Provident Row</h2>
+  <p class="big">Low Town. Two terraces facing across a street too narrow for vehicles. Built 1911 by the Calder-Vaughn Provident Society as cannery housing and never once maintained by them since. Concrete, salt-eaten, patched with whatever came off a ship. Everyone's grandparents were assigned here. Nobody chose it and nobody leaves.</p>
+  <p>The doors are numbered 1 to 44.</p>
+  <div class="rule"><b>There is no number 11.</b> No gap in the terrace, no bricked-up doorway. Number 10 and number 12 share a wall. The council register lists 43 units; count the doors and you get 43. The 1911 deed says 44. The Provident Society was dissolved in 1962.</div>
+  <p>Everyone on the Row has known this since they were a child. It's a joke you tell people who move in. <strong>Never resolve it.</strong> It isn't a clue and it doesn't pay off — the Row has always had the shape of the thing in it.</p>
+</section>
+
+<!-- ============ POWERS ============ -->
+<section id="s-powers">
+  <h2>Powers</h2>
+  <div class="grid">
+    <div class="card kg"><h4>Calder-Vaughn Group</h4><p>The phosphate house that became everything. Dug Sext hollow, ran the canneries, wrote the labour contracts, then converted a century of extraction into legitimacy: property, the registry, the Terraces. Old money that is, on these islands, <em>the</em> money. Polite, patient, on every board. Their family cemetery is nicer than the public one.</p></div>
+    <div class="card k2"><h4>Transpelagic</h4><p>Cable and data. Owns the Landing, the wire, and the licence. Sells the Hours' position — the one thing that can't be dug up — as latency. Cheerful, global, weightless, and the only entity here that could leave in a week.</p></div>
+    <div class="card kw"><h4>The Sounding Company</h4><p>Deep-sea mining, arrived four years ago. Nodule harvesting southeast of Compline — which is to say, in the water everyone has been told not to sound since 1587. Two ships, a riser, a collector crawling the bottom four kilometres down. Very well capitalised, very new here, and they think the annotation on the charts is folklore.</p></div>
+    <div class="card"><h4>The Administration</h4><p>The residual government. Technically self-governing, practically a shell operated by whoever is currently paying for the ferry subsidy. Underfunded, not stupid, occasionally heroic in individuals.</p></div>
+    <div class="card"><h4>The Water Board</h4><p>The besieged public utility. Its chief engineer has been saying the same thing about the plume for two years and being called alarmist. Honest, broke, and correct.</p></div>
+    <div class="card k2"><h4>The Tide Watch</h4><p>Mutual aid out of Low Town and Windward. Built the seawall. Keeps the records the Administration lost. Runs water distribution, storm shelters, the phone tree. Not a militia and not a cult — a neighbourhood association with a hundred years of practice and no illusions. <strong>The moral centre.</strong></p></div>
+    <div class="card kw"><h4>The Long Count</h4><p>Not an organisation. A condition. People who have started being helpful in a particular way — obliging, unexplaining, generous past the point of the request. There is nothing to raid.</p></div>
+  </div>
+</section>
+
+<!-- ============ PEOPLE ============ -->
+<section id="s-people">
+  <h2>The firm</h2>
+  <div class="grid">
+    <div class="card kg"><h4>Halloran &amp; Vey</h4><span class="tag">marine casualty &amp; loss adjustment</span><p>Third floor above a chandlery on the Crown. One window. A brass plate somebody polishes without being paid to. The 1961 ordinance required two named principals, so Halloran invented a second. <strong>There was never a Vey.</strong> Halloran died nine years ago and the plate passed to you.</p></div>
+    <div class="card k2"><h4>Ottoline Sabban — "Otty"</h4><span class="tag">clerk · 61 · thirty-four years</span><p>Started under Halloran at twenty-seven. Knows where every file is, including the ones from before the crew existed. The year he died she is the sole reason the plate was renewed on time, because she did the paperwork without being asked and without mentioning it. <strong>The crew inherited a name. Otty inherited the work.</strong> She answers the phone <em>"Halloran and Vey"</em> in a way that makes it sound like both of them are just down the hall. She goes on the list first. Nobody has ever asked her what she wants.</p></div>
+    <div class="card"><h4>Mrs. Ansel</h4><span class="tag">deputy registrar of marine licences</span><p>Has renewed your plate every year for eleven years. Unfailingly pleasant, remembers your mother, and has <strong>never once asked you for anything</strong> — which is worse than if she had. She is <em>not</em> Long Count. She is an ordinary decent civil servant, and the resemblance is the point. Never resolve it.</p></div>
+  </div>
+
+  <h2>Recurring</h2>
+  <div class="grid">
+    <div class="card"><h4>Vess</h4><span class="tag">compliance, transpelagic</span><p>Nervous in a way that isn't about the job. Refers to missing people in the present tense and corrects himself. Survives the first case regardless of the theory, and is worse in the next one.</p></div>
+    <div class="card"><h4>Dr. Yusra Halim</h4><span class="tag">physician</span><p>Wants off the chain on any boat. Eleven patient files she never submitted, all describing the same symptom in different hands.</p></div>
+    <div class="card"><h4>Ren</h4><span class="tag">the Kettle, a canteen on the Ladder</span><p>Open all night because the night shift is the only trade. Wants nothing at all, which makes what she remembers worse. Knows everyone's schedule.</p></div>
+    <div class="card kw"><h4>Grandmother</h4><span class="tag">channel 11</span><p>A duty supervisor nobody has met, who has signed off every shift for six years, in a post personnel says does not exist. <strong>Never on screen.</strong> Only ever a voice on a channel, and only ever helpful.</p></div>
+  </div>
+</section>
+
+<!-- ============ BUILD A CASE ============ -->
+<section id="s-case">
+  <h2>Twenty minutes, maximum</h2>
+  <ul>
+    <li>A job — who's hiring, the deliverable, the deadline. It pays too well.</li>
+    <li><strong>One</strong> wrong detail. Never explain it.</li>
+    <li>Four or five locations: a name, a smell, one person there.</li>
+    <li>Five to seven people: name, want, secret. Two are lying about unrelated things.</li>
+    <li>Eight to twelve clues on cards.</li>
+    <li>Five terrors, five temptations — one pair per ring.</li>
+    <li>Depth 3.</li>
+  </ul>
+  <div class="rule"><b>Do not write a solution.</b> If you have one in your head, throw it out — you'll steer toward it.</div>
+
+  <h2>Writing clues</h2>
+  <p>A clue is <strong>a hole in the world</strong>, not a piece of a puzzle you already solved.</p>
+  <table>
+    <tr><th>Good</th><th>Bad</th></tr>
+    <tr><td>The tower's water usage tripled after the last tenant left.</td><td class="dim">People are living in the flooded lobby. <em>(explains itself)</em></td></tr>
+    <tr><td>Her last transmission logged four minutes after the vessel went down. It describes the vessel going down.</td><td class="dim">She could see the future. <em>(that's a theory, not a clue)</em></td></tr>
+  </table>
+
+  <h2>Theorize</h2>
+  <p>Roll <strong>2d6 + clues woven in − depth</strong>. Depth 3 one-shot · 4 longer case · 5 finale.</p>
+  <div class="band"><b>10+</b><span>Their theory is true. It is now what happened.</span></div>
+  <div class="band m"><b>7–9</b><span>True, but wrong about the one thing that matters. Everyone marks Static.</span></div>
+  <div class="band l"><b>6−</b><span>Wrong, and the truth is worse. The Bleed fills.</span></div>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="s-gloss">
+  <h2>Glossary</h2>
+  <table>
+    <tr><td class="k">The Stand</td><td>The stand of the tide — the interval when the water is neither rising nor falling. The old sailors' word for what they were avoiding southeast of Compline. <em>It's only the stand. It'll turn.</em></td></tr>
+    <tr><td class="k">The Aperture</td><td>The season clock. Eight segments; the last three were never on the chart.</td></tr>
+    <tr><td class="k">The Bleed</td><td>The per-case doom clock. Six segments. When it fills, it arrives.</td></tr>
+    <tr><td class="k">Static</td><td>Corruption, damage and power on one track, 0–5. Measured in soundings. It never clears.</td></tr>
+    <tr><td class="k">Off soundings</td><td>What people say about the taken. Water too deep to measure. <em>She’s gone off soundings.</em></td></tr>
+    <tr><td class="k">Observed</td><td>Static 5. The character belongs to it. One last impossible thing, then the GM has them.</td></tr>
+    <tr><td class="k">Harbour</td><td>The creole. English-framed with a century of everything else in it, spoken fast.</td></tr>
+    <tr><td class="k">Mauka / makai</td><td>Not used here. The Hours' vocabulary is maritime, Spanish-colonial and clerical.</td></tr>
+    <tr><td class="k">The Unnumbered</td><td>The three islands the navigator counted and didn't name.</td></tr>
+    <tr><td class="k">No bottom found</td><td>The annotation carried on every chart of the Hours since 1587.</td></tr>
+    <tr><td class="k">The list</td><td>Names and what you owe them. Grows every interlude. Becomes the manifest.</td></tr>
+    <tr><td class="k">The plate</td><td>The firm's licence. Conditional. Renewed by someone's kindness.</td></tr>
+    <tr><td class="k">The Row</td><td>Provident Row, Low Town. Doors 1 to 44. No number 11.</td></tr>
+  </table>
+</section>
+
+<div class="foot">
+  <span>Signal Bleed · GM reference</span>
+  <span>Decide what's strange, not what's true</span>
+</div>
+</main>
+
+<script>
+"use strict";
+const BASIC=[
+ {n:"Push Through",s:"+EDGE",d:"Force, speed or nerve under real threat.",
+  h:"You do it, and you're clear.",
+  m:"You do it, but choose one: you take Harm · you leave something behind · someone sees you do it.",
+  l:"The GM says what happens instead."},
+ {n:"Read the Wire",s:"+WIRE or +VEIL",d:"Study a place, a system or a person for what's underneath. Say which stat and why.",
+  h:"Ask two.",m:"Ask one.",
+  l:"Ask one anyway — then the GM asks what you're now afraid of, and you answer honestly.",
+  extra:"What here is a lie? · What's about to go wrong? · What time is it really? · Who has already been here? · What here doesn't belong to this world?"},
+ {n:"Work Someone",s:"+FACE",d:"Lean on them with leverage, charm, or a very good lie.",
+  h:"They give you what you want.",
+  m:"Most of it, and one: they want something first · they'll remember this · they tell someone.",
+  l:"They were already working you."},
+ {n:"Jack In",s:"+WIRE +STATIC",d:"Interface with something that shouldn't still be running — a dead node, a length of cable nobody opened, something wet where it should be dry.",
+  h:"You get what you came for. Take a clue.",
+  m:"You get it, but choose one: mark Static · something on the other end has your name now · advance the Bleed.",
+  l:"Mark Static. The GM says what came ashore with you."},
+ {n:"Take a Sounding",s:"+VEIL +STATIC",d:"Open yourself deliberately to what's under a thing. Once per scene.",
+  h:"Take a clue and ask one question from Read the Wire.",
+  m:"Take a clue. Mark Static.",
+  l:"Mark Static, and it answers a question you didn't ask."},
+ {n:"Theorize",s:"+clues − depth",d:"Name what's really happening. Anyone can build the theory; one person rolls.",
+  h:"Your theory is true. It is now what happened.",
+  m:"True, but you were wrong about the one thing that matters. Everyone marks Static.",
+  l:"Wrong, and the truth is worse. The Bleed fills."}];
+
+document.getElementById("moves").innerHTML=BASIC.map(m=>`
+ <div class="mv"><button class="mvh"><span class="n">${m.n}</span><span class="s">${m.s}</span></button>
+  <div class="mvb">
+    <p class="fic">${m.d}</p>
+    <div class="band"><b>10+</b><span>${m.h}</span></div>
+    <div class="band m"><b>7–9</b><span>${m.m}</span></div>
+    <div class="band l"><b>6−</b><span>${m.l}</span></div>
+    ${m.extra?`<p class="fic" style="margin-top:9px">${m.extra}</p>`:""}
+  </div></div>`).join("");
+
+document.addEventListener("click",e=>{
+  const h=e.target.closest(".mvh");
+  if(h){h.parentElement.classList.toggle("open");return;}
+  const n=e.target.closest("#nav button");
+  if(n){
+    document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("sel",b===n));
+    document.querySelectorAll("section").forEach(s=>s.classList.toggle("sel",s.id==="s-"+n.dataset.s));
+    window.scrollTo(0,0);
+  }
+});
+
+document.getElementById("mode").addEventListener("click",e=>{
+  document.body.classList.toggle("light");
+  e.target.textContent=document.body.classList.contains("light")?"☀":"☾";
+});
+if(window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches){
+  document.body.classList.add("light");document.getElementById("mode").textContent="☀";
+}
+
+const q=document.getElementById("q"), count=document.getElementById("count");
+q.addEventListener("input",()=>{
+  const v=q.value.trim().toLowerCase();
+  if(!v){document.body.classList.remove("searching");
+    document.querySelectorAll(".card,.mv,tr,.rule,p,li,h2,h3").forEach(el=>el.classList.remove("hit","nohit"));
+    return;}
+  document.body.classList.add("searching");
+  let n=0;
+  document.querySelectorAll("main .card, main .mv, main tbody tr, main table tr, main .rule, main section > p, main section > ul > li, main h2, main h3").forEach(el=>{
+    const match=el.textContent.toLowerCase().includes(v);
+    el.classList.toggle("hit",match); el.classList.toggle("nohit",!match);
+    if(match)n++;
+  });
+  count.textContent=n+" match"+(n===1?"":"es");
+});
+</script>
+</body>
+</html>

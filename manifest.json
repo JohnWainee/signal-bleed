@@ -1,0 +1,13 @@
+{
+  "name": "Signal Bleed — Chart Table",
+  "short_name": "Signal Bleed",
+  "start_url": "./table/",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#05030C",
+  "theme_color": "#05030C",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SIGNAL BLEED</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#05030C">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<style>
+:root{--bg:#05030C;--ink:#E8E4F5;--dim:#8B85A3;--lens:#7C6BFF;--lens2:#00E5FF;--sig:#FF2D95;--edge:#1E1930;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 Georgia,'Times New Roman',serif;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;padding:48px 20px;}
+h1{font-size:clamp(34px,8vw,64px);letter-spacing:.06em;font-weight:400;}
+h1 i{color:var(--lens);font-style:italic;}
+.sub{color:var(--dim);font-size:13px;letter-spacing:.22em;text-transform:uppercase;margin:6px 0 40px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;max-width:820px;width:100%;}
+a.card{display:block;border:1px solid var(--edge);padding:22px 20px;text-decoration:none;color:var(--ink);
+  transition:border-color .2s;border-radius:2px;}
+a.card:hover{border-color:var(--lens);}
+a.card b{display:block;font-size:19px;margin-bottom:6px;}
+a.card span{color:var(--dim);font-size:13.5px;}
+a.card.pri{border-color:var(--lens);box-shadow:0 0 24px rgba(124,107,255,.12);}
+a.card.pri b{color:var(--lens);}
+.foot{margin-top:auto;padding-top:48px;color:var(--dim);font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-align:center;}
+.water{color:var(--lens2);opacity:.8;font-style:italic;margin:0 0 36px;font-size:14.5px;text-align:center;max-width:520px;}
+</style>
+</head>
+<body>
+<h1>SIGNAL <i>BLEED</i></h1>
+<div class="sub">Alpha playtest · v0.1</div>
+<p class="water">The water comes from below. Nobody built a wall that helps.</p>
+<div class="grid">
+  <a class="card pri" href="table/"><b>The Chart Table</b><span>The multiplayer play surface. Join with a room code — the GM runs the Portal, everyone else takes a playbook.</span></a>
+  <a class="card" href="gm/"><b>GM Reference</b><span>Searchable — moves, the Stand, the chain, Port Vespers, case building.</span></a>
+  <a class="card" href="print/vespers.html"><b>Print Pack — Port Vespers</b><span>Playbooks and GM screen, ready for paper.</span></a>
+  <a class="card" href="print/hours.html"><b>Print Pack — The Hours</b><span>The Hours setting's sheets, ready for paper.</span></a>
+  <a class="card" href="hours/"><b>The Hours — Chart &amp; Record</b><span>Setting reference: the chain, the eras, the record.</span></a>
+  <a class="card" href="cases/case-eleven-minutes.json"><b>Case File — Eleven Minutes</b><span>A prepped case in the case JSON format, with a blank template beside it.</span></a>
+</div>
+<div class="foot">Signal Bleed · playtest build · feedback welcome at the table</div>
+</body>
+</html>

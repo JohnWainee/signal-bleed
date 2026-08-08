@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SIGNAL BLEED — The Chart Table</title>
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#05030C">
+<link rel="apple-touch-icon" href="../assets/icon-192.png">
+<style>
+:root{
+  --void:#05030C; --deck:#0B0818; --panel:#12102A; --panel2:#1A1738;
+  --edge:#2B2657; --bone:#EDE9FF; --soft:#9B93C4; --dim:#5B5490;
+  --lens:#FF2D95; --lens2:#00E5FF; --warn:#FF3B57;
+  --mono:ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --tide:0; --glow:1; --rain:.5;
+}
+body.light{
+  --void:#EAE6DA; --deck:#F3F0E7; --panel:#FBF9F3; --panel2:#F0ECDF;
+  --edge:#C7C0AE; --bone:#17161B; --soft:#57534A; --dim:#8A8478;
+  --warn:#B02D2D; --glow:0; --rain:.30;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;}
+body{background:var(--void);color:var(--bone);font-family:var(--mono);font-size:13px;
+  line-height:1.45;-webkit-font-smoothing:antialiased;user-select:none;
+  transition:background .4s,color .4s;}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0;}
+input,textarea{font:inherit;color:var(--bone);background:transparent;border:none;outline:none;width:100%;user-select:text;}
+::placeholder{color:var(--dim);}
+
+/* ============ BOARD ============ */
+#table{position:fixed;inset:0;}
+#rain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.grid{position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,currentColor 0 1px,transparent 1px 54px),
+    repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 54px);
+  color:var(--bone);opacity:.035;}
+body.light .grid{opacity:.07;}
+.horizon{position:absolute;left:-30%;right:-30%;bottom:0;height:38%;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,transparent 0 3.2%,color-mix(in srgb,var(--lens) 26%,transparent) 3.2% 3.35%),
+    linear-gradient(to top,color-mix(in srgb,var(--lens) 10%,transparent),transparent 72%);
+  transform:perspective(340px) rotateX(66deg);transform-origin:bottom;opacity:.55;}
+body.light .horizon{opacity:.28;}
+body.calm .horizon{opacity:.22;}
+.sun{position:absolute;left:50%;bottom:26%;width:min(46vw,420px);aspect-ratio:1;
+  transform:translateX(-50%);border-radius:50%;pointer-events:none;opacity:.13;
+  background:linear-gradient(to bottom,var(--lens),var(--lens2));
+  -webkit-mask-image:repeating-linear-gradient(0deg,#000 0 7px,transparent 7px 12px);
+          mask-image:repeating-linear-gradient(0deg,#000 0 7px,transparent 7px 12px);}
+body.light .sun{opacity:.10;}
+body.calm .sun{display:none;}
+.scan{position:absolute;inset:0;pointer-events:none;opacity:.32;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.5) 0 1px,transparent 1px 3px);}
+body.light .scan,body.calm .scan{display:none;}
+.sweep{position:absolute;left:0;right:0;height:130px;pointer-events:none;top:-140px;
+  background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--lens) 13%,transparent),transparent);
+  animation:sweep 11s linear infinite;}
+@keyframes sweep{0%{transform:translateY(0)}100%{transform:translateY(calc(100vh + 280px))}}
+body.calm .sweep{display:none;}
+.tide{position:absolute;left:0;right:0;bottom:0;pointer-events:none;height:calc(var(--tide)*100%);
+  background:linear-gradient(to top,color-mix(in srgb,var(--lens) 24%,transparent),transparent);
+  border-top:1px solid var(--lens);box-shadow:0 0 calc(22px*var(--glow)) color-mix(in srgb,var(--lens) 55%,transparent);
+  transition:height 1.6s ease;}
+body.calm .tide{transition:none;}
+
+.ripple{position:absolute;border:1px solid var(--lens);border-radius:50%;pointer-events:none;
+  transform:translate(-50%,-50%);animation:rip .7s ease-out forwards;}
+@keyframes rip{0%{width:10px;height:10px;opacity:.9}100%{width:230px;height:230px;opacity:0}}
+body.calm .ripple{display:none;}
+
+.zone{position:absolute;pointer-events:none;border:1px dashed transparent;transition:border-color .25s;}
+#zTheory{left:57%;top:9%;width:39%;height:47%;}
+#zDeep{left:1.5%;right:1.5%;bottom:1.5%;height:18%;width:97%;}
+body.dragging #zTheory{border-color:var(--lens2);}
+body.dragging #zDeep{border-color:var(--warn);}
+.zone b{position:absolute;top:8px;left:11px;font-size:9px;letter-spacing:.26em;
+  text-transform:uppercase;font-weight:400;opacity:0;transition:opacity .25s;}
+body.dragging .zone b{opacity:1;}
+#zTheory b{color:var(--lens2);} #zDeep b{color:var(--warn);}
+
+svg#str{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+svg#str line.base{stroke:var(--lens);stroke-width:1.5;opacity:.5;pointer-events:stroke;cursor:pointer;}
+svg#str line.base:hover{opacity:1;stroke-width:3;}
+svg#str line.pulse{stroke:var(--lens2);stroke-width:2.2;stroke-dasharray:9 190;opacity:.95;
+  animation:flow 2.6s linear infinite;pointer-events:none;
+  filter:drop-shadow(0 0 calc(5px*var(--glow)) var(--lens2));}
+@keyframes flow{from{stroke-dashoffset:199}to{stroke-dashoffset:0}}
+body.calm svg#str line.pulse{display:none;}
+
+.card{position:absolute;width:212px;background:var(--panel);
+  border:1px solid var(--edge);border-left:3px solid var(--lens);
+  padding:12px 13px;cursor:grab;touch-action:none;
+  box-shadow:0 0 calc(16px*var(--glow)) color-mix(in srgb,var(--lens) 16%,transparent),0 3px 0 rgba(0,0,0,.35);
+  transition:opacity .5s,transform .5s;}
+.card.woven{border-left-color:var(--lens2);background:var(--panel2);
+  box-shadow:0 0 calc(20px*var(--glow)) color-mix(in srgb,var(--lens2) 22%,transparent),0 3px 0 rgba(0,0,0,.35);}
+.card.deep{border-left-color:var(--warn);opacity:.34;transform:translateY(4px);box-shadow:none;}
+.card.held{outline:2px solid;outline-offset:2px;}
+.card.face{background:repeating-linear-gradient(45deg,var(--panel) 0 7px,var(--deck) 7px 14px);border-left-color:var(--warn);}
+.card p{font-family:var(--serif);font-size:15px;line-height:1.35;margin:0;}
+.card.face p{color:var(--dim);font-style:italic;}
+.card .tie{position:absolute;right:-9px;top:calc(50% - 9px);width:18px;height:18px;
+  border:1.5px solid var(--edge);background:var(--deck);border-radius:50%;opacity:0;transition:opacity .2s;}
+.card:hover .tie,.card .tie.arm{opacity:1;}
+.card .tie.arm{border-color:var(--lens);background:var(--lens);}
+
+/* ============ RAIL ============ */
+#rail{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;
+  gap:16px;padding:0 16px;z-index:20;pointer-events:none;}
+#rail>*{pointer-events:auto;}
+.sound{display:flex;align-items:flex-end;gap:3px;}
+.mk{width:16px;border:1.5px solid var(--dim);border-top:none;transition:background .25s;}
+.mk.on{background:var(--warn);border-color:var(--warn);box-shadow:0 0 calc(9px*var(--glow)) var(--warn);}
+.mk.d1{height:12px}.mk.d2{height:15px}.mk.d3{height:18px;transform:skewX(-2deg)}
+.mk.d4{height:22px;transform:skewX(3deg)}.mk.d5{height:26px;transform:skewX(-5deg);border-style:dashed}
+.mk.d6{height:30px;transform:skewX(7deg);border-style:dashed}
+.cap{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);}
+.spacer{flex:1;}
+.dots{display:flex;gap:5px;}
+.dot{width:10px;height:10px;border-radius:50%;border:1.5px solid;}
+.ico{width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--edge);color:var(--dim);font-size:12px;}
+.ico:hover{border-color:var(--bone);color:var(--bone);}
+.ico.on{border-color:var(--lens);color:var(--lens);box-shadow:0 0 calc(10px*var(--glow)) color-mix(in srgb,var(--lens) 45%,transparent);}
+
+/* ============ TAG ============ */
+#tag{position:fixed;left:16px;bottom:16px;z-index:22;display:flex;align-items:center;gap:11px;
+  padding:9px 15px 9px 11px;background:var(--panel);border:1px solid var(--edge);border-left:3px solid var(--lens);
+  box-shadow:0 0 calc(18px*var(--glow)) color-mix(in srgb,var(--lens) 20%,transparent);}
+#tag .nm{font-size:12px;letter-spacing:.13em;text-transform:uppercase;}
+#tag .bk{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--lens);}
+#tag .snd{display:flex;align-items:flex-end;gap:2px;}
+#tag .snd i{width:9px;border:1.2px solid var(--dim);border-top:none;display:block;font-style:normal;}
+#tag .snd i.on{background:var(--warn);border-color:var(--warn);}
+#tag .snd i:nth-child(1){height:9px}#tag .snd i:nth-child(2){height:12px}
+#tag .snd i:nth-child(3){height:15px}#tag .snd i:nth-child(4){height:18px}#tag .snd i:nth-child(5){height:21px}
+#inboxDot{position:absolute;top:-6px;right:-6px;width:14px;height:14px;border-radius:50%;
+  background:var(--warn);display:none;place-items:center;font-size:9px;color:#fff;
+  box-shadow:0 0 calc(10px*var(--glow)) var(--warn);}
+#inboxDot.on{display:grid;}
+
+/* ============ DIAL ============ */
+#dial{position:fixed;right:22px;bottom:22px;z-index:24;width:64px;height:64px;}
+#dialBtn{width:64px;height:64px;border-radius:50%;border:1.5px solid var(--lens);
+  background:var(--deck);color:var(--lens);display:grid;place-items:center;
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;transition:transform .25s;
+  box-shadow:0 0 calc(18px*var(--glow)) color-mix(in srgb,var(--lens) 40%,transparent);}
+body.dialopen #dialBtn{transform:rotate(45deg);}
+.spoke{position:absolute;width:56px;height:56px;border-radius:50%;border:1px solid var(--edge);
+  background:var(--deck);display:grid;place-items:center;font-size:9px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--soft);right:4px;bottom:4px;opacity:0;pointer-events:none;
+  transition:transform .28s cubic-bezier(.2,.9,.3,1.3),opacity .2s;}
+body.dialopen .spoke{opacity:1;pointer-events:auto;}
+body.dialopen .spoke:nth-child(1){transform:translate(0,-88px);}
+body.dialopen .spoke:nth-child(2){transform:translate(-63px,-63px);}
+body.dialopen .spoke:nth-child(3){transform:translate(-88px,0);}
+body.dialopen .spoke:nth-child(4){transform:translate(-31px,-106px);}
+body.dialopen .spoke:nth-child(5){transform:translate(-106px,-31px);}
+body.dialopen .spoke:nth-child(6){transform:translate(-75px,-98px);}
+.spoke:hover{border-color:var(--lens);color:var(--lens);}
+body.calm .spoke{transition:opacity .12s;}
+
+/* ============ OVERLAYS ============ */
+.ov{position:fixed;inset:0;z-index:40;background:color-mix(in srgb,var(--void) 94%,transparent);
+  display:none;place-items:center;padding:22px;}
+.ov.open{display:grid;}
+.sheet{width:100%;max-width:600px;max-height:88vh;overflow:auto;background:var(--deck);
+  border:1px solid var(--edge);border-top:2px solid var(--lens);
+  box-shadow:0 0 calc(40px*var(--glow)) color-mix(in srgb,var(--lens) 14%,transparent);}
+.sheet.wide{max-width:860px;}
+.shd{display:flex;justify-content:space-between;align-items:baseline;padding:16px 20px;border-bottom:1px solid var(--edge);}
+.shd h2{margin:0;font-size:15px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--lens);}
+.shd .x{color:var(--dim);font-size:20px;padding:0 4px;}
+.shb{padding:18px 20px 24px;}
+.lab{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:20px 0 7px;}
+.lab:first-child{margin-top:0;}
+.tabs{display:flex;border-bottom:1px solid var(--edge);}
+.tb{flex:1;padding:11px 4px;font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--dim);border-bottom:2px solid transparent;}
+.tb.sel{color:var(--lens);border-bottom-color:var(--lens);}
+.mvrow{border-bottom:1px solid var(--edge);padding:11px 0;}
+.mvrow:last-child{border:none;}
+.mvname{display:flex;justify-content:space-between;align-items:center;width:100%;
+  font-size:12px;letter-spacing:.13em;text-transform:uppercase;text-align:left;gap:10px;}
+.mvname em{font-style:normal;color:var(--lens);font-size:10px;letter-spacing:.07em;white-space:nowrap;}
+.mvbody{display:none;padding-top:9px;} .mvrow.open .mvbody{display:block;}
+.mvbody .b{display:flex;gap:10px;padding:4px 0;font-size:12.5px;}
+.mvbody .b b{color:var(--lens2);min-width:32px;}
+.mvbody .b.m b{color:var(--bone);} .mvbody .b.l b{color:var(--warn);}
+.locked{opacity:.35;}
+.bigsound{display:flex;align-items:flex-end;gap:6px;justify-content:center;margin:6px 0 4px;}
+.bigsound button{width:38px;border:2px solid var(--dim);border-top:none;background:transparent;}
+.bigsound button.on{background:var(--warn);border-color:var(--warn);box-shadow:0 0 calc(14px*var(--glow)) var(--warn);}
+.bigsound button:nth-child(1){height:30px}.bigsound button:nth-child(2){height:38px}
+.bigsound button:nth-child(3){height:46px}.bigsound button:nth-child(4){height:54px}
+.bigsound button:nth-child(5){height:64px;border-style:dashed;}
+.ctr{text-align:center;}
+.hboxes{display:flex;gap:10px;justify-content:center;margin:8px 0;}
+.hboxes button{width:44px;height:44px;border:2px solid var(--dim);}
+.hboxes button.on{background:var(--bone);border-color:var(--bone);}
+.bondrow{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--edge);padding:9px 0;}
+.bondrow input{font-family:var(--serif);font-size:14px;flex:1;}
+.bondrow.burnt input{text-decoration:line-through;color:var(--dim);}
+.bondrow button{font-size:9px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--warn);
+  color:var(--warn);padding:4px 9px;}
+.bondrow.burnt button{border-color:var(--edge);color:var(--dim);}
+.symline{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--soft);
+  border-left:2px solid var(--warn);padding-left:10px;margin:5px 0;}
+.statrow{display:flex;gap:8px;margin:4px 0 14px;}
+.statrow button{flex:1;border:1px solid var(--edge);padding:7px 0;text-align:center;}
+.statrow span{display:block;font-size:8.5px;letter-spacing:.16em;color:var(--dim);}
+.statrow b{display:block;font-size:20px;font-weight:400;color:var(--lens);}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.pick button{border:1px solid var(--edge);padding:14px 12px;text-align:left;border-left-width:3px;}
+.pick button:hover{border-color:var(--bone);}
+.pick .pn{font-size:13px;letter-spacing:.14em;text-transform:uppercase;}
+.pick .pd{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--soft);margin-top:3px;}
+.bigin{width:100%;max-width:640px;}
+.bigin textarea{font-family:var(--serif);font-size:22px;line-height:1.4;border-bottom:1px solid var(--edge);
+  padding:10px 0;min-height:90px;resize:none;}
+.hint{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
+.acts{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+.act{border:1px solid var(--edge);padding:11px 20px;font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--soft);}
+.act:hover{border-color:var(--bone);color:var(--bone);}
+.act.pri{border-color:var(--lens);color:var(--lens);}
+.act.pri:hover{background:var(--lens);color:var(--void);}
+.act.sig{border-color:var(--warn);color:var(--warn);}
+.act.sig:hover{background:var(--warn);color:var(--void);}
+.act.sm{padding:7px 13px;font-size:9px;}
+.draw{max-width:660px;text-align:center;}
+.draw .big{font-family:var(--serif);font-style:italic;font-size:30px;line-height:1.35;min-height:120px;
+  display:grid;place-items:center;color:var(--bone);}
+.mod{font-size:76px;line-height:1;text-align:center;color:var(--lens);}
+.bands{display:grid;gap:9px;margin-top:24px;}
+.band{border:1px solid var(--edge);padding:13px 16px;text-align:left;display:flex;gap:14px;align-items:baseline;}
+.band b{font-size:16px;min-width:44px;}
+.band span{font-family:var(--serif);font-size:14px;color:var(--soft);}
+.band:hover{border-color:var(--bone);}
+.band.hi b{color:var(--lens2);}.band.mid b{color:var(--bone);}.band.lo b{color:var(--warn);}
+.msg{border:1px solid var(--edge);border-left:3px solid var(--lens2);padding:13px 15px;margin-bottom:11px;}
+.msg.unread{border-left-color:var(--warn);box-shadow:0 0 calc(16px*var(--glow)) color-mix(in srgb,var(--warn) 15%,transparent);}
+.msg .mh{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
+.msg .mb{font-family:var(--serif);font-size:15px;line-height:1.45;white-space:pre-wrap;}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;max-width:230px;margin:12px auto;}
+.keypad button{border:1px solid var(--edge);padding:14px 0;font-size:17px;}
+.keypad button:hover{border-color:var(--lens);color:var(--lens);}
+.readout{font-size:30px;letter-spacing:.35em;text-align:center;color:var(--lens);
+  border-bottom:1px solid var(--edge);padding:9px 0;min-height:50px;}
+.readout.bad{color:var(--warn);}
+.dialwrap{text-align:center;margin:14px 0;}
+.depthnum{font-size:52px;color:var(--lens);line-height:1;}
+.slider{width:100%;margin:16px 0;-webkit-appearance:none;background:transparent;}
+.slider::-webkit-slider-runnable-track{height:2px;background:var(--edge);}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;background:var(--lens);
+  margin-top:-10px;border-radius:50%;box-shadow:0 0 calc(12px*var(--glow)) var(--lens);}
+.slider::-moz-range-track{height:2px;background:var(--edge);}
+.slider::-moz-range-thumb{width:22px;height:22px;background:var(--lens);border:none;border-radius:50%;}
+.ping{font-family:var(--serif);font-style:italic;color:var(--soft);min-height:26px;}
+.transcript{font-family:var(--serif);font-size:16px;line-height:1.75;}
+.transcript button{border-bottom:1px solid var(--warn);color:var(--warn);padding:0 3px;}
+.transcript button:hover{background:var(--warn);color:var(--void);}
+.transcript .got{color:var(--lens2);}
+.gmrow{border:1px solid var(--edge);padding:11px 13px;margin-bottom:9px;display:flex;
+  gap:11px;align-items:flex-start;justify-content:space-between;}
+.gmrow .gt{font-family:var(--serif);font-size:14.5px;flex:1;}
+.gmrow .ga{display:flex;gap:6px;flex-wrap:wrap;}
+.who{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 4px;}
+.who button{border:1px solid var(--edge);padding:6px 11px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;}
+.who button.on{border-color:var(--lens);color:var(--lens);}
+.fld{border:1px solid var(--edge);padding:9px 11px;margin-bottom:9px;}
+.fld textarea{font-family:var(--serif);font-size:15px;min-height:64px;resize:vertical;}
+.roster{display:grid;gap:7px;}
+.rr{border:1px solid var(--edge);padding:9px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.rr .rn{font-size:12px;letter-spacing:.12em;text-transform:uppercase;}
+.rr .rb{font-size:9px;letter-spacing:.14em;text-transform:uppercase;}
+.rr .rs{display:flex;gap:3px;align-items:flex-end;}
+.rr .rs i{width:7px;border:1px solid var(--dim);border-top:none;display:block;font-style:normal;}
+.rr .rs i.on{background:var(--warn);border-color:var(--warn);}
+.rr .rs i:nth-child(1){height:7px}.rr .rs i:nth-child(2){height:10px}.rr .rs i:nth-child(3){height:13px}
+.rr .rs i:nth-child(4){height:16px}.rr .rs i:nth-child(5){height:19px}
+#moment{position:fixed;inset:0;z-index:60;display:none;place-items:center;padding:30px;
+  background:color-mix(in srgb,var(--void) 97%,transparent);text-align:center;}
+#moment.open{display:grid;}
+#moment .mt{font-family:var(--serif);font-style:italic;font-size:clamp(26px,5vw,46px);line-height:1.3;max-width:840px;}
+#moment .mc{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--lens);margin-bottom:22px;}
+#moment .tap{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-top:34px;}
+#join{position:fixed;inset:0;z-index:70;background:var(--void);display:grid;place-items:center;padding:26px;}
+#join .box{max-width:470px;width:100%;}
+#join h1{font-size:17px;letter-spacing:.3em;text-transform:uppercase;margin:0 0 6px;color:var(--lens);}
+#join p{font-family:var(--serif);font-style:italic;color:var(--soft);font-size:15px;margin:0 0 22px;}
+#join input{border-bottom:1px solid var(--edge);font-size:20px;padding:8px 0;font-family:var(--serif);}
+.logline{font-size:12px;color:var(--soft);padding:5px 0;border-bottom:1px solid var(--edge);}
+.logline b{color:var(--bone);font-weight:400;}
+.entry{border-left:3px solid var(--edge);padding:9px 0 9px 13px;margin-bottom:15px;}
+.entry.hi{border-left-color:var(--lens2);}.entry.mid{border-left-color:var(--bone);}.entry.lo{border-left-color:var(--warn);}
+.entry .et{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);}
+.entry .th{font-family:var(--serif);font-size:15px;margin:5px 0 0;}
+.empty{font-family:var(--serif);font-style:italic;color:var(--dim);font-size:14px;}
+@media (max-width:760px){
+  .card{width:172px;} #zTheory{left:52%;width:45%;}
+  .pick{grid-template-columns:1fr;} #dial{right:16px;bottom:16px;} #tag{left:12px;bottom:12px;padding:7px 12px;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+body.calm{--glow:0;}
+</style>
+</head>
+<body>
+
+<div id="table">
+  <canvas id="rain"></canvas>
+  <div class="grid"></div>
+  <div class="sun"></div>
+  <div class="horizon"></div>
+  <div class="sweep"></div>
+  <div class="tide"></div>
+  <div class="zone" id="zTheory"><b>The theory</b></div>
+  <div class="zone" id="zDeep"><b>No bottom found</b></div>
+  <svg id="str"></svg>
+  <div id="cards"></div>
+  <div id="fx"></div>
+  <div class="scan"></div>
+</div>
+
+<div id="rail">
+  <div class="sound" id="bleedS"></div>
+  <span class="cap" id="apCap">stable</span>
+  <div class="spacer"></div>
+  <div class="dots" id="dots"></div>
+  <button class="ico" id="modeBtn" data-act="mode" aria-label="Light or dark">☾</button>
+  <button class="ico" id="sndBtn" data-act="snd" aria-label="Sound">♪</button>
+  <button class="ico" id="calmBtn" data-act="calm" aria-label="Calm mode">◐</button>
+</div>
+
+<button id="tag" data-act="sheet">
+  <span class="snd" id="tagSnd"></span>
+  <span style="text-align:left"><span class="nm" id="tagName">—</span><br><span class="bk" id="tagBook">no playbook</span></span>
+  <span id="inboxDot">!</span>
+</button>
+
+<div id="dial">
+  <button class="spoke" data-act="pin">Pin</button>
+  <button class="spoke" data-act="draw">Draw</button>
+  <button class="spoke" data-act="theory">Theory</button>
+  <button class="spoke" data-act="ledger">Ledger</button>
+  <button class="spoke" data-act="case">Case</button>
+  <button class="spoke" id="gmSpoke" data-act="portal" style="display:none">Portal</button>
+  <span class="spoke" id="roomChip" style="pointer-events:none;opacity:.7"></span>
+  <button id="dialBtn" data-act="dial" aria-label="Menu">+</button>
+</div>
+
+<div class="ov" id="ovPin"><div class="bigin">
+  <div class="hint">Pin a clue — a hole in the world</div>
+  <textarea id="pinText" placeholder="Concrete. Strange. Explains nothing."></textarea>
+  <div class="acts">
+    <button class="act pri" data-act="pin-go">Pin it</button>
+    <button class="act sig" data-act="pin-face">Face down</button>
+    <button class="act" data-act="close">Back</button></div>
+</div></div>
+
+<div class="ov" id="ovDraw"><div class="draw">
+  <div class="hint" id="drawCap">A sign of the Stand</div>
+  <div class="big" id="drawOut">—</div>
+  <div class="acts" style="justify-content:center">
+    <button class="act pri" data-act="draw-sign">Sign</button>
+    <button class="act sig" data-act="draw-sym">Symptom</button>
+    <button class="act" data-act="draw-ask">Ask</button>
+    <button class="act" data-act="close">Back</button></div>
+</div></div>
+
+<div class="ov" id="ovTheory"><div class="bigin">
+  <div class="hint">Say it out loud first</div>
+  <div class="mod" id="tMod">+0</div>
+  <div class="hint ctr" style="margin-top:6px"><span id="tW">0</span> woven · depth
+    <button data-act="depth" id="tD" style="border-bottom:1px dotted var(--dim)">3</button></div>
+  <textarea id="tText" placeholder="What is actually happening here?" style="margin-top:18px"></textarea>
+  <div class="bands">
+    <button class="band hi" data-act="rec" data-r="hi"><b>10+</b><span>Your theory is true. It is now what happened.</span></button>
+    <button class="band mid" data-act="rec" data-r="mid"><b>7–9</b><span>True — but wrong about the one thing that matters.</span></button>
+    <button class="band lo" data-act="rec" data-r="lo"><b>6−</b><span>Wrong. The truth is worse.</span></button></div>
+  <div class="acts"><button class="act" data-act="close">Back</button></div>
+</div></div>
+
+<div class="ov" id="ovSheet"><div class="sheet">
+  <div class="shd"><h2 id="shTitle">Your sheet</h2><button class="x" data-act="close">×</button></div>
+  <div class="tabs" id="shTabs" style="display:none">
+    <button class="tb sel" data-t="self">Sheet</button>
+    <button class="tb" data-t="secret">Sealed</button>
+    <button class="tb" data-t="inbox">Received <span id="inbN"></span></button></div>
+  <div class="shb" id="shBody"></div>
+</div></div>
+
+<div class="ov" id="ovLedger"><div class="sheet">
+  <div class="shd"><h2>Ledger</h2><button class="x" data-act="close">×</button></div>
+  <div class="shb" id="ledBody"></div></div></div>
+
+<div class="ov" id="ovCase"><div class="sheet">
+  <div class="shd"><h2>The case</h2><button class="x" data-act="close">×</button></div>
+  <div class="shb" id="caseBody"></div></div></div>
+
+<div class="ov" id="ovPortal"><div class="sheet wide">
+  <div class="shd"><h2>Portal</h2><button class="x" data-act="close">×</button></div>
+  <div class="tabs" id="pTabs">
+    <button class="tb sel" data-p="bank">Clue bank</button>
+    <button class="tb" data-p="send">Send</button>
+    <button class="tb" data-p="puzzle">Puzzle</button>
+    <button class="tb" data-p="crew">Crew</button>
+    <button class="tb" data-p="clocks">Clocks</button>
+    <button class="tb" data-p="notes">Prep</button></div>
+  <div class="shb" id="portalBody"></div></div></div>
+
+<div id="moment"><div>
+  <div class="mc" id="mCap"></div><div class="mt" id="mText"></div>
+  <div class="tap">Tap to continue</div></div></div>
+
+<div id="join"><div class="box">
+  <h1>Sign on</h1>
+  <p>Eleven islands. Eight names. Somebody has a job for you.</p>
+  <p style="font-size:12px;opacity:.75">Room <b id="roomJoin" style="letter-spacing:.2em"></b></p>
+  <input id="joinName" placeholder="Your name at the table" autocomplete="off">
+  <div class="acts">
+    <button class="act pri" data-act="join">Enter as player</button>
+    <button class="act sig" data-act="join-gm">Enter as GM</button></div>
+  <div class="acts" style="margin-top:10px">
+    <input id="roomIn" placeholder="Have a room code? Enter it" autocomplete="off" style="flex:1;text-transform:uppercase">
+    <button class="act sm" data-act="room-go">Go</button></div>
+</div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="../firebase-config.js"></script>
+<script>
+"use strict";
+/* ===================== CONTENT ===================== */
+const SIGNS=["Every clock in the room agrees, and all of them are wrong by the same amount.",
+"The surf stops. Not quietens — stops. For as long as it takes to notice.",
+"Standing water is tilted, very slightly, toward something.",
+"A count comes out at eleven when there are nine of you.",
+"Someone repeats a thing you thought thirty seconds ago — and apologises.",
+"A door that is on the plan and has never been there."];
+const SYMPTOMS=["You are eleven minutes ahead of every clock on the island, and you can prove it.",
+"You've stopped hearing the surf. It's still there. Everyone else hears it.",
+"Standing water tilts slightly toward you.",
+"You know the name of the ninth hour. It hurts to hold.",
+"There's a day missing and you can feel the edge of it, like a seam.",
+"Someone has started calling you by a name nobody gave you, and correcting themselves, and doing it again."];
+const ASKS=["What here is a lie?","What's about to go wrong?","What time is it really?",
+"Who has already been here?","What here doesn't belong to this world?"];
+const RINGS=["Normal","First Sign","Escalation","Revelation","Dissolution"];
+const APW=["stable","stable","hairline","hairline","widening","widening","yawning","imminent","open"];
+const BASIC=[
+ {n:"Push Through",s:"+EDGE",d:"Force, speed or nerve under real threat.",
+  h:"You do it, and you're clear.",m:"You do it, but: take Harm · leave something behind · someone sees you.",l:"The GM says what happens instead."},
+ {n:"Read the Wire",s:"+WIRE / +VEIL",d:"Study something for what's underneath.",
+  h:"Ask two.",m:"Ask one.",l:"Ask one — then answer what you're now afraid of."},
+ {n:"Work Someone",s:"+FACE",d:"Leverage, charm, or a very good lie.",
+  h:"They give you what you want.",m:"Most of it, and: they want something first · they'll remember · they tell someone.",l:"They were already working you."},
+ {n:"Jack In",s:"+WIRE +STATIC",d:"Interface with something that shouldn't still be running.",
+  h:"You get it. Take a clue.",m:"You get it, but: mark Static · it has your name · advance the Bleed.",l:"Mark Static. Something came ashore with you."},
+ {n:"Take a Sounding",s:"+VEIL +STATIC",d:"Open yourself to what's under a thing. Once a scene.",
+  h:"Take a clue and ask one question.",m:"Take a clue. Mark Static.",l:"Mark Static. It answers a question you didn't ask."}];
+const BOOKS={
+ Splicer:{lens:"#00E5FF",lens2:"#B14BFF",tag:"You opened a cable nobody had opened since 1903. The traffic on it was current.",
+  stats:{EDGE:1,WIRE:2,FACE:0,VEIL:1},start:0,
+  sec:"What came up the wire during the outage that you never logged, and who has started asking about it?",
+  mv:[{n:"Deep Splice",d:"Open a line nobody's supposed to open — take a clue before you roll Jack In."},
+      {n:"Cold Hands",d:"Ignore something horrifying for one exchange. Then it's worse."}],
+  sm:{1:["Traffic Memory","Once a session ask “Where have I heard this before?” They answer truthfully, even if impossible."],
+      3:["The Tap","You've already been on any line you can name. Say when you put it in. Mark Static."],
+      5:["Termination","You don't need a deck. You are a landing point."]},
+  bonds:["______ has seen my hands shake and said nothing.","I have read ______'s traffic. They don't know."]},
+ Registrar:{lens:"#FFB627",lens2:"#FF5DA2",tag:"Eleven thousand ships fly this flag. Not one has ever been here. You typed why.",
+  stats:{EDGE:1,WIRE:1,FACE:2,VEIL:0},start:0,
+  sec:"Which vessel did you flag that you shouldn't have, and what is still aboard her?",
+  mv:[{n:"A Plate on the Door",d:"Once a session: you know someone here and what they owe you. The GM says what you owe them."},
+      {n:"Paper Trail",d:"Digging through records? Roll +FACE for Read the Wire."}],
+  sm:{1:["The Other Ledger","You see what a person is most afraid of losing. You can't turn it off."],
+      3:["Leverage","+1 ongoing to Work Someone against anyone whose secret you learned this session."],
+      5:["Agent of Record","You may negotiate directly with it. It files."]},
+  bonds:["I got ______ off a manifest and never told them what it cost.","______ is the only person I've never lied to. Yet."]},
+ Operator:{lens:"#FF2D95",lens2:"#00E5FF",tag:"Channel 11 has a supervisor nobody has met. She is helpful. You've talked nine years.",
+  stats:{EDGE:1,WIRE:0,FACE:1,VEIL:2},start:1,
+  sec:"Whose voice comes through most often, and what did you fail to do for them?",
+  mv:[{n:"The Open Channel",d:"Take a Sounding on anything that carried a voice — a handset, a black box, a chair."},
+      {n:"Second Watch",d:"Entering a place, the GM tells you one thing that isn't visible."}],
+  sm:{1:["Take It","When someone else would mark Static, take it instead. Say what you pull out of them."],
+      3:["Call and Answer","Once a session put one question on the channel. It always answers."],
+      5:["Station","You are the channel now."]},
+  bonds:["______ doesn't believe me and I need them not to.","I have heard ______'s voice on the channel, and they are still alive."]},
+ Diver:{lens:"#00FFC8",lens2:"#0091FF",tag:"Rebuilt for a pressure the body was never meant to hold. You're grateful. That's the worrying part.",
+  stats:{EDGE:2,WIRE:1,FACE:0,VEIL:1},start:0,
+  sec:"Who was on the other end of your line, on the dive you don't talk about?",
+  mv:[{n:"Rated for Depth",d:"Always trade Harm for Static — and take +1 forward when you do."},
+      {n:"Procedure",d:"Run the full procedure over gear: treat as Take a Sounding, twice a scene."}],
+  sm:{1:["The Body Wasn't Made for This","Ignore one Harm box permanently."],
+      3:["Buddy Breathing","Clear all Harm from another person. Mark Static. They dream about you."],
+      5:["Saturation","You don't come up anymore."]},
+  bonds:["______ has seen what the pressure did.","I am keeping ______ breathing with something I shouldn't have."]},
+ Inspector:{lens:"#B79CFF",lens2:"#FF2D95",tag:"You determined a cause. You signed it. The wreck has not accepted your finding.",
+  stats:{EDGE:1,WIRE:1,FACE:1,VEIL:1},start:0,
+  sec:"What did you leave out of the report, and who countersigned it?",
+  mv:[{n:"The Casualty File",d:"Once a session: state one thing you learned on a wreck like this. It's true now."},
+      {n:"Pressure",d:"+1 to Work Someone who fears you more than what they're hiding."}],
+  sm:{1:["Under Observation","You always know when you're watched. Now you know by what."],
+      3:["Reopen the Finding","Name a drowned clue. It's back, meaning something else."],
+      5:["Cause Determined","You understand the first wreck. You may not tell anyone."]},
+  bonds:["I have a file on ______.","______ knows what I did and hasn't used it."]},
+ Salvage:{lens:"#FF6B4A",lens2:"#FFD166",tag:"Overboard on the eleventh. Paid out on the nineteenth. Up the wharf on the twenty-second.",
+  stats:{EDGE:1,WIRE:1,FACE:0,VEIL:2},start:2,
+  sec:"Who filed the claim on you, and what did they ask you to do about it?",
+  mv:[{n:"Declared a Total Loss",d:"First time you'd be Wasted, you aren't. You come to somewhere else, wrong. Mark Static."},
+      {n:"The Interval",d:"Once a session describe something you remember that hasn't happened. The GM works it in."}],
+  sm:{1:["Not All of Me Came Up","Leave part of yourself somewhere. It keeps watching. You keep receiving."],
+      3:["The Log of Those Days","Ask the GM what you were doing while you were missing. They answer."],
+      5:["Recovered","The right one surfaces this time."]},
+  bonds:["______ was on the wharf when I came back.","______ treats me like I'm the same person. I let them."]},
+ Watch:{lens:"#B4FF39",lens2:"#00E5FF",tag:"Nobody was ever from here. Your family has been anyway, for a hundred and forty years.",
+  stats:{EDGE:1,WIRE:0,FACE:2,VEIL:1},start:0,
+  sec:"What did the Watch decide, that you carried out, that you have never told anyone?",
+  mv:[{n:"The Ledger",d:"Once a session state a fact about a person or place in Low Town. It's in the ledger, so it's true."},
+      {n:"Phone Tree",d:"Say who you call. They come. The GM says what it costs them."}],
+  sm:{1:["You Hold the Line","Instead of marking Static, cross a task off the list. It doesn't get done. Unlimited, not free."],
+      3:["Everyone Shows Up","Clear all Harm from everyone present. Say who came and what they brought."],
+      5:["The Wall","You stop being a person and start being a place people go."]},
+  bonds:["______ isn't from here and I vouched for them.","______ has been on my water list since before they could walk."]}};
+const GM_LENS="#E04CFF",GM_LENS2="#00E5FF";
+
+/* ===================== LIVING BACKGROUND ===================== */
+const GLYPHS="0123456789012345678911114▁▂▃▄▅▆▇·:∙°′″—│┤├NOBTMVESCOMSEXTERPRILAU".split("");
+let rainCols=[],rainCv,rainCx,rainW=0,rainH=0,rainAcc=0,rainLast=0,rainColor="#FF2D95";
+function initRain(){
+  rainCv=document.getElementById("rain");rainCx=rainCv.getContext("2d");sizeRain();
+}
+function sizeRain(){
+  const d=Math.min(window.devicePixelRatio||1,2);
+  rainW=window.innerWidth;rainH=window.innerHeight;
+  rainCv.width=rainW*d;rainCv.height=rainH*d;
+  rainCx.setTransform(d,0,0,d,0,0);
+  const step=17,n=Math.ceil(rainW/step);
+  rainCols=[];
+  for(let i=0;i<n;i++)rainCols.push({x:i*step+3,y:Math.random()*-rainH,
+    sp:.55+Math.random()*1.25,len:7+Math.floor(Math.random()*16),g:[]});
+}
+function pressure(){                        // 0 → 1, driven by the game
+  const b=(B?B.bleed:0)/6, a=(B?B.aperture:0)/8;
+  return Math.min(1,b*.35+a*.65);
+}
+function drawRain(t){
+  requestAnimationFrame(drawRain);
+  if(!rainCx)return;
+  const calm=document.body.classList.contains("calm");
+  const dt=t-rainLast;
+  const p=pressure();
+  const interval=calm?260:(90-p*58);
+  if(dt<interval)return;
+  rainLast=t;
+  rainCx.clearRect(0,0,rainW,rainH);
+  const light=document.body.classList.contains("light");
+  const base=light?.16:.34;
+  const alpha=(base+p*.30)*(calm?.42:1);
+  rainCx.font="13px ui-monospace,Menlo,Consolas,monospace";
+  const density=calm?.34:(.5+p*.5);
+  for(const c of rainCols){
+    if(c.skip===undefined)c.skip=Math.random()>density;
+    if(c.skip){ if(Math.random()<.004)c.skip=false; continue; }
+    c.y+=c.sp*(calm?3:(11+p*13));
+    if(c.y-c.len*15>rainH){c.y=Math.random()*-260;c.len=7+Math.floor(Math.random()*16);
+      c.sp=.55+Math.random()*1.25;if(Math.random()<.22)c.skip=true;}
+    for(let i=0;i<c.len;i++){
+      const y=c.y-i*15;
+      if(y<-16||y>rainH+16)continue;
+      const fade=1-i/c.len;
+      const ch=GLYPHS[(Math.floor(y/15)+i*7+c.x)%GLYPHS.length];
+      if(i===0){
+        rainCx.fillStyle=hexA(light?"#2A2620":"#FFFFFF",Math.min(.85,alpha*2.1));
+      }else{
+        rainCx.fillStyle=hexA(rainColor,alpha*fade*fade);
+      }
+      rainCx.fillText(ch,c.x,y);
+    }
+  }
+}
+function hexA(h,a){
+  const n=h.replace("#","");
+  const r=parseInt(n.slice(0,2),16),g=parseInt(n.slice(2,4),16),b=parseInt(n.slice(4,6),16);
+  return `rgba(${r},${g},${b},${Math.max(0,Math.min(1,a)).toFixed(3)})`;
+}
+function shade(h,amt){   // amt<0 darken, >0 lighten
+  const n=h.replace("#","");
+  let r=parseInt(n.slice(0,2),16),g=parseInt(n.slice(2,4),16),b=parseInt(n.slice(4,6),16);
+  const f=x=>Math.round(amt<0?x*(1+amt):x+(255-x)*amt);
+  r=f(r);g=f(g);b=f(b);
+  return "#"+[r,g,b].map(x=>Math.max(0,Math.min(255,x)).toString(16).padStart(2,"0")).join("");
+}
+function ripple(x,y){
+  if(document.body.classList.contains("calm"))return;
+  const d=document.createElement("div");d.className="ripple";
+  d.style.left=x+"px";d.style.top=y+"px";
+  document.getElementById("fx").appendChild(d);
+  setTimeout(()=>d.remove(),750);
+}
+
+/* ===================== SOUND ===================== */
+let AC=null,amb=null,sndOn=false;
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}return AC;}
+function tone(f,d,t,v,sl){if(!sndOn)return;const c=ac();if(!c)return;
+  const o=c.createOscillator(),g=c.createGain();o.type=t||"sine";o.frequency.value=f;
+  if(sl)o.frequency.exponentialRampToValueAtTime(sl,c.currentTime+d);
+  g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(v||.09,c.currentTime+.02);
+  g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);
+  o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+d+.05);}
+const sfx={tap:()=>tone(430,.07,"triangle",.05),drop:()=>tone(175,.17,"sine",.07),
+ mark:()=>tone(150,.5,"sine",.10,90),deep:()=>tone(68,1.5,"sine",.13,45),
+ bell:()=>{tone(680,1.1,"sine",.07);setTimeout(()=>tone(1020,1.3,"sine",.05),110);},
+ bad:()=>tone(94,1.8,"sawtooth",.05,42),
+ recv:()=>{tone(880,.1,"square",.05);setTimeout(()=>tone(1180,.14,"square",.045),95);},
+ ok:()=>{tone(560,.12,"sine",.07);setTimeout(()=>tone(840,.3,"sine",.06),90);},
+ no:()=>tone(140,.28,"square",.06,100)};
+function startAmb(){const c=ac();if(!c||amb)return;
+  const b=c.createBuffer(1,c.sampleRate*3,c.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.5;
+  const s=c.createBufferSource();s.buffer=b;s.loop=true;
+  const f=c.createBiquadFilter();f.type="lowpass";f.frequency.value=250;
+  const g=c.createGain();g.gain.value=.03;s.connect(f);f.connect(g);g.connect(c.destination);s.start();amb={s};}
+function stopAmb(){if(amb){try{amb.s.stop();}catch(e){}amb=null;}}
+
+/* ===================== THREE STORES ===================== */
+/* Sync adapter: Firebase RTDB when configured (firebase-config.js), localStorage otherwise. */
+const ROOM=(()=>{const p=new URLSearchParams(location.search);let r=(p.get("room")||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+  if(!r){r=Math.random().toString(36).slice(2,7).toUpperCase();p.set("room",r);
+    history.replaceState(null,"",location.pathname+"?"+p.toString());}
+  return r;})();
+let fb=null; /* {db, uid} when Firebase is live */
+const K_SHARED="shared";
+const K_PRIV=id=>"players/"+id;
+const K_GM="gm";
+let B=board(),P=priv(),G=gm();
+let me=null,uid=0,tsB=0,tsP=0,tsG=0,dragging=false,tieFrom=null,ok=null,drag=null;
+let shTab="self",pTab="bank",sendTo="all";
+function board(){return{v:3,ts:0,bleed:0,aperture:0,ring:0,ringT:0,ringP:0,cases:0,depth:3,caseName:"",
+  clues:[],links:[],roster:[],ledger:[],log:[],presence:{},corps:[]};}
+function priv(){return{v:3,ts:0,ch:null,secret:"",notes:"",inbox:[]};}
+function gm(){return{v:3,ts:0,bank:[],notes:"",wrong:""};}
+function nid(){return Date.now().toString(36)+"-"+(uid++).toString(36);}
+function ct(){return new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function logit(t){B.log.unshift({t:ct(),text:t});if(B.log.length>150)B.log.pop();}
+function isGM(){return me&&me.role==="gm";}
+async function put(k,o){o.ts=Date.now();
+  if(fb){try{await fb.db.ref("rooms/"+ROOM+"/"+k).set(JSON.parse(JSON.stringify(o)));}catch(e){}}
+  else{try{localStorage.setItem("SB:"+ROOM+":"+k,JSON.stringify(o));}catch(e){}}
+  return o.ts;}
+async function got(k){
+  if(fb){try{const s=await fb.db.ref("rooms/"+ROOM+"/"+k).get();return s.exists()?s.val():null;}catch(e){return null;}}
+  try{const v=localStorage.getItem("SB:"+ROOM+":"+k);return v?JSON.parse(v):null;}catch(e){return null;}}
+function absorbShared(s){if(!(s&&s.ts>tsB&&!dragging))return;
+  const pb=B.bleed,pa=B.aperture,mp=me?B.presence[me.id]:null;
+  B=Object.assign(board(),s);B.presence=B.presence||{};if(me&&mp)B.presence[me.id]=mp;tsB=s.ts;
+  if(B.bleed>pb)sfx.mark();if(B.aperture>pa)sfx.deep();render();}
+function absorbPriv(p){if(!(p&&p.ts>tsP))return;
+  const had=P.inbox?P.inbox.length:0;
+  P=Object.assign(priv(),p);P.inbox=P.inbox||[];tsP=p.ts;
+  if(P.inbox.length>had){sfx.recv();const last=P.inbox[0];
+    moment("Received",last.kind==="puzzle"?"Something arrived that wants working out.":"Something arrived for you alone.","recv");}
+  render();}
+function subPriv(){if(!fb||!me)return;
+  fb.db.ref("rooms/"+ROOM+"/players/"+me.id).on("value",s=>absorbPriv(s.val()));}
+function subGM(){if(!fb||!isGM())return;
+  fb.db.ref("rooms/"+ROOM+"/gm").on("value",s=>{const g=s.val();if(g&&g.ts>tsG){G=Object.assign(gm(),g);G.bank=G.bank||[];tsG=g.ts;if(pTab)render();}});}
+async function initSync(){
+  const cfg=window.SB_FIREBASE_CONFIG;
+  if(!cfg||!cfg.apiKey||!window.firebase){ok=false;return;}
+  try{firebase.initializeApp(cfg);
+    const cred=await firebase.auth().signInAnonymously();
+    fb={db:firebase.database(),uid:cred.user.uid};ok=true;
+    fb.db.ref("rooms/"+ROOM+"/shared").on("value",s=>absorbShared(s.val()));
+  }catch(e){fb=null;ok=false;}}
+async function pushB(){if(me)B.presence[me.id]={name:me.name,color:me.lens,role:me.role,t:Date.now(),hold:me.hold||null};
+  syncRoster();tsB=await put(K_SHARED,B);}
+async function pushP(){if(!me)return;tsP=await put(K_PRIV(me.id),P);}
+async function pushG(){tsG=await put(K_GM,G);}
+function syncRoster(){if(!me)return;const c=P.ch;
+  B.roster=(B.roster||[]).filter(r=>r.pid!==me.id);
+  if(c)B.roster.push({pid:me.id,name:c.name,book:c.book,lens:BOOKS[c.book].lens,static:c.static,harm:c.harm});}
+async function pullAll(){
+  absorbShared(await got(K_SHARED));
+  if(me)absorbPriv(await got(K_PRIV(me.id)));
+  if(isGM()){const g=await got(K_GM);if(g&&g.ts>tsG){G=Object.assign(gm(),g);G.bank=G.bank||[];tsG=g.ts;}}
+}
+
+/* ===================== LENS + MODE ===================== */
+let light=false;
+function applyLens(){
+  let a,b2;
+  if(isGM()){a=GM_LENS;b2=GM_LENS2;}
+  else if(P.ch){a=BOOKS[P.ch.book].lens;b2=BOOKS[P.ch.book].lens2;}
+  else{a="#7C6BFF";b2="#00E5FF";}
+  rainColor=a;
+  const A=light?shade(a,-.42):a, B2=light?shade(b2,-.42):b2;
+  document.documentElement.style.setProperty("--lens",A);
+  document.documentElement.style.setProperty("--lens2",B2);
+  if(me)me.lens=a;
+}
+function setMode(v){
+  light=v;
+  document.body.classList.toggle("light",light);
+  document.getElementById("modeBtn").textContent=light?"☀":"☾";
+  applyLens();
+}
+
+/* ===================== MOMENT ===================== */
+function moment(cap,text,s){
+  document.getElementById("mCap").textContent=cap;
+  document.getElementById("mText").textContent=text;
+  document.getElementById("moment").classList.add("open");
+  if(s&&sfx[s])sfx[s]();
+}
+document.getElementById("moment").addEventListener("click",()=>
+  document.getElementById("moment").classList.remove("open"));
+
+/* ===================== RENDER ===================== */
+function render(){
+  applyLens();
+  let h="";for(let i=1;i<=6;i++)h+=`<button class="mk d${i} ${i<=B.bleed?"on":""}" data-act="bleed" data-i="${i}" aria-label="Bleed ${i}"></button>`;
+  document.getElementById("bleedS").innerHTML=h;
+  document.getElementById("apCap").textContent=APW[Math.min(B.aperture,8)];
+  document.documentElement.style.setProperty("--tide",(B.aperture/8*.5).toFixed(3));
+  renderCards();renderStr();
+  const n=Date.now();
+  document.getElementById("dots").innerHTML=Object.values(B.presence||{}).filter(p=>n-p.t<30000)
+    .map(p=>`<span class="dot" style="border-color:${p.color};${p.role==="gm"?`background:${p.color}`:""}" title="${esc(p.name)}"></span>`).join("");
+  const c=P.ch;
+  document.getElementById("tagName").textContent=isGM()?(me.name+" · GM"):(c?c.name:(me?me.name:"—"));
+  document.getElementById("tagBook").textContent=isGM()?"the portal":(c?"the "+c.book:"tap to take a playbook");
+  let t="";for(let i=1;i<=5;i++)t+=`<i class="${c&&i<=c.static?"on":""}"></i>`;
+  document.getElementById("tagSnd").innerHTML=isGM()?"":t;
+  const un=(P.inbox||[]).filter(m=>!m.read).length;
+  const d=document.getElementById("inboxDot");d.classList.toggle("on",un>0&&!isGM());d.textContent=un||"";
+  document.getElementById("gmSpoke").style.display=isGM()?"grid":"none";
+  const w=B.clues.filter(x=>x.st==="woven").length;
+  document.getElementById("tW").textContent=w;document.getElementById("tD").textContent=B.depth;
+  const m=w-B.depth;document.getElementById("tMod").textContent=(m>=0?"+":"−")+Math.abs(m);
+}
+function renderCards(){
+  const g=isGM();
+  document.getElementById("cards").innerHTML=B.clues.map(c=>{
+    const hold=Object.values(B.presence||{}).find(p=>p.hold===c.id&&Date.now()-p.t<25000);
+    const hid=c.face&&!g;
+    return `<div class="card ${c.st==="woven"?"woven":""} ${c.st==="deep"?"deep":""} ${c.face?"face":""} ${hold?"held":""}"
+      style="left:${c.x}%;top:${c.y}%;${hold?`outline-color:${hold.color}`:""}" data-card="${c.id}">
+      <p>${esc(hid?"Face down.":c.text)}</p>
+      <button class="tie ${tieFrom===c.id?"arm":""}" data-act="tie" data-id="${c.id}" aria-label="Tie"></button></div>`;}).join("");
+}
+function renderStr(){
+  const r=document.getElementById("table").getBoundingClientRect();
+  const p=id=>{const c=B.clues.find(x=>x.id===id);return c?{x:c.x/100*r.width+106,y:c.y/100*r.height+34}:null;};
+  document.getElementById("str").innerHTML=B.links.map(l=>{const a=p(l.a),b=p(l.b);
+    if(!a||!b)return"";
+    return `<line class="base" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" data-act="cut" data-id="${l.id}"><title>Cut</title></line>
+      <line class="pulse" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" style="animation-delay:${(l.id.length%7)*.34}s"/>`;}).join("");
+}
+
+/* ===================== SHEET ===================== */
+function openSheet(){
+  const body=document.getElementById("shBody"),title=document.getElementById("shTitle"),tabs=document.getElementById("shTabs");
+  if(isGM()){tabs.style.display="none";title.textContent="Portal";openPortal();return;}
+  if(!P.ch){
+    tabs.style.display="none";title.textContent="Take a playbook";
+    body.innerHTML=`<div class="pick">`+Object.entries(BOOKS).map(([k,v])=>
+      `<button data-act="claim" data-k="${k}" style="border-left-color:${light?shade(v.lens,-.42):v.lens}">
+        <span class="pn" style="color:${light?shade(v.lens,-.42):v.lens}">The ${k}</span><span class="pd">${esc(v.tag)}</span></button>`).join("")+`</div>`;
+  }else{
+    tabs.style.display="flex";title.textContent="The "+P.ch.book;
+    document.getElementById("inbN").textContent=(P.inbox||[]).filter(m=>!m.read).length?"•":"";
+    document.querySelectorAll("#shTabs .tb").forEach(t=>t.classList.toggle("sel",t.dataset.t===shTab));
+    body.innerHTML=shTab==="self"?sheetSelf():shTab==="secret"?sheetSecret():sheetInbox();
+  }
+  document.getElementById("ovSheet").classList.add("open");
+}
+function sheetSelf(){
+  const p=P.ch,bk=BOOKS[p.book];
+  return `<div class="statrow">`+Object.keys(p.stats).map(k=>
+    `<button data-act="stat" data-k="${k}"><span>${k}</span><b>${p.stats[k]>=0?"+":""}${p.stats[k]}</b></button>`).join("")+`</div>
+   <div class="lab ctr">Static — soundings taken</div>
+   <div class="bigsound">`+[1,2,3,4,5].map(i=>`<button data-act="static" data-i="${i}" class="${i<=p.static?"on":""}" aria-label="Static ${i}"></button>`).join("")+`</div>
+   <div class="lab ctr" style="margin-top:6px">${p.static>=5?"observed":p.static+" of 5"}</div>
+   ${p.symptoms.map(s=>`<div class="symline">${esc(s)}</div>`).join("")}
+   <div class="lab ctr">Harm</div>
+   <div class="hboxes">`+[1,2,3].map(i=>`<button data-act="harm" data-i="${i}" class="${i<=p.harm?"on":""}" aria-label="Harm ${i}"></button>`).join("")+`</div>
+   <div class="lab">Bonds — burn one instead of marking Static</div>
+   ${p.bonds.map((x,i)=>`<div class="bondrow ${x.burned?"burnt":""}">
+     <input value="${esc(x.text)}" data-act="bond" data-i="${i}">
+     <button data-act="burn" data-i="${i}">${x.burned?"restore":"burn"}</button></div>`).join("")}
+   <div class="lab">Your moves</div>${bk.mv.map(m=>mv(m.n,"",m.d)).join("")}
+   ${[1,3,5].map(n=>{const s=bk.sm[n];return `<div class="mvrow ${p.static>=n?"":"locked"}">
+     <button class="mvname" data-act="mv"><span>${esc(s[0])}</span><em>${p.static>=n?"":"static "+n}</em></button>
+     <div class="mvbody"><div class="b"><span style="font-family:var(--serif);font-size:13.5px">${esc(s[1])}</span></div></div></div>`;}).join("")}
+   <div class="lab">Basic moves</div>${BASIC.map(m=>mv(m.n,m.s,null,m)).join("")}
+   <div class="acts"><button class="act" data-act="dropbook">Put the playbook down</button></div>`;
+}
+function sheetSecret(){
+  const bk=BOOKS[P.ch.book];
+  return `<div class="lab">Sealed — only you see this page</div>
+   <p style="font-family:var(--serif);font-style:italic;color:var(--soft);font-size:15px;margin:0 0 10px">${esc(bk.sec)}</p>
+   <div class="fld"><textarea data-act="secret" placeholder="Write it here. Nobody else's screen ever loads this.">${esc(P.secret)}</textarea></div>
+   <div class="lab">Private notes</div>
+   <div class="fld"><textarea data-act="notes" style="min-height:150px" placeholder="Suspicions. Things you haven't said out loud.">${esc(P.notes)}</textarea></div>`;
+}
+function sheetInbox(){
+  if(!P.inbox||!P.inbox.length)return `<div class="empty">Nothing has come for you.</div>`;
+  return P.inbox.map((m,i)=>{
+    if(m.kind==="puzzle")return puzzleUI(m,i);
+    return `<div class="msg ${m.read?"":"unread"}" data-act="readmsg" data-i="${i}">
+      <div class="mh">${esc(m.title||"Received")} · ${esc(m.t)}</div>
+      <div class="mb">${esc(m.body)}</div></div>`;}).join("");
+}
+function mv(n,s,d,full){
+  return `<div class="mvrow"><button class="mvname" data-act="mv"><span>${esc(n)}</span><em>${esc(s||"")}</em></button>
+   <div class="mvbody">${full?
+    `<div class="b" style="color:var(--soft);font-family:var(--serif);font-size:13.5px">${esc(full.d)}</div>
+     <div class="b"><b>10+</b><span>${esc(full.h)}</span></div>
+     <div class="b m"><b>7–9</b><span>${esc(full.m)}</span></div>
+     <div class="b l"><b>6−</b><span>${esc(full.l)}</span></div>`
+    :`<div class="b"><span style="font-family:var(--serif);font-size:13.5px">${esc(d)}</span></div>`}</div></div>`;
+}
+function puzzleUI(m,i){
+  const st=m.state||{};
+  if(m.solved)return `<div class="msg"><div class="mh">${esc(m.title)} · solved</div><div class="mb">${esc(m.payload)}</div></div>`;
+  if(m.p==="keypad")return `<div class="msg unread"><div class="mh">${esc(m.title)} · sealed</div>
+    <div class="mb" style="margin-bottom:12px">${esc(m.body)}</div>
+    <div class="readout ${st.bad?"bad":""}">${esc(st.buf||"")||"· · · ·"}</div>
+    <div class="keypad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-act="pad" data-i="${i}" data-k="${n}">${n}</button>`).join("")}
+      <button data-act="pad" data-i="${i}" data-k="c">←</button>
+      <button data-act="pad" data-i="${i}" data-k="0">0</button>
+      <button data-act="pad" data-i="${i}" data-k="e">↵</button></div></div>`;
+  if(m.p==="sound"){const v=st.v==null?2000:st.v;
+    return `<div class="msg unread"><div class="mh">${esc(m.title)} · take a sounding</div>
+      <div class="mb" style="margin-bottom:6px">${esc(m.body)}</div>
+      <div class="dialwrap"><div class="depthnum">${v}<span style="font-size:16px;color:var(--dim)"> m</span></div>
+      <input class="slider" type="range" min="0" max="4200" step="10" value="${v}" data-act="sonar" data-i="${i}">
+      <div class="ping">${esc(st.ping||"Nothing yet.")}</div></div>
+      <div class="acts" style="margin-top:6px"><button class="act pri sm" data-act="sonar-go" data-i="${i}">Ping</button></div></div>`;}
+  if(m.p==="audio"){
+    const got=st.got||[],parts=m.body.split(/(\[\[.*?\]\])/g);let bi=-1;
+    const html=parts.map(pt=>{const mm=pt.match(/^\[\[(.*?)\]\]$/);
+      if(!mm)return esc(pt);bi++;
+      return got.includes(bi)?`<span class="got">${esc(mm[1])}</span>`
+        :`<button data-act="recover" data-i="${i}" data-b="${bi}">▂▂▂▂</button>`;}).join("");
+    const free=Math.max(0,3-got.length);
+    return `<div class="msg unread"><div class="mh">${esc(m.title)} · recovered audio</div>
+      <div class="transcript">${html}</div>
+      <div class="lab" style="margin-top:14px">${free>0?free+" clear recoveries left":"further recovery costs Static"}</div></div>`;}
+  return "";
+}
+
+/* ===================== PORTAL ===================== */
+function openPortal(){
+  document.querySelectorAll("#pTabs .tb").forEach(t=>t.classList.toggle("sel",t.dataset.p===pTab));
+  document.getElementById("portalBody").innerHTML=
+    pTab==="bank"?pBank():pTab==="send"?pSend():pTab==="puzzle"?pPuz():pTab==="crew"?pCrew():pTab==="clocks"?pClocks():pNotes();
+  document.getElementById("ovPortal").classList.add("open");
+}
+function pBank(){
+  return `<div class="lab">Write clues here. They stay in the portal until you drop them on the board.</div>
+   <div class="fld"><textarea id="bankIn" placeholder="A hole in the world."></textarea></div>
+   <div class="acts" style="margin-top:0"><button class="act pri sm" data-act="bank-add">Add to bank</button></div>
+   <div class="lab">Bank — ${G.bank.length}</div>
+   ${G.bank.length?G.bank.map((c,i)=>`<div class="gmrow"><div class="gt">${esc(c)}</div>
+     <div class="ga"><button class="act sm" data-act="bank-drop" data-i="${i}">Drop</button>
+     <button class="act sm sig" data-act="bank-face" data-i="${i}">Face down</button>
+     <button class="act sm" data-act="bank-del" data-i="${i}">×</button></div></div>`).join("")
+     :`<div class="empty">Bank is empty.</div>`}`;
+}
+function whoRow(){
+  const r=B.roster||[];
+  return `<div class="who"><button data-act="to" data-pid="all" class="${sendTo==="all"?"on":""}">Everyone</button>
+    ${r.map(x=>`<button data-act="to" data-pid="${x.pid}" class="${sendTo===x.pid?"on":""}">${esc(x.name)}</button>`).join("")}</div>
+    ${r.length?"":`<div class="empty" style="margin-bottom:8px">Nobody has taken a playbook yet.</div>`}`;
+}
+function pSend(){
+  return `<div class="lab">Send an artifact — a document, a photograph, a transcript. It lands only in their space.</div>
+   ${whoRow()}
+   <div class="fld"><input id="artTitle" placeholder="Title — e.g. Maintenance log, sublevel 4"></div>
+   <div class="fld"><textarea id="artBody" style="min-height:130px" placeholder="The text of the thing."></textarea></div>
+   <div class="acts" style="margin-top:0"><button class="act pri" data-act="send-art">Send it</button></div>`;
+}
+function pPuz(){
+  return `<div class="lab">Send something that has to be worked out.</div>${whoRow()}
+   <div class="lab">Keypad — they must enter a code</div>
+   <div class="fld"><input id="kTitle" placeholder="Title"></div>
+   <div class="fld"><textarea id="kBody" placeholder="What they're looking at. Give them a way to work the code out in the fiction."></textarea></div>
+   <div class="fld"><input id="kCode" placeholder="Code — digits only, e.g. 1411"></div>
+   <div class="fld"><textarea id="kPay" placeholder="What they get when it opens."></textarea></div>
+   <div class="acts" style="margin-top:0"><button class="act pri sm" data-act="send-keypad">Send keypad</button></div>
+   <div class="lab">Sounding — they must find a depth</div>
+   <div class="fld"><input id="sTitle" placeholder="Title"></div>
+   <div class="fld"><textarea id="sBody" placeholder="What they're sounding, and why."></textarea></div>
+   <div class="fld"><input id="sTarget" placeholder="Target depth in metres, e.g. 4100"></div>
+   <div class="fld"><textarea id="sPay" placeholder="What's down there."></textarea></div>
+   <div class="acts" style="margin-top:0"><button class="act pri sm" data-act="send-sound">Send sounding</button></div>
+   <div class="lab">Recovered audio — words are missing</div>
+   <div class="fld"><input id="aTitle" placeholder="Title"></div>
+   <div class="fld"><textarea id="aBody" style="min-height:120px" placeholder="Wrap missing words in double brackets: the log shows [[eleven]] minutes gone, every [[night]]."></textarea></div>
+   <div class="acts" style="margin-top:0"><button class="act pri sm" data-act="send-audio">Send audio</button></div>`;
+}
+function pCrew(){
+  const r=B.roster||[];
+  return `<div class="lab">Everyone's public state. Sealed pages and private notes never reach you.</div>
+   ${r.length?`<div class="roster">`+r.map(x=>`<div class="rr" style="border-left:3px solid ${light?shade(x.lens,-.42):x.lens}">
+     <div><div class="rn">${esc(x.name)}</div><div class="rb" style="color:${light?shade(x.lens,-.42):x.lens}">the ${esc(x.book)}</div></div>
+     <div class="rs">${[1,2,3,4,5].map(i=>`<i class="${i<=x.static?"on":""}"></i>`).join("")}</div></div>`).join("")+`</div>`
+    :`<div class="empty">Nobody yet.</div>`}
+   <div class="lab">The Aperture — ${APW[Math.min(B.aperture,8)]} (${B.aperture}/8)</div>
+   <div class="acts" style="margin-top:0"><button class="act sm" data-act="ap-dn">−</button><button class="act sm" data-act="ap-up">+</button></div>`;
+}
+function pClocks(){
+  const list=(B.corps||[]).map(c=>`<div class="row" style="align-items:center;gap:8px;margin-bottom:8px">
+    <b style="flex:1">${esc(c.name)}</b>
+    ${[1,2,3,4].map(i=>`<button class="act sm ${i<=c.n?"pri":""}" data-act="corp-seg" data-id="${c.id}" data-i="${i}" style="min-width:30px">${i<=c.n?"●":"○"}</button>`).join("")}
+    <button class="act sm" data-act="corp-del" data-id="${c.id}">×</button></div>`).join("");
+  return `<div class="lab">Company clocks — four segments each. Advance one, and say how they noticed.</div>
+   ${list||`<div class="empty">No clocks yet. Each player names a company in setup.</div>`}
+   <div class="fld"><input id="corpIn" placeholder="Company name — e.g. Meridian Salvage"></div>
+   <div class="acts" style="margin-top:0"><button class="act pri sm" data-act="corp-add">Add clock</button></div>`;
+}
+function pNotes(){
+  return `<div class="lab">The one wrong detail — never explain it</div>
+   <div class="fld"><textarea data-act="gwrong" placeholder="Exactly one thing is wrong, and nobody comments on it.">${esc(G.wrong)}</textarea></div>
+   <div class="lab">Prep — locations, people, wants, secrets</div>
+   <div class="fld"><textarea data-act="gnotes" style="min-height:260px" placeholder="Four or five locations: a name, a smell, one person there.&#10;Five to seven NPCs: name, want, secret.&#10;No solution. If you have one, throw it out.">${esc(G.notes)}</textarea></div>
+   <div class="lab">Backup — the whole table as text</div>
+   <div class="fld"><textarea id="dumpBox" style="min-height:90px;font-size:11px" placeholder="Export dumps the table here. Paste one in and Import to restore."></textarea></div>
+   <div class="acts" style="margin-top:0">
+     <button class="act sm" data-act="dump-exp">Export</button>
+     <button class="act sm" data-act="dump-imp">Import</button></div>`;
+}
+function openLedger(){
+  document.getElementById("ledBody").innerHTML=
+    (B.ledger.length?B.ledger.map(e=>`<div class="entry ${e.r}">
+      <div class="et">${esc(e.case)} · ${e.r==="hi"?"true":e.r==="mid"?"wrong about what matters":"the truth is worse"}</div>
+      <div class="th">${esc(e.text)||"<span style='color:var(--dim)'>(nothing written down)</span>"}</div></div>`).join("")
+     :`<div class="empty">No theory has become law yet.</div>`)
+    +`<div class="lab">Log</div>`
+    +(B.log.length?B.log.map(l=>`<div class="logline"><b>${esc(l.t)}</b> ${esc(l.text)}</div>`).join(""):`<div class="empty">Nothing yet.</div>`);
+  document.getElementById("ovLedger").classList.add("open");
+}
+function openCase(){
+  document.getElementById("caseBody").innerHTML=`
+   <div class="lab">Case name</div>
+   <input id="caseIn" value="${esc(B.caseName)}" style="border-bottom:1px solid var(--edge);font-family:var(--serif);font-size:18px;padding:6px 0">
+   <div class="lab">Ring ${B.ring+1} — ${RINGS[B.ring]}</div>
+   <div class="acts" style="margin-top:0">
+     <button class="act ${B.ringT?"pri":""}" data-act="rt">Terror ${B.ringT?"✓":""}</button>
+     <button class="act ${B.ringP?"pri":""}" data-act="rp">Temptation ${B.ringP?"✓":""}</button>
+     <button class="act" data-act="ringfwd">Next ring</button></div>
+   <div class="acts" style="margin-top:28px"><button class="act sig" data-act="endcase">End the case</button></div>`;
+  document.getElementById("ovCase").classList.add("open");
+}
+
+/* ===================== DRAG ===================== */
+document.getElementById("cards").addEventListener("pointerdown",e=>{
+  if(e.target.closest("button"))return;
+  const el=e.target.closest("[data-card]");if(!el)return;
+  const c=B.clues.find(x=>x.id===el.dataset.card);if(!c)return;
+  const r=document.getElementById("table").getBoundingClientRect();
+  drag={c,dx:e.clientX-c.x/100*r.width,dy:e.clientY-c.y/100*r.height,r,moved:false};
+  dragging=true;document.body.classList.add("dragging");el.setPointerCapture(e.pointerId);sfx.tap();
+  if(me){me.hold=c.id;pushB();}
+});
+document.addEventListener("pointermove",e=>{
+  if(!drag)return;drag.moved=true;
+  drag.c.x=Math.max(0,Math.min(93,(e.clientX-drag.dx)/drag.r.width*100));
+  drag.c.y=Math.max(6,Math.min(88,(e.clientY-drag.dy)/drag.r.height*100));
+  const el=document.querySelector(`[data-card="${drag.c.id}"]`);
+  if(el){el.style.left=drag.c.x+"%";el.style.top=drag.c.y+"%";}renderStr();
+});
+document.addEventListener("pointerup",e=>{
+  if(!drag)return;const c=drag.c,prev=c.st;
+  c.st=(c.y>=79)?"deep":(c.x>=57&&c.x<=96&&c.y>=9&&c.y<=56)?"woven":"play";
+  if(drag.moved){
+    ripple(e.clientX,e.clientY);
+    if(c.st==="deep"&&prev!=="deep")sfx.drop();
+    else if(c.st==="woven"&&prev!=="woven")sfx.tap();
+    else if(prev==="deep"&&c.st!=="deep"){logit("An unfinished clue came back up, unchanged.");
+      moment("It came back up","Unchanged. It means something else now.","mark");}
+  }
+  drag=null;dragging=false;document.body.classList.remove("dragging");
+  if(me)me.hold=null;render();pushB();
+});
+
+/* ===================== ACTIONS ===================== */
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const a=b.dataset.act,i=parseInt(b.dataset.i,10),c=P.ch;
+  switch(a){
+  case "join":case "join-gm":{
+    const n=document.getElementById("joinName").value.trim()||(a==="join-gm"?"GM":"Somebody");
+    (async()=>{
+      const wantGM=a==="join-gm";
+      if(fb&&wantGM){
+        try{const res=await fb.db.ref("rooms/"+ROOM+"/meta/gmUid")
+          .transaction(cur=>(cur===null||cur===fb.uid)?fb.uid:undefined);
+          if(!res.committed){moment("Occupied","This room already has a GM. Enter as a player, or open a new room.","mark");return;}
+        }catch(e){moment("Occupied","This room already has a GM. Enter as a player, or open a new room.","mark");return;}
+      }
+      me={id:fb?fb.uid:(wantGM?"gm-"+nid():nid()),name:n,role:wantGM?"gm":"player",lens:"#7C6BFF",hold:null};
+      document.getElementById("join").style.display="none";
+      logit(n+" signed on.");
+      if(isGM()){const g=await got(K_GM);if(g){G=Object.assign(gm(),g);G.bank=G.bank||[];tsG=g.ts;}subGM();}
+      const p=await got(K_PRIV(me.id));if(p){P=Object.assign(priv(),p);P.inbox=P.inbox||[];tsP=p.ts;}
+      subPriv();render();pushB();})();break;}
+  case "corp-add":{const el=document.getElementById("corpIn");const v=(el.value||"").trim();
+    if(!v)break;B.corps=B.corps||[];B.corps.push({id:nid(),name:v,n:0});
+    logit("A clock starts for "+v+".");render();openPortal();pushB();break;}
+  case "corp-seg":{const c=(B.corps||[]).find(x=>x.id===b.dataset.id);if(!c)break;
+    const i=+b.dataset.i;const prev=c.n;c.n=(c.n===i)?i-1:i;
+    if(c.n>prev)logit(c.name+"'s clock advances — "+c.n+"/4.");
+    render();openPortal();pushB();break;}
+  case "corp-del":{B.corps=(B.corps||[]).filter(x=>x.id!==b.dataset.id);render();openPortal();pushB();break;}
+  case "dump-exp":{document.getElementById("dumpBox").value=JSON.stringify({shared:B,gm:isGM()?G:undefined});
+    moment("Exported","Copy the text somewhere safe.","tap");break;}
+  case "dump-imp":{try{const d=JSON.parse(document.getElementById("dumpBox").value);
+    if(d.shared){B=Object.assign(board(),d.shared);pushB();}
+    if(d.gm&&isGM()){G=Object.assign(gm(),d.gm);pushG();}
+    render();moment("Imported","The table is restored.","deep");}catch(e){moment("Failed","That text isn't a valid backup.","mark");}break;}
+  case "room-go":{const v=(document.getElementById("roomIn").value||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+    if(v)location.search="?room="+v;break;}
+  case "dial":document.body.classList.toggle("dialopen");sfx.tap();break;
+  case "close":document.querySelectorAll(".ov").forEach(o=>o.classList.remove("open"));break;
+  case "mode":setMode(!light);sfx.tap();break;
+  case "snd":sndOn=!sndOn;b.classList.toggle("on",sndOn);if(sndOn){ac();startAmb();sfx.tap();}else stopAmb();break;
+  case "calm":document.body.classList.toggle("calm");b.classList.toggle("on",document.body.classList.contains("calm"));break;
+  case "bleed":{const was=B.bleed;B.bleed=(B.bleed===i)?i-1:i;
+    if(B.bleed>was)sfx.mark();
+    if(B.bleed>=6&&was<6){moment("The Bleed is full","It arrives. Something becomes true that cannot be untrue.","deep");logit("The Bleed filled.");}
+    render();pushB();break;}
+  case "sheet":openSheet();document.body.classList.remove("dialopen");break;
+  case "claim":{const k=b.dataset.k,d=BOOKS[k];
+    P.ch={id:nid(),name:me.name,book:k,stats:Object.assign({},d.stats),static:d.start,
+      symptoms:[],harm:0,bonds:d.bonds.map(t=>({text:t,burned:false}))};
+    logit(me.name+" signed on as the "+k+".");render();pushP();pushB();openSheet();break;}
+  case "dropbook":P.ch=null;render();pushP();pushB();openSheet();break;
+  case "stat":{if(!c)break;const k=b.dataset.k;c.stats[k]=c.stats[k]>=3?-1:c.stats[k]+1;pushP();openSheet();break;}
+  case "static":{if(!c)break;setStatic(c,c.static===i?i-1:i);render();pushP();pushB();openSheet();break;}
+  case "harm":{if(!c)break;c.harm=c.harm===i?i-1:i;pushP();pushB();openSheet();break;}
+  case "burn":{if(!c)break;const bd=c.bonds[i];bd.burned=!bd.burned;
+    if(bd.burned){logit(c.name+" burned a bond.");moment("You burned a bond","You leaned on them to hold yourself together. It's gone.","bad");}
+    pushP();pushB();openSheet();break;}
+  case "mv":b.parentElement.classList.toggle("open");sfx.tap();break;
+  case "readmsg":{const m=P.inbox[i];if(m&&!m.read){m.read=true;pushP();render();openSheet();}break;}
+  case "pad":{const m=P.inbox[i],st=m.state=m.state||{buf:""},k=b.dataset.k;
+    if(k==="c")st.buf=st.buf.slice(0,-1);
+    else if(k==="e"){
+      if(st.buf===String(m.code)){m.solved=true;sfx.ok();moment("It opens",m.payload,"bell");}
+      else{st.bad=true;st.buf="";sfx.no();setTimeout(()=>{st.bad=false;openSheet();},450);}}
+    else{st.buf=(st.buf+k).slice(0,8);sfx.tap();}
+    pushP();openSheet();break;}
+  case "sonar-go":{const m=P.inbox[i],st=m.state=m.state||{v:2000},d=Math.abs(st.v-m.target);
+    if(d<=40){m.solved=true;sfx.ok();moment("Bottom found",m.payload,"bell");}
+    else{st.ping=d<200?"Something returns. Very close.":d<600?"A weak return. Nearer than you were.":
+      d<1400?"Faint. Wrong depth.":"Nothing. The line goes down and down.";sfx.drop();}
+    pushP();openSheet();break;}
+  case "recover":{const m=P.inbox[i],st=m.state=m.state||{got:[]},bi=parseInt(b.dataset.b,10);
+    if(!st.got.includes(bi)){
+      if(st.got.length>=3&&c&&c.static<5){setStatic(c,c.static+1);
+        moment("You pushed","You recovered what wasn't meant to be recovered. Mark Static.","mark");pushB();}
+      else sfx.recv();
+      st.got.push(bi);}
+    pushP();render();openSheet();break;}
+  case "pin":document.getElementById("ovPin").classList.add("open");document.body.classList.remove("dialopen");
+    setTimeout(()=>document.getElementById("pinText").focus(),50);break;
+  case "pin-go":case "pin-face":{const el=document.getElementById("pinText"),t=el.value.trim();if(!t)break;
+    dropClue(t,a==="pin-face");el.value="";document.getElementById("ovPin").classList.remove("open");break;}
+  case "tie":{const id=b.dataset.id;
+    if(tieFrom&&tieFrom!==id){B.links.push({id:nid(),a:tieFrom,b:id});tieFrom=null;sfx.tap();render();pushB();}
+    else{tieFrom=tieFrom===id?null:id;renderCards();}break;}
+  case "cut":B.links=B.links.filter(l=>l.id!==b.dataset.id);render();pushB();break;
+  case "draw":document.getElementById("ovDraw").classList.add("open");document.body.classList.remove("dialopen");break;
+  case "draw-sign":show("A sign of the Stand",SIGNS);break;
+  case "draw-sym":show("A symptom",SYMPTOMS);break;
+  case "draw-ask":show("Ask",ASKS);break;
+  case "theory":document.getElementById("ovTheory").classList.add("open");document.body.classList.remove("dialopen");break;
+  case "depth":B.depth=B.depth>=5?1:B.depth+1;render();pushB();break;
+  case "rec":{const r=b.dataset.r,woven=B.clues.filter(x=>x.st==="woven");
+    B.ledger.unshift({case:B.caseName||("Case "+(B.cases+1)),text:document.getElementById("tText").value.trim(),
+      r,woven:woven.length,depth:B.depth});
+    woven.forEach(x=>{x.st="deep";x.y=81+Math.random()*5;x.x=4+Math.random()*84;});
+    document.getElementById("tText").value="";document.getElementById("ovTheory").classList.remove("open");
+    if(r==="hi")moment("Ten or better","Your theory is true. It is now what happened.","bell");
+    if(r==="mid"){if(c&&c.static<5){setStatic(c,c.static+1);pushP();}
+      moment("Seven to nine","True — but you were wrong about the one thing that mattered. Everyone marks Static.","mark");}
+    if(r==="lo"){B.bleed=6;B.aperture=Math.min(8,B.aperture+1);
+      moment("Six or less","You were wrong, and the truth is worse.","deep");}
+    render();pushB();break;}
+  case "ledger":openLedger();document.body.classList.remove("dialopen");break;
+  case "case":openCase();document.body.classList.remove("dialopen");break;
+  case "rt":B.ringT=!B.ringT;pushB();openCase();break;
+  case "rp":B.ringP=!B.ringP;pushB();openCase();break;
+  case "ringfwd":
+    if(!(B.ringT&&B.ringP)&&!confirm("No Terror and Temptation yet. Advance anyway?"))break;
+    if(B.ring<4){B.ring++;B.ringT=B.ringP=false;B.bleed=Math.min(6,B.bleed+1);
+      moment("Ring "+(B.ring+1),RINGS[B.ring],"mark");}
+    render();pushB();openCase();break;
+  case "ap-up":B.aperture=Math.min(8,B.aperture+1);sfx.deep();render();pushB();isGM()?openPortal():openCase();break;
+  case "ap-dn":B.aperture=Math.max(0,B.aperture-1);render();pushB();isGM()?openPortal():openCase();break;
+  case "endcase":{if(!confirm("End the case? Everything on the chart drowns, Harm clears, the Aperture widens."))break;
+    B.cases++;B.aperture=Math.min(8,B.aperture+1);B.bleed=0;B.ring=0;B.ringT=B.ringP=0;
+    B.clues.forEach(x=>{x.st="deep";x.y=80+Math.random()*6;x.x=4+Math.random()*84;});
+    if(c){c.harm=0;pushP();}
+    document.getElementById("ovCase").classList.remove("open");
+    moment("The case is closed","Static carries. It always carries.","deep");
+    render();pushB();break;}
+  case "portal":openPortal();document.body.classList.remove("dialopen");break;
+  case "to":sendTo=b.dataset.pid;openPortal();break;
+  case "bank-add":{const el=document.getElementById("bankIn");if(el.value.trim()){G.bank.push(el.value.trim());el.value="";pushG();openPortal();}break;}
+  case "bank-del":G.bank.splice(i,1);pushG();openPortal();break;
+  case "bank-drop":case "bank-face":dropClue(G.bank[i],a==="bank-face");G.bank.splice(i,1);pushG();openPortal();break;
+  case "send-art":{const t=document.getElementById("artTitle").value.trim(),body=document.getElementById("artBody").value.trim();
+    if(!body)break;deliver({kind:"art",title:t||"Received",body});
+    document.getElementById("artTitle").value="";document.getElementById("artBody").value="";
+    moment("Sent",sendTo==="all"?"It lands in every private space.":"It lands in one private space.","recv");break;}
+  case "send-keypad":{const t=document.getElementById("kTitle").value.trim(),body=document.getElementById("kBody").value.trim(),
+    code=document.getElementById("kCode").value.replace(/\D/g,""),pay=document.getElementById("kPay").value.trim();
+    if(!code||!body)break;deliver({kind:"puzzle",p:"keypad",title:t||"Sealed",body,code,payload:pay||"It opens."});
+    ["kTitle","kBody","kCode","kPay"].forEach(x=>document.getElementById(x).value="");
+    moment("Sent","Sealed. They'll have to work it out.","recv");break;}
+  case "send-sound":{const t=document.getElementById("sTitle").value.trim(),body=document.getElementById("sBody").value.trim(),
+    target=parseInt(document.getElementById("sTarget").value,10),pay=document.getElementById("sPay").value.trim();
+    if(!body||isNaN(target))break;deliver({kind:"puzzle",p:"sound",title:t||"Sounding",body,target,payload:pay||"Bottom found."});
+    ["sTitle","sBody","sTarget","sPay"].forEach(x=>document.getElementById(x).value="");
+    moment("Sent","Let them find the depth.","recv");break;}
+  case "send-audio":{const t=document.getElementById("aTitle").value.trim(),body=document.getElementById("aBody").value;
+    if(!body.trim())break;deliver({kind:"puzzle",p:"audio",title:t||"Recovered audio",body});
+    ["aTitle","aBody"].forEach(x=>document.getElementById(x).value="");
+    moment("Sent","Three clear recoveries. After that it costs them.","recv");break;}
+  }
+});
+function dropClue(text,face){
+  B.clues.push({id:nid(),text,x:5+Math.random()*40,y:14+Math.random()*44,st:"play",face:!!face});
+  sfx.tap();render();pushB();
+}
+async function deliver(msg){
+  msg.t=ct();msg.read=false;
+  const targets=sendTo==="all"?(B.roster||[]).map(r=>r.pid):[sendTo];
+  for(const pid of targets){if(!pid||pid==="all")continue;
+    const cur=(await got(K_PRIV(pid)))||priv();
+    cur.inbox=cur.inbox||[];cur.inbox.unshift(Object.assign({},msg,{id:nid()}));
+    await put(K_PRIV(pid),cur);}
+  logit("The GM sent something.");pushB();
+}
+function show(cap,arr){const r=Math.floor(Math.random()*arr.length);
+  document.getElementById("drawCap").textContent=cap;
+  document.getElementById("drawOut").textContent=arr[r];sfx.tap();}
+function setStatic(c,t){
+  t=Math.max(0,Math.min(5,t));
+  if(t>c.static){for(let k=c.static;k<t;k++)c.symptoms.push(SYMPTOMS[Math.floor(Math.random()*6)]);
+    sfx.mark();
+    if(t>=5)moment(c.name+" is observed","Take your Moment: one scene, one impossible thing, no roll. Then you belong to it.","deep");}
+  else if(t<c.static)c.symptoms=c.symptoms.slice(0,t);
+  c.static=t;
+}
+document.addEventListener("input",e=>{
+  const el=e.target.closest("[data-act]"),c=P.ch;
+  if(el){const a=el.dataset.act;
+    if(a==="bond"&&c){c.bonds[parseInt(el.dataset.i,10)].text=el.value;pushP();}
+    if(a==="secret"){P.secret=el.value;pushP();}
+    if(a==="notes"){P.notes=el.value;pushP();}
+    if(a==="gnotes"){G.notes=el.value;pushG();}
+    if(a==="gwrong"){G.wrong=el.value;pushG();}
+    if(a==="sonar"){const i=parseInt(el.dataset.i,10),m=P.inbox[i];
+      m.state=m.state||{};m.state.v=parseInt(el.value,10);
+      const d=el.closest(".dialwrap").querySelector(".depthnum");
+      if(d)d.innerHTML=m.state.v+'<span style="font-size:16px;color:var(--dim)"> m</span>';}}
+  if(e.target.id==="caseIn"){B.caseName=e.target.value;pushB();}
+});
+document.querySelector("#shTabs").addEventListener("click",e=>{
+  const t=e.target.closest(".tb");if(!t)return;shTab=t.dataset.t;openSheet();});
+document.querySelector("#pTabs").addEventListener("click",e=>{
+  const t=e.target.closest(".tb");if(!t)return;pTab=t.dataset.p;openPortal();});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){document.querySelectorAll(".ov").forEach(o=>o.classList.remove("open"));
+    document.body.classList.remove("dialopen");}
+  if(e.key==="Enter"&&e.target.id==="joinName"){e.preventDefault();document.querySelector('[data-act="join"]').click();}
+});
+window.addEventListener("resize",()=>{sizeRain();renderStr();});
+
+initRain();requestAnimationFrame(drawRain);
+if(window.matchMedia){
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    document.body.classList.add("calm");document.getElementById("calmBtn").classList.add("on");}
+  if(window.matchMedia("(prefers-color-scheme: light)").matches)setMode(true);
+}
+(async function(){await initSync();await pullAll();render();
+  const rc=document.getElementById("roomChip");if(rc)rc.textContent="Room "+ROOM+(fb?"":" · offline");
+  const rj=document.getElementById("roomJoin");if(rj)rj.textContent=ROOM+(fb?"":" — no sync configured; this device only");
+  if(!fb)setInterval(()=>{if(!dragging)pullAll();},3000);
+  setInterval(()=>{if(me)pushB();},14000);
+  if("serviceWorker" in navigator)navigator.serviceWorker.register("../sw.js").catch(()=>{});})();
+</script>
+</body>
+</html>

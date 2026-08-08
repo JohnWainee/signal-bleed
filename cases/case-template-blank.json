@@ -1,0 +1,73 @@
+{
+  "format": "signal-bleed-case",
+  "version": 1,
+
+  "title": "",
+  "byline": "One line, for you, not the players.",
+  "depth": 3,
+
+  "job": {
+    "client": "",
+    "brief": "",
+    "pay": "Too much, and here's why that's strange",
+    "deadline": ""
+  },
+
+  "wrongDetail": "Exactly one thing is wrong and nobody comments on it. Never explain it.",
+
+  "locations": [
+    { "name": "", "sense": "what it smells and sounds like", "who": "one person there" },
+    { "name": "", "sense": "", "who": "" },
+    { "name": "", "sense": "", "who": "" },
+    { "name": "", "sense": "", "who": "" }
+  ],
+
+  "npcs": [
+    { "name": "", "want": "", "hiding": "" },
+    { "name": "", "want": "", "hiding": "" },
+    { "name": "", "want": "", "hiding": "lying about something unrelated" },
+    { "name": "", "want": "", "hiding": "lying about something unrelated" },
+    { "name": "", "want": "", "hiding": "" }
+  ],
+
+  "clues": [
+    { "text": "A hole in the world. Concrete, strange, explains nothing." },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "" },
+    { "text": "Something only the GM knows is on the board.", "face": true }
+  ],
+
+  "artifacts": [
+    { "title": "", "to": "all", "body": "A document, a log, a transcript. Let it be dull and specific." }
+  ],
+
+  "puzzles": [
+    { "type": "keypad", "title": "", "to": "all", "body": "Give them a way to work the code out in the fiction.", "code": "0000", "payload": "What they get when it opens." },
+    { "type": "sound",  "title": "", "to": "all", "body": "What they're sounding, and why.", "target": 1000, "payload": "What's down there." },
+    { "type": "audio",  "title": "", "to": "all", "body": "Wrap missing words in double brackets: the log shows [[eleven]] minutes gone, every [[night]]." }
+  ],
+
+  "rings": {
+    "terrors": [
+      "Ring 1 — something small and physically wrong",
+      "Ring 2 — the wrong thing repeats",
+      "Ring 3 — someone lies to them specifically",
+      "Ring 4 — a rule of the world visibly breaks",
+      "Ring 5 — the cost, made personal"
+    ],
+    "temptations": [
+      "Ring 1 — easy money to look the other way",
+      "Ring 2 — an answer, for a favour",
+      "Ring 3 — something they want and shouldn't take",
+      "Ring 4 — it offers to simply tell them",
+      "Ring 5 — a way out that costs somebody else"
+    ]
+  },
+
+  "notes": "DO NOT WRITE A SOLUTION. If you have one in your head, throw it out — you'll steer toward it.\n\nRun Ring 1 slow. Let them be good at their jobs before anything is wrong.\n\nDepth 3. Let them find six or seven clues. Let them Theorize in Ring 4."
+}
