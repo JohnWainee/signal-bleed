@@ -344,7 +344,7 @@ body.calm{--glow:0;}
 <div id="dial">
   <button class="spoke" data-act="pin">Pin</button>
   <button class="spoke" data-act="draw">Draw</button>
-  <button class="spoke" data-act="theory">Theory</button>
+  <button class="spoke" data-act="theory">Theorize</button>
   <button class="spoke" data-act="ledger">Ledger</button>
   <button class="spoke" data-act="case">Case</button>
   <button class="spoke" id="gmSpoke" data-act="portal" style="display:none">Portal</button>
@@ -477,7 +477,9 @@ const BOOKS={
   stats:{EDGE:1,WIRE:1,FACE:2,VEIL:0},start:0,
   sec:"Which vessel did you flag that you shouldn't have, and what is still aboard her?",
   mv:[{n:"A Plate on the Door",d:"Once a session: you know someone here and what they owe you. The GM says what you owe them."},
-      {n:"Paper Trail",d:"Digging through records? Roll +FACE for Read the Wire."}],
+      {n:"Paper Trail",d:"Digging through records? Roll +FACE for Read the Wire."},
+      {n:"Say It Yourself",d:"At Static 3 or higher: when you catch yourself having been helpful in a way you can't account for, name it out loud at the table and mark XP. If you don't, and the GM notices first, mark Static instead."},
+      {n:"Playing What You Lost",d:"When your character is claimed at Static 5: you lose them, but keep the voice. Roll up someone new. When the GM decides your claimed character appears, you play them — the help you offer through them has to be real: concrete, correct, generous, no riddles."}],
   sm:{1:["The Other Ledger","You see what a person is most afraid of losing. You can't turn it off."],
       3:["Leverage","+1 ongoing to Work Someone against anyone whose secret you learned this session."],
       5:["Agent of Record","You may negotiate directly with it. It files."]},

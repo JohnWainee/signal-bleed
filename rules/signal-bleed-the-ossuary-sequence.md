@@ -124,7 +124,7 @@ Write these on cards. **Ten fixed, and two slots you fill from the Canon Ledger.
 7. There are 1,411 names on the waiting list. There have always been 1,411 names on the waiting list. Eleven are added each night; eleven are admitted each night.
 8. Idris's shift log for last Tuesday is written twice, in his hand, describing two different Tuesdays.
 9. The Sleeper's Advocate has replied to 2,300 patient queries. Every reply is under nine words. Every reply is correct.
-10. A maintenance requisition, six years old, for eleven metres of welding wire. Signed by someone at Ossuary Storage.
+10. A maintenance requisition, six years old, for eleven metres of welding wire. Signed by someone at Ossuary Cold Storage, Cold Harbour.
 11. **[SLOT — make one fact from the group's Case 1 theory physically present here.]** If they decided it moves through implants, find one, wet and warm, in a drawer. If they decided it counts people, find the count written on a wall.
 12. **[SLOT — the thing they were wrong about in Case 1.]** Don't correct them. Show them the shape of it again, bigger.
 
