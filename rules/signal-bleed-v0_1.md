@@ -436,12 +436,12 @@ A Clue is a **hole in the world**, not a piece of a puzzle you've already solved
 
 *A ready-to-run one-shot. Depth 3.*
 
-**The job:** A mid-tier data-haven called **Ossuary Storage** wants its night-shift technician found. Name: **Miren Adeyemi**. Missing nine days. The client is a corp compliance officer named **Vess** who is nervous in a way that isn't about Miren. Pays 40k, half up front, no questions.
+**The job:** A mid-tier data-haven called **Ossuary Cold Storage, Cold Harbour** wants its night-shift technician found. Name: **Miren Adeyemi**. Missing nine days. The client is a corp compliance officer named **Vess** who is nervous in a way that isn't about Miren. Pays 40k, half up front, no questions.
 
 **The wrong detail:** Vess keeps referring to Miren in the present tense, then correcting himself to the past tense, then correcting back.
 
 **Locations**
-- Ossuary Storage, sublevel 4 — cold, humming, smells like copper
+- Ossuary Cold Storage, Cold Harbour, sublevel 4 — cold, humming, smells like copper
 - Miren's flat — immaculate, nothing personal, one chair facing a blank wall
 - The Kettle — a noodle bar where the night shift drinks
 - Maintenance shaft 11 — sealed, welded from the inside

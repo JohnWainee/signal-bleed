@@ -44,6 +44,51 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Claude (Sonnet 5, Claude Code) — reconciled the print pack and a
+few app/rules spots against `table/index.html`'s `BOOKS`/`SIGNS`/`ASKS`
+(current canon for The Hours setting) per an approved terminology-drift
+analysis. `print/vespers.html` was never reskinned from the old cyberpunk
+playbooks — this was the core job. Renamed all 6 existing playbooks +
+their moves/static-moves to match `BOOKS` exactly (mapped 1:1 by stat
+spread + slot: Deck-Runner→Splicer, Fixer→Registrar, Medium→Operator,
+Chrome Priest→Diver, Badge→Inspector, Hollow→Salvage), rebuilt the GM
+screen's "Signs of the Bleed" table onto `BOOKS`'s actual `SIGNS` array
+(it previously printed six unrelated cyberpunk signs — the worst
+offender), fixed four core terms in the print pack ("Commune"→"Take a
+Sounding", the 3rd Read the Wire Ask "Where is it hiding?"→"What time is
+it really?", "an implant"→"an earpiece" in the Operator's channel move,
+kept "Theorize" which was already correct), and added a new Sheet 8 "The
+Watch" print playbook (Watch exists in `BOOKS` but had no print sheet),
+renumbering all sheets to "of 9". In `table/index.html`: renamed the
+dial's "Theory" label to "Theorize" (display text only, `data-act="theory"`
+left untouched), and added three plate-on-the-door campaign moves from
+`rules/signal-bleed-the-plate-on-the-door.md` ("Say It Yourself", "The
+Water", "Playing What You Lost") to the Registrar's `mv` array — the
+Registrar already carries the "A Plate on the Door" move and the
+registry/paperwork theme matching the campaign spine's firm (Halloran &
+Vey). In `rules/signal-bleed-v0_1.md` and
+`rules/signal-bleed-the-ossuary-sequence.md`: renamed the two remaining
+"Ossuary Storage" references to "Ossuary Cold Storage, Cold Harbour" to
+match `cases/case-eleven-minutes.json` (left `the-hours-setting-bible.md`'s
+"Ossuary Storage" reference alone — it's explaining the old→new rename
+itself, not using it as a current name). Preserved all other prose
+verbatim; did not touch Bonds, Dark Secret, or flavor-tagline text beyond
+these specific terms. Flagged three things rather than guessing: (1) no
+literal "Theory" heading exists in the app's `ovTheory` overlay to rename
+alongside the dial spoke — it opens straight into a `.hint` reading "Say
+it out loud first," so only the spoke changed; (2) "The Water" is
+documented as a GM move (not a PC move) in the plate-on-the-door rules
+doc, yet per this task's explicit instruction it was added to the
+Registrar's player-facing `mv` array anyway — worth a sponsor look; (3)
+Salvage's print sheet keeps Hollow's original "deceased" tag, dark
+secret, bonds, and flavor tagline (all still read as death/restoration,
+not lost-at-sea/insurance-claim) since only the playbook+move names were
+in scope — a full resync of that sheet's prose would need a separate,
+explicitly-scoped pass. Ran `npm i && npm run smoke`, `npm run
+cases:validate`, `npm run html:sanity`: all green. Opened PR against
+`main`; did not merge — independent review happens in a separate session.
+**Branch:** `fix/terminology-canon` — pushed to origin, not merged
+
 **Agent:** Claude (Sonnet 5, Claude Code) — fixed the "GM-assigned items show
 up but can't be opened" inbox bug in `table/index.html`. Root cause:
 `absorbPriv(p)` (the realtime-sync handler for `players/<id>`) was the only
