@@ -407,6 +407,7 @@ body.calm{--glow:0;}
     <button class="tb sel" data-p="bank">Clue bank</button>
     <button class="tb" data-p="send">Send</button>
     <button class="tb" data-p="puzzle">Puzzle</button>
+    <button class="tb" data-p="d100">Roll</button>
     <button class="tb" data-p="crew">Crew</button>
     <button class="tb" data-p="clocks">Clocks</button>
     <button class="tb" data-p="notes">Prep</button></div>
@@ -530,6 +531,78 @@ const BOOKS={
       5:["The Wall","You stop being a person and start being a place people go."]},
   bonds:["______ isn't from here and I vouched for them.","______ has been on my water list since before they could walk."]}};
 const GM_LENS="#E04CFF",GM_LENS2="#00E5FF";
+/* ===================== D100 GENERATOR — signs, clues, prompts, artifacts, puzzles, terrors, temptations ===================== */
+const D100=[
+ {lo:1,hi:20,kind:"sign",opts:[
+   "The harbour beacon and the chandlery clock agree with each other and disagree with everyone else's watch by the same eleven minutes.",
+   "Standing water in one of the Strand's flooded lobbies tilts very slightly toward a door marked EXIT that has been welded shut since 2038.",
+   "A ferry manifest counts eleven names aboard a boat that seats nine and sailed with seven.",
+   "The surf goes quiet at the stand of the tide, for exactly as long as it takes someone to notice, and then it doesn't.",
+   "Somebody repeats a sentence you said under your breath thirty seconds ago, word for word, and apologises for interrupting.",
+   "A brass door-plate on the Crown reads a firm name that dissolved in 1962. It has been polished this week."]},
+ {lo:21,hi:40,kind:"clue",opts:[
+   "A welding requisition at Cold Harbour: eleven metres of wire, signed out, never logged as returned, for a job with no work order attached.",
+   "The mail boat's manifest lists the same parcel to None as delivered, six runs running. Nobody on None has signed for it.",
+   "A soundings chart of the water off the Unnumbered, hand-annotated in eleven different hands, all the same ink, all giving the same wrong depth.",
+   "Provident Row's council register lists forty-three doors. The 1911 deed for the terrace says forty-four.",
+   "A Tide Watch phone-tree card, ten names crossed through in the same pen, an eleventh name added in a different hand nobody claims.",
+   "Two entries in the Water Board's plume log, same date, same instrument, different numbers, both initialled by the same engineer."]},
+ {lo:41,hi:55,kind:"prompt",opts:[
+   "Who already knew this before you told them?",
+   "What did the water take instead of what it was offered?",
+   "Whose name is on paperwork that shouldn't have one?",
+   "What here is being kept helpful, and by whom?",
+   "What did the Long Count already take care of, quietly, before you got here?",
+   "Who's still on the list who should have been crossed off by now?"]},
+ {lo:56,hi:70,kind:"artifact",opts:[
+   {title:"Cold Harbour — bonded warehouse manifest, extract",
+    body:"CONTAINER LOG — BAY 11\n02:14  IN — sealed, Transpelagic, no inspection requested\n02:41  ——\n03:02  OUT — same seal number, same container, contents not re-declared\n\n[Auto-note: bay 11 shows one movement. The log shows two.]\n\nSomebody signed the release. The signature reads clearly and belongs to nobody on the current roster."},
+   {title:"Halloran & Vey — case note, unsigned",
+    body:"Client wants a finding, not an investigation. Wants it to say accident. It might be.\n\nOtty pulled a file from before either of us worked here. Same wording, same everything, down to the date, minus forty years.\n\nDidn't ask her how she found it that fast."},
+   {title:"Registry ledger — brass plate assignments, page torn",
+    body:"...Halloran & Vey — third floor, above the chandlery — renewed\nMeridian & Sons — dissolved 1962 — plate not removed\n[page torn here]\n...— no principal on record — renewed anyway, eleven years running, by the same hand"},
+   {title:"Tide Watch phone tree — this week's card",
+    body:"Auntie Sesi, no. 19 — water run, Tuesday\nRen, the Kettle — night shift count\nTavi Ruiz, no. 3 — seawall watch\n[eleventh line, no name, called anyway, always answers]"},
+   {title:"The Sounding Company — bathymetry memo, internal, not for release",
+    body:"Riser platform readings over the Unnumbered continue to disagree with the 1587 chart annotation by a consistent 4,100 metres. Recommend re-calibration of instruments.\n\nField crew reports instruments are already calibrated. Twice. Recommend re-calibration of field crew.\n\nDo not circulate outside Ops. — J.T."}]},
+ {lo:71,hi:76,kind:"puzzle",p:"keypad",opts:[
+   {title:"The chandlery's back room lock",
+    body:"An old four-digit mechanical lock on a drawer nobody admits to owning. The chandler says his father set the code and never told him. He says this every time somebody asks, in the exact same words.",
+    code:"1587",payload:"Charts going back a hundred years, every one annotated over the same patch of water in a different hand. The oldest annotation and the newest say exactly the same thing, in exactly the same words: no bottom found, do not sound."},
+   {title:"A strongbox, third floor above the chandlery",
+    body:"Four brass dials, cut for a lock that predates the plate on the door. Nobody currently at the firm ever set a combination. The person who used to work here never mentioned one either.",
+    code:"1141",payload:"Eleven blank findings, pre-signed, undated, in a hand that isn't anyone's you recognise. The twelfth page already has a name on it. It's someone at this table."},
+   {title:"The Tank Farm's valve control panel",
+    body:"A keypad bolted over tank 11's isolation valve, added after the 2049 failure, never in the as-built drawings. Somebody wanted this one locked separately from the other twenty-one.",
+    code:"0341",payload:"The valve isn't a valve. It's a hatch, and it opens onto stairs going down past where the tank's floor should be."}]},
+ {lo:77,hi:82,kind:"puzzle",p:"sound",opts:[
+   {title:"Sounding the water off the Unnumbered",
+    body:"Every chart since 1587 carries the same note over this patch: no bottom found, do not sound. You have a weighted line and a very quiet stretch of water. Find the bottom anyway.",
+    target:4100,payload:"Four thousand one hundred metres, and then the line goes slack the way a line goes slack when something takes the weight off it gently, on purpose — the way you'd take a bag from someone whose hands are full."},
+   {title:"Sounding a service shaft, Cold Harbour",
+    body:"The building plans say this shaft terminates at the pump housing, forty metres down. The hatch welds are new and were made from the inside. Find out how far it actually goes.",
+    target:411,payload:"Four hundred eleven metres. The island isn't four hundred metres thick here. Past a certain point the line stops going down and starts going along."},
+   {title:"Sounding the flooded sublevel under a ward that shouldn't have one",
+    body:"The pumps below have run continuously for years and discharged nothing. Somebody should know where that water actually goes. Take a sounding.",
+    target:1961,payload:"Nineteen sixty-one metres — the number on the line and the year None was closed arrive in the same breath. Whoever logs this will notice, and won't mention it."}]},
+ {lo:83,hi:88,kind:"puzzle",p:"audio",opts:[
+   {title:"Recovered — harbour radio, Channel 11, unlogged",
+    body:"— still reading you, the [[pumps]] are down but the gauge says [[running]] — I checked the board myself — she says it's only the [[stand]], she says it always [[turns]] — I've been waiting since [[Tuesday]] — no, she says that's fine, she says everybody [[waits]] —"},
+   {title:"Recovered — answering machine, Provident Row, no. 19",
+    body:"— it's me, I know it's late, I just wanted to say the lights are [[on]] again, whatever you did, thank you, I don't — I don't need to know how, I just — there were [[eleven]] of us that night and I only remember [[nine]] — call me back, or don't, either way I'll [[wait]] —"},
+   {title:"Recovered — dictaphone, Halloran & Vey archive, undated",
+    body:"— finding on file, marine casualty, vessel unnamed, cause [[undetermined]] — the second principal signed in the usual place, I checked the [[signature]] myself, it's consistent with every finding this firm has ever [[filed]] — there was never a [[Vey]] — there was never a [[Vey]] —"}]},
+ {lo:89,hi:95,kind:"terror",opts:[
+   "Someone the table has trusted all session starts answering questions before they finish being asked, and gets every answer exactly right.",
+   "A player counts the room out loud and gets eleven. There are nine of you. Nobody but them reacts.",
+   "The Bleed clock advances between scenes, and nobody at the table did it.",
+   "Somebody receives a message, dated tomorrow, whose contents they already know."]},
+ {lo:96,hi:100,kind:"temptation",opts:[
+   "Grandmother offers to simply say what happened. Plainly. No conditions. All anyone has to do is ask her by name, on the open channel.",
+   "The Sounding Company will pay well to have the old chart annotation quietly removed. Somebody on the crew knows how.",
+   "A finding that closes this case clean — accident, no further inquiry — is already typed. It only needs a signature. Nobody would check.",
+   "Whoever the table has lost is offering to come back and help, and the help, if taken, will be real."]}
+];
 
 /* ===================== LIVING BACKGROUND ===================== */
 const GLYPHS="0123456789012345678911114▁▂▃▄▅▆▇·:∙°′″—│┤├NOBTMVESCOMSEXTERPRILAU".split("");
@@ -642,11 +715,11 @@ const K_PRIV=id=>"players/"+id;
 const K_GM="gm";
 let B=board(),P=priv(),G=gm();
 let me=null,uid=0,tsB=0,tsP=0,tsG=0,dragging=false,tieFrom=null,ok=null,drag=null;
-let shTab="self",pTab="bank",sendTo="all";
+let shTab="self",pTab="bank",sendTo="all",d100Hist=[];
 function board(){return{v:3,ts:0,bleed:0,aperture:0,ring:0,ringT:0,ringP:0,cases:0,depth:3,caseName:"",
   clues:[],links:[],roster:[],ledger:[],log:[],presence:{},corps:[]};}
 function priv(){return{v:3,ts:0,ch:null,secret:"",notes:"",inbox:[]};}
-function gm(){return{v:3,ts:0,bank:[],notes:"",wrong:""};}
+function gm(){return{v:3,ts:0,bank:[],queue:[],notes:"",wrong:""};}
 function nid(){return Date.now().toString(36)+"-"+(uid++).toString(36);}
 function ct(){return new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -673,7 +746,7 @@ function absorbPriv(p){if(!(p&&p.ts>tsP))return;
 function subPriv(){if(!fb||!me)return;
   fb.db.ref("rooms/"+ROOM+"/players/"+me.id).on("value",s=>absorbPriv(s.val()));}
 function subGM(){if(!fb||!isGM())return;
-  fb.db.ref("rooms/"+ROOM+"/gm").on("value",s=>{const g=s.val();if(g&&g.ts>tsG){G=Object.assign(gm(),g);G.bank=G.bank||[];tsG=g.ts;if(pTab)render();}});}
+  fb.db.ref("rooms/"+ROOM+"/gm").on("value",s=>{const g=s.val();if(g&&g.ts>tsG){G=Object.assign(gm(),g);G.bank=G.bank||[];G.queue=G.queue||[];tsG=g.ts;if(pTab)render();}});}
 async function initSync(){
   const cfg=window.SB_FIREBASE_CONFIG;
   if(!cfg||!cfg.apiKey||!window.firebase){ok=false;return;}
@@ -692,7 +765,7 @@ function syncRoster(){if(!me)return;const c=P.ch;
 async function pullAll(){
   absorbShared(await got(K_SHARED));
   if(me)absorbPriv(await got(K_PRIV(me.id)));
-  if(isGM()){const g=await got(K_GM);if(g&&g.ts>tsG){G=Object.assign(gm(),g);G.bank=G.bank||[];tsG=g.ts;}}
+  if(isGM()){const g=await got(K_GM);if(g&&g.ts>tsG){G=Object.assign(gm(),g);G.bank=G.bank||[];G.queue=G.queue||[];tsG=g.ts;}}
 }
 
 /* ===================== LENS + MODE ===================== */
@@ -864,7 +937,7 @@ function puzzleUI(m,i){
 function openPortal(){
   document.querySelectorAll("#pTabs .tb").forEach(t=>t.classList.toggle("sel",t.dataset.p===pTab));
   document.getElementById("portalBody").innerHTML=
-    pTab==="bank"?pBank():pTab==="send"?pSend():pTab==="puzzle"?pPuz():pTab==="crew"?pCrew():pTab==="clocks"?pClocks():pNotes();
+    pTab==="bank"?pBank():pTab==="send"?pSend():pTab==="puzzle"?pPuz():pTab==="d100"?pD100():pTab==="crew"?pCrew():pTab==="clocks"?pClocks():pNotes();
   document.getElementById("ovPortal").classList.add("open");
 }
 function pBank(){
@@ -909,6 +982,64 @@ function pPuz(){
    <div class="fld"><input id="aTitle" placeholder="Title"></div>
    <div class="fld"><textarea id="aBody" style="min-height:120px" placeholder="Wrap missing words in double brackets: the log shows [[eleven]] minutes gone, every [[night]]."></textarea></div>
    <div class="acts" style="margin-top:0"><button class="act pri sm" data-act="send-audio">Send audio</button></div>`;
+}
+function nameForPid(pid){const r=(B.roster||[]).find(x=>x.pid===pid);return r?r.name:pid;}
+function d100Label(k){return{sign:"Sign of the Stand",clue:"Clue",prompt:"Prompt",artifact:"Artifact",puzzle:"Puzzle",terror:"Terror",temptation:"Temptation"}[k]||k;}
+function d100Summary(r){
+  if(typeof r.data==="string")return r.data.length>70?r.data.slice(0,70)+"…":r.data;
+  return r.data.title;
+}
+function d100EntryHTML(r){
+  if(typeof r.data==="string")return esc(r.data);
+  if(r.kind==="artifact")return `<b style="font-style:normal">${esc(r.data.title)}</b><br>${esc(r.data.body)}`;
+  const d=r.data;
+  const extra=r.p==="keypad"?`Code ${esc(d.code)} — ${esc(d.payload)}`
+    :r.p==="sound"?`Target ${d.target}m — ${esc(d.payload)}`
+    :"Three free recoveries, then it costs Static.";
+  return `<b style="font-style:normal">${esc(d.title)}</b><br>${esc(d.body)}<br><span style="font-size:13px;color:var(--soft)">${extra}</span>`;
+}
+function d100Actions(r){
+  if(r.kind==="sign"||r.kind==="clue"||r.kind==="prompt")
+    return `<button class="act pri sm" data-act="d100-drop">Drop to board</button>`;
+  if(r.kind==="artifact")
+    return `<button class="act pri sm" data-act="d100-use-send">Use in Send</button><button class="act sm" data-act="d100-stage">Stage</button>`;
+  if(r.kind==="puzzle")
+    return `<button class="act pri sm" data-act="d100-use-puzzle">Use in Puzzle</button><button class="act sm" data-act="d100-stage">Stage</button>`;
+  return `<span class="hint" style="margin:0">GM eyes only — no send target</span>`;
+}
+function rollD100(){
+  const n=1+Math.floor(Math.random()*100);
+  const band=D100.find(x=>n>=x.lo&&n<=x.hi);
+  const data=band.opts[Math.floor(Math.random()*band.opts.length)];
+  const r={n,kind:band.kind,p:band.p,data};
+  d100Hist.unshift(r);if(d100Hist.length>8)d100Hist.pop();
+  return r;
+}
+function stageRoll(r){
+  if(r.kind==="artifact")G.queue.push({kind:"art",title:r.data.title,body:r.data.body,to:sendTo});
+  else if(r.kind==="puzzle")G.queue.push({kind:"puzzle",p:r.p,title:r.data.title,body:r.data.body,
+    code:r.data.code,target:r.data.target,payload:r.data.payload,to:sendTo});
+}
+function pD100(){
+  const last=d100Hist[0];
+  const q=G.queue||[];
+  return `<div class="lab">Roll d100 — signs, clues, prompts, artifacts and puzzles, terrors and temptations</div>
+   <div class="draw">
+     <div class="hint">${last?d100Label(last.kind):"Tap Roll to begin"}</div>
+     <div class="mod">${last?last.n:"—"}</div>
+     <div class="big" style="font-size:18px;font-style:normal;text-align:left;display:block">${last?d100EntryHTML(last):"—"}</div>
+     <div class="acts" style="justify-content:center">${last?d100Actions(last):""}</div>
+   </div>
+   <div class="acts" style="justify-content:center"><button class="act pri" data-act="d100-roll">Roll d100</button></div>
+   <div class="lab">Recent rolls</div>
+   ${d100Hist.length>1?d100Hist.slice(1,6).map(r=>`<div class="band"><b>${r.n}</b><span>${esc(d100Label(r.kind))} — ${esc(d100Summary(r))}</span></div>`).join(""):`<div class="empty">Nothing rolled yet.</div>`}
+   <div class="lab">Staged — ${q.length}</div>
+   ${q.length?q.map((it,i)=>`<div class="gmrow"><div class="gt"><b>${esc(it.title||(it.kind==="puzzle"?it.p:"artifact"))}</b>
+     <span style="color:var(--dim)"> · ${esc(it.kind==="puzzle"?it.p:"artifact")} · to ${esc(it.to==="all"?"all":nameForPid(it.to))}</span><br>
+     <span style="color:var(--soft)">${esc((it.body||"").slice(0,90))}${(it.body||"").length>90?"…":""}</span></div>
+     <div class="ga"><button class="act sm pri" data-act="q-send" data-i="${i}">Send</button>
+     <button class="act sm" data-act="q-del" data-i="${i}">×</button></div></div>`).join("")
+    :`<div class="empty">Nothing staged.</div>`}`;
 }
 function pCrew(){
   const r=B.roster||[];
@@ -1013,7 +1144,7 @@ document.addEventListener("click",e=>{
       me={id:fb?fb.uid:(wantGM?"gm-"+nid():nid()),name:n,role:wantGM?"gm":"player",lens:"#7C6BFF",hold:null};
       document.getElementById("join").style.display="none";
       logit(n+" signed on.");
-      if(isGM()){const g=await got(K_GM);if(g){G=Object.assign(gm(),g);G.bank=G.bank||[];tsG=g.ts;}subGM();}
+      if(isGM()){const g=await got(K_GM);if(g){G=Object.assign(gm(),g);G.bank=G.bank||[];G.queue=G.queue||[];tsG=g.ts;}subGM();}
       const p=await got(K_PRIV(me.id));if(p){P=Object.assign(priv(),p);P.inbox=P.inbox||[];tsP=p.ts;}
       subPriv();render();pushB();})();break;}
   case "corp-add":{const el=document.getElementById("corpIn");const v=(el.value||"").trim();
@@ -1119,6 +1250,26 @@ document.addEventListener("click",e=>{
     render();pushB();break;}
   case "portal":openPortal();document.body.classList.remove("dialopen");break;
   case "to":sendTo=b.dataset.pid;openPortal();break;
+  case "d100-roll":rollD100();sfx.tap();openPortal();break;
+  case "d100-drop":{const r=d100Hist[0];if(r&&typeof r.data==="string")dropClue(r.data,false);break;}
+  case "d100-use-send":{const r=d100Hist[0];if(!r||r.kind!=="artifact")break;
+    pTab="send";openPortal();
+    document.getElementById("artTitle").value=r.data.title;
+    document.getElementById("artBody").value=r.data.body;break;}
+  case "d100-use-puzzle":{const r=d100Hist[0];if(!r||r.kind!=="puzzle")break;
+    pTab="puzzle";openPortal();const d=r.data;
+    if(r.p==="keypad"){document.getElementById("kTitle").value=d.title;document.getElementById("kBody").value=d.body;
+      document.getElementById("kCode").value=d.code;document.getElementById("kPay").value=d.payload;}
+    else if(r.p==="sound"){document.getElementById("sTitle").value=d.title;document.getElementById("sBody").value=d.body;
+      document.getElementById("sTarget").value=d.target;document.getElementById("sPay").value=d.payload;}
+    else if(r.p==="audio"){document.getElementById("aTitle").value=d.title;document.getElementById("aBody").value=d.body;}
+    break;}
+  case "d100-stage":{const r=d100Hist[0];if(!r||(r.kind!=="artifact"&&r.kind!=="puzzle"))break;
+    stageRoll(r);pushG();openPortal();break;}
+  case "q-send":{const it=G.queue[i];if(!it)break;deliver(Object.assign({},it),it.to);
+    G.queue.splice(i,1);pushG();openPortal();
+    moment("Sent",it.to==="all"?"It lands in every private space.":"It lands in one private space.","recv");break;}
+  case "q-del":G.queue.splice(i,1);pushG();openPortal();break;
   case "bank-add":{const el=document.getElementById("bankIn");if(el.value.trim()){G.bank.push(el.value.trim());el.value="";pushG();openPortal();}break;}
   case "bank-del":G.bank.splice(i,1);pushG();openPortal();break;
   case "bank-drop":case "bank-face":dropClue(G.bank[i],a==="bank-face");G.bank.splice(i,1);pushG();openPortal();break;
@@ -1146,9 +1297,12 @@ function dropClue(text,face){
   B.clues.push({id:nid(),text,x:5+Math.random()*40,y:14+Math.random()*44,st:"play",face:!!face});
   sfx.tap();render();pushB();
 }
-async function deliver(msg){
+async function deliver(msg,target){
   msg.t=ct();msg.read=false;
-  const targets=sendTo==="all"?(B.roster||[]).map(r=>r.pid):[sendTo];
+  const to=target||sendTo;
+  let targets;
+  if(to==="all")targets=(B.roster||[]).map(r=>r.pid);
+  else{const found=(B.roster||[]).find(r=>r.name===to);targets=[found?found.pid:to];}
   for(const pid of targets){if(!pid||pid==="all")continue;
     const cur=(await got(K_PRIV(pid)))||priv();
     cur.inbox=cur.inbox||[];cur.inbox.unshift(Object.assign({},msg,{id:nid()}));
