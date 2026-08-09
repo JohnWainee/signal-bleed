@@ -664,9 +664,10 @@ function absorbShared(s){if(!(s&&s.ts>tsB&&!dragging))return;
 function absorbPriv(p){if(!(p&&p.ts>tsP))return;
   const had=P.inbox?P.inbox.length:0;
   P=Object.assign(priv(),p);P.inbox=P.inbox||[];tsP=p.ts;
-  if(P.inbox.length>had){sfx.recv();const last=P.inbox[0];
+  if(P.inbox.length>had){sfx.recv();const last=P.inbox[0];shTab="inbox";
     moment("Received",last.kind==="puzzle"?"Something arrived that wants working out.":"Something arrived for you alone.","recv");}
-  render();}
+  render();
+  if(document.getElementById("ovSheet").classList.contains("open"))openSheet();}
 function subPriv(){if(!fb||!me)return;
   fb.db.ref("rooms/"+ROOM+"/players/"+me.id).on("value",s=>absorbPriv(s.val()));}
 function subGM(){if(!fb||!isGM())return;

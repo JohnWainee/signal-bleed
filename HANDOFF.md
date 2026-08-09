@@ -44,6 +44,29 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Claude (Sonnet 5, Claude Code) — fixed the "GM-assigned items show
+up but can't be opened" inbox bug in `table/index.html`. Root cause:
+`absorbPriv(p)` (the realtime-sync handler for `players/<id>`) was the only
+inbox-mutation path that didn't call `openSheet()` — it only called the
+global `render()`, which never rebuilds `#shBody`. If a player had their
+Sheet open on the Received tab when a GM-sent item arrived over the wire, the
+new item never rendered into the visible list, and because `deliver()`
+unshifts new items to index 0, the already-rendered puzzle controls carried
+stale `data-i` indices (a click could hit the wrong inbox item). Fix: after
+the existing `render();`, added `if(document.getElementById("ovSheet")
+.classList.contains("open"))openSheet();` so an open Sheet re-renders through
+the same `sheetInbox()`/`puzzleUI()` path every other inbox mutator uses.
+Also set `shTab="inbox"` on genuine new arrivals (the `P.inbox.length>had`
+branch only, before render/openSheet) so the player lands on Received
+without an extra tap, without yanking them off the Self/Sealed tab on every
+sync tick. Verified `openSheet()` fully rebuilds `#shBody` before making the
+change. Ran `npm i && npm run smoke`, `npm run cases:validate`, and
+`npm run html:sanity`: all green. No game/rules/case content touched; diff is
+the 6-line change in `absorbPriv` only. Opened PR against `main`; did not
+merge — independent review (per AGENTS.md's separation-of-duties rule)
+happens in a separate session.
+**Branch:** `fix/inbox-render-on-receive` — pushed to origin, not merged
+
 **Agent:** Claude (Sonnet 5, Claude Code) — completed HANDOFF.md step 3
 (Firebase) and added Cloudflare Worker deploy config. Populated
 `firebase-config.js` with the sponsor's real public web config (apiKey,
