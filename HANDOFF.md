@@ -44,6 +44,34 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Claude (Sonnet 5, Claude Code) — two sponsor-approved follow-ups to
+the terminology-canon PR, resolving both items flagged by the prior session.
+(1) Confirmed against `rules/signal-bleed-the-plate-on-the-door.md` that "The
+Water" is a GM move (not a PC move); removed it from the Registrar's
+player-facing `mv` array in `table/index.html` (kept "Say It Yourself" and
+"Playing What You Lost" there — the rules doc confirms both are player-side
+moves). Added "The Water" as a GM move card to the Special-moves section of
+`gm/index.html` (next to "The Offer", matching its `.mv`/`.mvh`/`.mvb` markup
+and using the rules doc's exact framing and water-sentence examples).
+Did not add it to `print/vespers.html`'s Sheet 9 GM Screen — that sheet is
+still pre-reskin Hollow-cyberpunk prose throughout ("corp clocks," "the
+horror," "the city"), so a canon-named move there would sit inconsistently;
+flagging that sheet for a future full reskin pass rather than guessing.
+(2) Resynced Sheet 7 "The Salvage" in `print/vespers.html` off the
+already-reskinned version in `print/hours.html` (which matches
+`table/index.html`'s `BOOKS.Salvage` exactly) — replaced the leftover Hollow
+cyberpunk prose (the "insurance covered a restore" tag/lead-in, the "deceased"
+status tag, "the restore didn't copy," "who paid for the restore," "I came
+back," "something came back in the gap") with the maritime/insurance-claim
+voice ("declared total loss," "paid out," "the wharf," "filed the claim,"
+"surfaces"). Mechanics/stats/move-unlock levels untouched; only prose fields
+(tag, status line, look line, two static-move descriptions, dark secret,
+one bond, footer tagline) changed. Ran `npm i && npm run smoke`, `npm run
+cases:validate`, `npm run html:sanity`: all green. Pushed to the existing
+`fix/terminology-canon` branch, updating PR #4; did not merge — independent
+review happens in a separate session.
+**Branch:** `fix/terminology-canon` — pushed to origin, not merged
+
 **Agent:** Claude (Sonnet 5, Claude Code) — reconciled the print pack and a
 few app/rules spots against `table/index.html`'s `BOOKS`/`SIGNS`/`ASKS`
 (current canon for The Hours setting) per an approved terminology-drift
