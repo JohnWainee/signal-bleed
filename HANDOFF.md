@@ -44,6 +44,26 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Claude (Sonnet 5, Claude Code) — completed HANDOFF.md step 3
+(Firebase) and added Cloudflare Worker deploy config. Populated
+`firebase-config.js` with the sponsor's real public web config (apiKey,
+authDomain, databaseURL, projectId, storageBucket, messagingSenderId,
+appId — `measurementId` omitted, no slot for it and Analytics is off per
+this doc's own step 3); the `no-secrets-in-firebase-config` hook allowed
+the write as expected (public web config, not a server-side secret).
+Added `wrangler.jsonc` at repo root (`name: "signal-bleed"`,
+`compatibility_date`, `assets.directory: "./"`, no `main`/script entry)
+so the sponsor's Cloudflare "Worker with Static Assets" deploy
+(`npx wrangler deploy`) has a config to publish against; left
+`not_found_handling` at its default since this is a multi-page static
+site, not an SPA. Ran `npm i && npm run smoke`, `npm run cases:validate`,
+`npm run html:sanity` locally with the real config in place: all green
+(smoke-test's `initSync()` short-circuits on missing `window.firebase` in
+jsdom regardless of config values, so behavior is unchanged from the
+placeholder). Opened PR against `main`, merged after the 4 required
+checks passed.
+**Branch:** `chore/firebase-config` — merged
+
 **Agent:** Claude (Opus 4.8, Claude Code) — independent fresh-eyes review of
 the governance PR (#1), one fix-forward, then merge. Verified: no build step,
 ubuntu/Node 22, all four CI jobs (smoke / cases-validate / html-sanity /
