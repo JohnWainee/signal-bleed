@@ -44,6 +44,48 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Claude (Sonnet 5, Claude Code) — built the d100 random event/puzzle
+generator, a sponsor-approved GM-only Portal tab in `table/index.html`. Added
+a new `data-p="d100"` tab labelled "Roll" between Puzzle and Crew, wired into
+`openPortal()`'s dispatch. Authored `const D100` — nine weighted range-bands
+covering 1–100 (`sign` 1–20, `clue` 21–40, `prompt` 41–55, `artifact` 56–70,
+`puzzle` keypad 71–76 / sound 77–82 / audio 83–88, `terror` 89–95,
+`temptation` 96–100), each band an array of options it picks among, authored
+from `rules/the-hours-setting-bible.md`, the campaign-spine docs, and
+`cases/case-eleven-minutes.json`, in current canon only (Take a Sounding, the
+Stand, off soundings, Cold Harbour, the Unnumbered, Provident Row, Halloran &
+Vey/Otty, the Sounding Company, the Long Count — no leftover cyberpunk terms).
+`pD100()` reuses the existing `.mod`/`.big`/`.band` styling and the
+random-pick pattern from `show()`/the Theorize overlay; no new CSS. Prefill
+routes by `kind`: sign/clue/prompt get "Drop to board" (`dropClue`,
+unchanged); artifact gets "Use in Send" (switches to the Send tab, fills
+`#artTitle`/`#artBody`); puzzle gets "Use in Puzzle" (switches to the Puzzle
+tab, fills the matching keypad/sound/audio fields by `p`); terror/temptation
+are GM-eyes display only, no send target. Folded in the minimal `G.queue`
+staging slice from the LOADER PATCH in `rules/signal-bleed-case-format.md`:
+added `queue:[]` to the `gm()` store default (and to all three
+`G=Object.assign(gm(),g)` hydration sites, matching the existing `G.bank`
+fallback pattern), gave `deliver()` an explicit `target` parameter per the
+patch's edit #2 (falls back to `sendTo`, so every existing call site is
+unchanged), and added a "Stage" button on rolled artifacts/puzzles that
+pushes `{kind,p,title,body,code,target,payload,to:sendTo}` into `G.queue`,
+plus `q-send`/`q-del` actions on the tab's own staged-items list to send or
+discard later. Did **not** build the full Case tab, `loadCase()`/
+`exportCase()`, or the file-picker import/export from the LOADER PATCH — the
+task scoped this to "the minimal coherent slice the d100 needs," so staged
+items are only visible/actionable from the Roll tab itself, and recipient
+selection when staging reuses whatever `sendTo` is currently set to
+app-wide (no per-item recipient picker) rather than the full patch's
+free-text `to` name field. Verified with `npm run smoke` (unmodified,
+still green — the Roll tab isn't in its GM-Portal exercise path) plus an
+ad hoc jsdom script (written and discarded, not committed) that clicked
+through every band kind at least once — roll, drop-to-board, both prefill
+paths, stage, and send-from-queue — with zero page errors. Ran `npm run
+cases:validate` and `npm run html:sanity`: also green. Opened PR against
+`main`; did not merge — independent Opus review happens in a separate
+session per this task's explicit instruction.
+**Branch:** `feat/d100-generator` — pushed to origin, not merged
+
 **Agent:** Claude (Sonnet 5, Claude Code) — two sponsor-approved follow-ups to
 the terminology-canon PR, resolving both items flagged by the prior session.
 (1) Confirmed against `rules/signal-bleed-the-plate-on-the-door.md` that "The
