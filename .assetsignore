@@ -1,0 +1,21 @@
+# The current Worker serves the repository root for the no-build alpha.
+# Keep beta source/fixtures and repository tooling out of that public tree.
+# SB-08 switches the asset directory only after a reviewed release rehearsal.
+/beta/
+/dist-beta/
+/preview-beta/
+/node_modules/
+/scripts/
+/.git/
+/.github/
+/.claude/
+/.agents/
+/.wrangler/
+/.assetsignore
+/.gitignore
+/AGENTS.md
+/HANDOFF.md
+/README.md
+/package.json
+/package-lock.json
+/wrangler.jsonc

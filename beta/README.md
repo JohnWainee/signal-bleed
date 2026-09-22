@@ -57,4 +57,4 @@ Use [Hawaiʻi — Emergency Republic](../rules/hawaii-setting-bible.md) for all 
 
 ## SB-02 scaffold draft
 
-PR #6 is merged; main is the integration base. The next task branch adds three fixture-only entry pages and draft build/packaging commands. See [SCAFFOLD.md](SCAFFOLD.md) for setup and the explicit installation, lockfile, build and browser blockers. This is not a connected multiplayer session.
+PR #6 is merged; main is the integration base. Draft PR #7 adds three fixture-only entry pages, a reproducible lockfile, build and preview packaging. See [SCAFFOLD.md](SCAFFOLD.md) for verified setup and remaining review/device limits. This is not a connected multiplayer session. The root Cloudflare Worker continues to serve alpha; `.assetsignore` excludes beta source and fixtures until the reviewed release task changes the asset directory.

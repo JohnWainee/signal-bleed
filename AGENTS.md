@@ -41,7 +41,7 @@ see [Handoff protocol](#handoff-protocol) below.
   alpha functional smoke check. Other checks are listed below.
 - `node --test beta/tests/session.test.mjs` — in-memory beta reference tests.
 - `npm run setting:validate` — current setting/content consistency.
-- `npm run beta:dev`, `npm run beta:typecheck`, `npm run beta:build`, `npm run beta:package` — draft SB-02 commands; first install beta dependencies. See `beta/SCAFFOLD.md` for the pending lockfile/build gate.
+- `npm run beta:dev`, `npm run beta:typecheck`, `npm run beta:build`, `npm run beta:package` — SB-02 beta commands. Run `npm --prefix beta ci` first; see `beta/SCAFFOLD.md` for verification and remaining browser/device limits.
 - Alpha has no dev server. Alpha pages are self-contained HTML — open the file
   directly, or serve the repo root with any static file server, to view
   changes.
@@ -182,4 +182,3 @@ canvas/deterministic-core-specific applies here:
   file, for intentionally pausing mid-step.
 
 Both are wired in `.claude/settings.json`.
-

@@ -70,7 +70,7 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 | SB-06 | Player prompts and persistent personal surface | C | SB-03 | WAIT |
 | SB-07 | Wire surfaces and prove four-client M1 | Integrator/reviewer | SB-04–06 | WAIT |
 | SB-08 | Preview packaging and release rehearsal | Integrator | SB-07 | WAIT |
-| SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | READY |
+| SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | IN PROGRESS; bounded Qwen read-only inventory, no accepted deliverable yet |
 | SB-10 | Recover lifepath specification and content manifest | Content analyst | — | READY; implementation blocked on source |
 | SB-11 | Lifepath engine and character persistence | A/C sequentially | SB-07, SB-10 | WAIT |
 | SB-12 | GM-led lifepath presentation and playtest | B + reviewer | SB-11 | WAIT |
@@ -224,3 +224,23 @@ PR #6 merged at `373565b188496500f92f57abb8e2f45bcf96b7ce`; current integration 
 | Status / result | REVIEW; automated and desktop-browser gates passed. Independent final review and PR #7 evidence update pending. No merge/deploy. |
 
 Factory discovery is read-only, not a dispatch: Claude Code 2.1.278 is authenticated and lists Fable 5.1/Sonnet 5 in its local catalog; Ollama is reachable with local Qwen models, but no Signal Bleed Qwen task has run. The DeepSeek pi provider reports `credentials_not_configured`; SB-10 is **not dispatched**. The existing factory Beads queue/worktrees concern another tenant, not this repository. Do not claim those workers for Signal Bleed or share this game's content into that queue. SB-09 and SB-10 packets must name an exact new branch/worktree and base SHA before dispatch. At most three implementation workers may be active, including Codex.
+
+### Review dispatch — SB-02 Fable 5.1
+
+- Task: independent final review of SB-02; owner/model: Fable 5.1 through authenticated Claude Code 2.1.278; status: **static report received, fix re-review pending**. Fable found one medium root-asset exposure risk, now addressed with `.assetsignore`; its plan-mode review did not execute tests. It also found stale setup docs, now updated.
+- Exact target/base: `b299ad6dbcaf7a46fc9bf620ce7b83acd46efe0b`; dedicated `review/beta-sb-02-fable` worktree at `/private/tmp/signal-bleed-sb02-fable-review`. Compare with main `373565b188496500f92f57abb8e2f45bcf96b7ce`.
+- Sources: root `HANDOFF.md`, `AGENTS.md`, this board, `CONTRACTS.md`, `SCAFFOLD.md`, Hawaiʻi setting bible. Own review notes only; no implementation/shared/protected files. Check lockfile, routes, packaging, alpha preservation, exact tests and limits; report severity/file/line, actual commands/results, failures and unresolved questions. No merge/deploy or Firebase claims.
+- If review changes are authored, draft PR target is `feat/beta-sb-02-scaffold` and reviewer updates `HANDOFF.md`; for a read-only report, Codex records review result in `HANDOFF.md` and PR #7. No report is accepted as test evidence until Codex inspects it.
+
+### Research dispatch — SB-09 Qwen local
+
+- Task: bounded alpha feature inventory with file/line references, no runtime or tracked-file changes; owner/model: local `qwen2.5-coder:7b` via pi/Ollama; status: **attempted, no accepted result**. The first invocation exited after printing a read-tool-call-shaped string, without a source inventory or test evidence. Codex owns final `beta/PARITY.md` integration and cross-review; retry only after confirming the factory tool protocol.
+- Exact base: main `373565b188496500f92f57abb8e2f45bcf96b7ce`; dedicated `docs/beta-sb-09-parity` worktree at `/private/tmp/signal-bleed-sb09-qwen`; dependency SB-00 DONE. Draft documentation PR target: `main` only after evidence review, with its own HANDOFF update.
+- Sources: `HANDOFF.md`, `AGENTS.md`, this board, `CONTRACTS.md`, `SCAFFOLD.md`, Hawaiʻi setting bible and actual alpha source. Own inventory report only; no shared/router/dependency/protected files. Inventory chart/clocks/clues/links/rolls/case staging/artifacts/puzzles/inbox/notes/print/reference/Hawaiʻi index. Supply exact references, retain/migrate/defer recommendation and gaps; do not assume historical handoff equals current code.
+- Acceptance: read-only source inspection with reproducible `rg`/file references, limitations and unresolved migration questions; no runtime changes, no claim of browser or migration tests. Report actual checks and failures. If the factory cannot complete the packet, mark not dispatched or failed and have Codex do the inventory independently.
+
+### Prepared, not dispatched — SB-10 DeepSeek
+
+- Task: source/content reconciliation and missing-decisions report for lifepath. Intended owner/model: DeepSeek `deepseek-v4-flash` via pi, contingent on verified credential, tenant data-scope approval, and a reachable model. Current auth result: `credentials_not_configured`; **not dispatched**, no result or PR.
+- Planned exact base: main `373565b188496500f92f57abb8e2f45bcf96b7ce`; dedicated branch `docs/beta-sb-10-lifepath-spec`, separate worktree to be created only at dispatch. Draft PR target `main`; dependency independent of SB-02.
+- Required sources: `HANDOFF.md`, `AGENTS.md`, this board, `CONTRACTS.md`, Hawaiʻi setting bible, approved lifepath source documents. Owned files: `beta/LIFEPATH_SPEC.md` and its own HANDOFF entry only; no canonical rules, runtime, config or task-board edits. Record stages, rolls/tables/modifiers/rerolls/branches/bonds/reveals/persistence with exact source references and explicitly missing decisions. Acceptance: no invented approved table/canon, source traceability and questions if approved transcript is unavailable. Report actual checks/failures; no merge/deploy. Later backend review requires a separate packet and availability check.
