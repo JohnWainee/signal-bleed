@@ -35,7 +35,7 @@ Use at most three concurrent implementation agents after the contract is settled
 
 | Lane | Responsibility | Owned areas |
 |---|---|---|
-| A — session/backend | Contracts, auth, Firebase adapter and rules tests | `beta/session/`, proposed `beta/src/session/`, `beta/src/data/`, backend tests |
+| A — session/backend | Contracts, auth, Firebase adapter and rules tests | `beta/src/session/`, `beta/src/data/`, backend tests |
 | B — GM/presenter | GM scene controls and public display | Proposed `beta/src/gm/`, `beta/src/present/`, surface tests |
 | C — player | Private decisions and personal information | Proposed `beta/src/play/`, player tests |
 | Integrator/reviewer | Scaffold, shared UI, dependency updates, integration and release | Root config, lockfile, router, shared styles, workflow and deployment files |
@@ -107,7 +107,7 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 ### SB-03 — Typed model and mock adapter
 
 **Deliver:** typed session commands/views, an adapter interface, and multi-actor fixtures following SB-01.
-**Own:** `beta/session/`, `beta/src/session/`, mock data adapter and contract tests.
+**Own:** `beta/src/session/`, mock data adapter and contract tests. The former `beta/session/` prototype was removed.
 **Do:** migrate the existing module instead of maintaining two competing implementations. Validate inputs and isolate public/player/GM data. Replace or adapt the global revision concept with the contract's per-entity concurrency.
 **Accept:** tests cover valid scene/prompt flow, malformed IDs/input, spoofed roles, duplicate commands, stale responses, independent concurrent player responses, immutable projections, and private-data isolation. Fixture data is clearly non-canonical test content.
 **Exclude:** network transport and invented game mechanics.
@@ -239,7 +239,7 @@ Factory discovery is read-only, not a dispatch: Claude Code 2.1.278 is authentic
 - Sources: `HANDOFF.md`, `AGENTS.md`, this board, `CONTRACTS.md`, `SCAFFOLD.md`, Hawaiʻi setting bible and actual alpha source. Own inventory report only; no shared/router/dependency/protected files. Inventory chart/clocks/clues/links/rolls/case staging/artifacts/puzzles/inbox/notes/print/reference/Hawaiʻi index. Supply exact references, retain/migrate/defer recommendation and gaps; do not assume historical handoff equals current code.
 - Acceptance: read-only source inspection with reproducible `rg`/file references, limitations and unresolved migration questions; no runtime changes, no claim of browser or migration tests. Report actual checks and failures. If the factory cannot complete the packet, mark not dispatched or failed and have Codex do the inventory independently.
 
-SB-02 result link: [draft PR #7](https://github.com/JohnWainee/signal-bleed/pull/7). Reviewed code SHA: `2633f60e255bea98ce21feb44c68d44173630e8c` (Fable read-only re-review). Cloudflare dashboard confirms `signal-bleed.com` is the `signal-bleed` static-assets Worker, connected to this repo, deploying `main` from `/` with `npx wrangler deploy`. The active version remains main `373565b`; PR #7 builds did not deploy. On live main, `/gm/` and `/table/` are 200, beta source and route are 404, and `/HANDOFF.md` is 200; the reviewed `.assetsignore` fixes the latter in local Worker checks. SB-02 is DONE and SB-03 is in review. Fable SB-05 and Qwen SB-06 remain WAIT.
+SB-02 result link: [merged PR #7](https://github.com/JohnWainee/signal-bleed/pull/7), merge commit `6868ab47ee50890c91e29149613170be36773109`. Reviewed code SHA: `2633f60e255bea98ce21feb44c68d44173630e8c` (Fable read-only re-review). Cloudflare dashboard confirms `signal-bleed.com` is the `signal-bleed` static-assets Worker, connected to this repo, deploying `main` from `/` with `npx wrangler deploy`. After merge, live `/gm/` and `/table/` return 200; beta source/routes, `/HANDOFF.md`, and `/AGENTS.md` return 404. SB-02 is DONE and SB-03 is in review. Fable SB-05 and Qwen SB-06 remain WAIT.
 
 ### SB-03 implementation record — 2026-09-21 HST
 
@@ -247,10 +247,10 @@ SB-02 result link: [draft PR #7](https://github.com/JohnWainee/signal-bleed/pull
 |---|---|
 | Task / owner | SB-03; Codex integrator, typed mock implementation; independent review pending |
 | Branch / exact base | `feat/beta-sb-03-session-model` from accepted SB-02 head `5c654ed` |
-| Dependency / PR target | SB-02 in PR #7; SB-03 draft PR targets `feat/beta-sb-02-scaffold` until scaffold integration |
+| Dependency / PR target | SB-02 merged in PR #7; [draft PR #8](https://github.com/JohnWainee/signal-bleed/pull/8) targets `main` |
 | Owned files | `beta/src/session/`, `beta/tests/model.test.mjs`, removal of older `beta/session/session.mjs` and its tests; documentation and handoff updates. No Firebase, alpha runtime, protected file, routing or dependency changes. |
 | Acceptance evidence | `node --experimental-strip-types --test beta/tests/model.test.mjs` 11/11; `npm run beta:typecheck`, `npm run beta:package`, alpha smoke/cases/HTML/setting checks passed. Covers private views, malformed commands, roles, independent answers, receipts, scene epochs, serialized close/answer ordering, admission races, revocation, reconnect and personal revisions. |
-| Review / remaining gate | Fable read-only review found no blocker; its missing private markers and authorization-order findings were fixed, and its test gaps were narrowed. Final diff and PR checks still require review. Mock is not backend authorization or four-client multiplayer proof. |
+| Review / remaining gate | Fable read-only re-review of `07f768f` found no blocker and verified the prior fixes. Follow-up aligned disconnected role precedence and cross-player denial with the contract; 11/11 tests and package build pass. Final PR checks remain pending. Mock is not backend authorization or four-client multiplayer proof. |
 
 ### Prepared, not dispatched — SB-10 DeepSeek
 

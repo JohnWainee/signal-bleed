@@ -48,6 +48,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (Codex app) — merged reviewed SB-02 PR #7 at `6868ab47ee50890c91e29149613170be36773109` after verifying live Workers Static Assets hosting and all PR checks. Production `signal-bleed.com` now returns 200 for `/gm/` and `/table/`, 404 for beta route/source and `/HANDOFF.md`/`/AGENTS.md`; the beta remains excluded from the production Worker. Opened SB-03 as [draft PR #8](https://github.com/JohnWainee/signal-bleed/pull/8), retargeted to `main`; its initial checks passed. Fable's read-only re-review of `07f768f` found no blocker and verified the prior fixes. Small follow-up aligned disconnected role precedence and cross-player denial; eleven tests and packaging pass locally. Final PR checks remain pending. No Firebase or release cutover changed.
+**Branch:** `feat/beta-sb-03-session-model` — released
+
 **Agent:** Codex (Codex app) — started SB-03 from accepted SB-02 head `5c654ed` on `feat/beta-sb-03-session-model`. Replaced the old global-revision JavaScript prototype with a typed fixture-only SessionAdapter/mock, synthetic multi-actor fixtures, per-entity revisions, scoped receipts, private events and eleven contract tests. Typecheck, package build, alpha smoke/cases/HTML/setting checks and all eleven tests passed. Fable's independent read-only review found no blocker; its missing private markers and authorization-order findings were fixed, and test gaps were narrowed. Final diff/PR checks still need review before acceptance. No Firebase rules, auth, protected files, merge or deployment changed. Draft PR target is the SB-02 branch until PR #7 is integrated.
 **Branch:** `feat/beta-sb-03-session-model` — released
 

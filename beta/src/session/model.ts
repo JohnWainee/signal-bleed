@@ -200,12 +200,12 @@ class MockSessionAdapter implements SessionAdapter {
   async send(roomId: string, command: Command): Promise<Result> {
     const { room, code } = this.access(roomId); if (!room) return fail(code!);
     if (!this.authorized(room)) return fail('FORBIDDEN');
-    if (this.store.status(roomId) !== 'live') return fail('DISCONNECTED');
     if (object(command) && typeof command.type === 'string') {
       const gmCommand = command.type === 'scene.publish' || command.type === 'prompt.open' || command.type === 'prompt.close';
       const playerCommand = command.type === 'response.submit' || command.type === 'sheet.replace' || command.type === 'notes.replace';
       if ((gmCommand && this.uid !== room.owner) || (playerCommand && (this.uid === room.owner || own(room.admissions, this.uid)?.role !== 'player'))) return fail('FORBIDDEN');
     }
+    if (this.store.status(roomId) !== 'live') return fail('DISCONNECTED');
     if (!validCommand(command)) return fail('INVALID');
     const prior = this.receipt(room, command.commandId, command); if (prior) return prior;
     let entityRevision = 0;
@@ -230,7 +230,7 @@ class MockSessionAdapter implements SessionAdapter {
         prompt.closed = true; entityRevision = ++prompt.revision; break;
       }
       case 'response.submit': {
-        const prompt = own(own(room.decisions, this.uid) ?? {}, command.promptId); if (!prompt) return fail('NOT_FOUND');
+        const prompt = own(own(room.decisions, this.uid) ?? {}, command.promptId); if (!prompt) return fail('FORBIDDEN');
         if (prompt.sceneEpoch !== room.epoch || command.sceneEpoch !== room.epoch) return fail('STALE_SCENE');
         if (prompt.response) return fail('ALREADY_ANSWERED');
         if (prompt.closed) return fail('CLOSED');

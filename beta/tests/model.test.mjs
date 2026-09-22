@@ -49,7 +49,7 @@ test('independent player answers, idempotency and stale scene enforcement', asyn
 test('authorization, malformed input, close race and revocation', async () => {
   const { gm, p1, p2, tv, x } = await fixture();
   assert.deepEqual(await tv.send('fixture', answer('p1')), { ok: false, code: 'FORBIDDEN' });
-  assert.deepEqual(await p2.send('fixture', answer('p1')), { ok: false, code: 'NOT_FOUND' });
+  assert.deepEqual(await p2.send('fixture', answer('p1')), { ok: false, code: 'FORBIDDEN' });
   assert.deepEqual(await x.send('fixture', answer('p1')), { ok: false, code: 'FORBIDDEN' });
   assert.deepEqual(await p1.send('fixture', { ...answer('p1'), promptId: '../gm' }), { ok: false, code: 'INVALID' });
   assert.deepEqual(await p1.send('fixture', { ...answer('p1'), role: 'gm' }), { ok: false, code: 'INVALID' });
@@ -116,6 +116,7 @@ test('synthetic empty, loading, disconnected, denied and revoked fixtures', asyn
   assert.equal(latest(events(disconnected.tv).list, 'scene').data.status, 'disconnected');
   assert.equal(latest(events(disconnected.tv).list, 'scene').data.value.epoch, 1);
   assert.deepEqual(await disconnected.p1.send('fixture', answer('p1')), { ok: false, code: 'DISCONNECTED' });
+  assert.deepEqual(await disconnected.tv.send('fixture', answer('p1')), { ok: false, code: 'FORBIDDEN' });
   disconnected.store.setStatus('fixture', 'live');
   assert.equal((await disconnected.p1.send('fixture', answer('p1'))).ok, true);
   const denied = await createSyntheticFixture('denied');
