@@ -1,0 +1,21 @@
+:root { color-scheme: dark; font-family: system-ui, sans-serif; color: #e7ede7; background: #111c20; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+#app { width: min(1050px, 100%); margin: auto; padding: clamp(20px, 4vw, 64px); }
+header p:first-child { color: #a9c9c1; letter-spacing: .16em; font-size: .8rem; }
+h1 { font-size: clamp(2rem, 5vw, 3.8rem); line-height: 1.08; margin: 24px 0; }
+h2 { font-size: clamp(1.4rem, 3vw, 2.3rem); }
+p { line-height: 1.65; max-width: 65ch; }
+nav { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0; }
+a { color: #b3e5d8; text-underline-offset: 4px; }
+nav a, button, select { min-height: 48px; padding: 12px 18px; border-radius: 6px; }
+nav a[aria-current] { background: #29443f; }
+section { border: 1px solid #3e5556; padding: clamp(18px, 3vw, 36px); margin: 24px 0; border-radius: 10px; }
+.scene { background: linear-gradient(125deg, #233e3b, #192a33); }
+button, select { font: inherit; color: #ecf6f1; background: #29443f; border: 1px solid #86b3a7; margin: 6px 12px 6px 0; cursor: pointer; }
+button:hover { background: #3b5e55; }
+:focus-visible { outline: 3px solid #f1cd80; outline-offset: 4px; }
+footer { margin-top: 40px; }
+body[data-surface='present'] .scene { min-height: 42vh; display: grid; align-content: center; }
+body[data-surface='present'] .scene h2 { font-size: clamp(2.5rem, 7vw, 6rem); margin: 12px 0; }
+@media (max-width: 520px) { button { display: block; width: 100%; } }

@@ -8,7 +8,11 @@
     "smoke": "node smoke-test.js",
     "cases:validate": "node scripts/validate-cases.mjs",
     "html:sanity": "node scripts/html-sanity.mjs",
-    "setting:validate": "node scripts/validate-setting.mjs"
+    "setting:validate": "node scripts/validate-setting.mjs",
+    "beta:dev": "npm --prefix beta run dev",
+    "beta:build": "npm --prefix beta run build",
+    "beta:typecheck": "npm --prefix beta run typecheck",
+    "beta:package": "npm --prefix beta run package:preview"
   },
   "keywords": [],
   "author": "",

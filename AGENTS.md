@@ -41,7 +41,7 @@ see [Handoff protocol](#handoff-protocol) below.
   alpha functional smoke check. Other checks are listed below.
 - `node --test beta/tests/session.test.mjs` — in-memory beta reference tests.
 - `npm run setting:validate` — current setting/content consistency.
-- Beta build/typecheck commands will be added by SB-02; none exist yet.
+- `npm run beta:dev`, `npm run beta:typecheck`, `npm run beta:build`, `npm run beta:package` — draft SB-02 commands; first install beta dependencies. See `beta/SCAFFOLD.md` for the pending lockfile/build gate.
 - Alpha has no dev server. Alpha pages are self-contained HTML — open the file
   directly, or serve the repo root with any static file server, to view
   changes.

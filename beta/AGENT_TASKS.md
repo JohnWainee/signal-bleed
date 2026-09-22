@@ -1,6 +1,6 @@
 # Signal Bleed beta — agent task board
 
-Updated: 2026-09-22. Planning baseline: draft PR #6, branch `feat/beta-session-foundation`, baseline reviewed at `ba03bc542cb9098b077df9cfb9d08a93039051a2`.
+Updated: 2026-09-22. Integration baseline: main at merge `373565b188496500f92f57abb8e2f45bcf96b7ce` (PR #6 merged by user authorization).
 Re-fetch branch state before starting; this document does not freeze future repository changes.
 
 ## Setting authority
@@ -47,7 +47,7 @@ These are responsibilities, not four agents that must run continuously. Use a se
 ## Branch and ownership protocol
 
 1. Read root `AGENTS.md`, `HANDOFF.md`, `beta/README.md`, and this board.
-2. Until PR #6 is merged, use `feat/beta-session-foundation` as the integration base. Create a task branch `feat/beta-sb-NN-short-name` from its latest reviewed commit; target draft task PRs at that integration branch. After integration into main, the coordinator explicitly updates the base.
+2. PR #6 is merged. Use `main` as the integration base. Create a task branch `feat/beta-sb-NN-short-name` from its latest reviewed commit; target draft task PRs at `main`.
 3. Never have two agents write the same branch/worktree. Record task owner, base SHA, and branch in the coordinator's dispatch record before work. Check HANDOFF for existing claims.
 4. Agent owns only the task's listed areas. Propose interface/config changes to the integrator instead of editing another lane's files.
 5. Root package/lock files, shared router/styles, and deployment config have one writer: the integrator. Backend agents can propose dependency requirements.
@@ -63,7 +63,7 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 |---|---|---|---|---|
 | SB-00 | Review foundation and verify working baseline | Integrator/reviewer | — | DONE; baseline evidence recorded |
 | SB-01 | Reconcile beta instructions and freeze contracts | A + integrator | SB-00 | DONE; contract v1 reviewed |
-| SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | READY |
+| SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | BLOCKED-ENV; draft scaffold, install/build pending |
 | SB-03 | Typed session model and mock adapter | A | SB-02 | WAIT |
 | SB-04 | Firebase authorization and realtime adapter | A | SB-03 | WAIT |
 | SB-05 | GM control surface and presenter | B | SB-03 | WAIT |
@@ -208,3 +208,7 @@ Keep tasks to one coherent, reviewable behavior. If a task grows beyond that, sp
 ### Dispatch record — 2026-09-22
 
 Coordinator Codex completed SB-00 evidence and SB-01 design on integration branch `feat/beta-session-foundation`, base `ba03bc542cb9098b077df9cfb9d08a93039051a2`. Independent reviewer: hawaii_review (read-only). See `reviews/SB-00-01.md` for exact scope and remaining browser/backend limits. No implementation agents own SB-02–06 yet. Next owner: integrator for SB-02, using `CONTRACTS.md` v1. This task acceptance does not approve merging the entire PR or deployment.
+
+### Dispatch record — merge and SB-02 scaffold
+
+PR #6 merged at `373565b188496500f92f57abb8e2f45bcf96b7ce`; current integration base is main. Codex prepared SB-02 on `feat/beta-sb-02-scaffold` from that exact commit. Status: BLOCKED-ENV (npm HTTP 403; cannot generate a trustworthy lockfile or verify build/typecheck/browser). Source and packaging are reviewable; completion requires the commands/checks in `SCAFFOLD.md`. Branch released for a dependency-enabled implementation session. SB-03 remains WAIT. The earlier “no owner” record is historical.

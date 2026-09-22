@@ -46,6 +46,10 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (ChatGPT Work Mode) — user authorized merge and continuation. PR #6 merged at `373565b188496500f92f57abb8e2f45bcf96b7ce` after all four CI jobs passed head `8e7b55e0c8c5e9d02a03fb814f90bb1d90e6db3b`. Integration base is now main. Started SB-02 fixture scaffold: three beta entry pages, TypeScript display code, Vite config, separate pinned beta package, root convenience scripts and allowlisted preview packaging. No Firebase wiring or protected files edited. npm registry requests return HTTP 403; no lockfile, clean install, build, typecheck or browser verification possible here. SB-02 remains blocked draft; next agent must install dependencies, generate/commit beta/package-lock.json, verify build/direct routes and packaging before SB-03. See beta/SCAFFOLD.md.
+**Branch:** `feat/beta-session-foundation` — merged
+**Branch:** `feat/beta-sb-02-scaffold` — released
+
 **Agent:** Codex (ChatGPT Work Mode) — completed SB-00 baseline evidence and SB-01 M1 contract design. CI run 35677113746 at ba03bc542cb9098b077df9cfb9d08a93039051a2 passed smoke, cases-validate, html-sanity and handoff-freshness; four local beta tests pass. Independent hawaii_review found no prototype-scope blocker; contract feedback fixed room-create retry identity, schema versions and initial record revisions. Added beta/CONTRACTS.md, review evidence and scoped Vite/TypeScript exception to AGENTS. Next: SB-02 fixture scaffold, then SB-03 typed model; backend epoch/receipt feasibility remains SB-04. No runtime/protected files changed, no merge/deploy. Browser/emulator/device verification remains outstanding.
 **Branch:** `feat/beta-session-foundation` — released
 
