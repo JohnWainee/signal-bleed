@@ -48,6 +48,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (independent review session) | Codex (integrator) — independent exact-SHA review of `69b3b1e` found no authorization, slot, capacity-transaction, retry, privacy, App Check-boundary, or alpha-preservation blocker. It identified a moderate mismatch where the 32 KB callable guard counted UTF-16 code units rather than UTF-8 bytes, plus a low documentation omission for `Admission.roomClosed`. The integrator changed the guard to `Buffer.byteLength(..., 'utf8')`, added a multibyte oversize regression test, and aligned the authoritative Admission shape. This follow-up requires focused re-verification before review acceptance; no deployment, merge, production configuration, or protected file changed.
+**Branch:** `feat/beta-sb-04-feasibility` — claimed for review-finding fixes
+
 **Agent:** Codex (Codex app) — verified Sonnet's SB-04 room-lifecycle and proactive closure fixes in the original writable checkout. The isolated emulator suite passed: one slot-config test, five rules tests, seven transaction/capacity/closure tests, and two adapter/callable tests. The four simultaneous Chromium-context privacy test passed against the Auth/RTDB/Functions emulators and live Vite client, including distinct private inbound-frame assertions, revocation, exact retry, proactive player closure, and read-only GM roster after reload. Beta typecheck/package, eleven model tests, and alpha smoke/cases/HTML/setting checks also passed. No production service, rule, route, or protected file changed. Next gate is Fable's independent read-only review of the exact pushed SHA; PR #9 remains draft and undeployed.
 **Branch:** `feat/beta-sb-04-feasibility` — released for exact-SHA review
 

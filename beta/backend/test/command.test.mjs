@@ -53,6 +53,8 @@ test('room, admission, scene, concurrent answers and receipts commit atomically'
 test('scene transition, revocation, malformed commands and cross-player commands fail without receipts', async () => {
   error(await send('p1', { type: 'response.submit', commandId: 'steal', promptId: 'prompt_p2', sceneEpoch: 1, expectedRevision: 0, choice: 'A' }), 'FORBIDDEN');
   error(await send('p1', { type: 'notes.replace', commandId: 'bad', expectedRevision: 0, text: 'x', uid: 'p2' }), 'INVALID');
+  const multibyteInventory = Array.from({ length: 100 }, (_, index) => ({ id: `item_${index}`, label: '漢'.repeat(200), quantity: 1 }));
+  error(await send('p2', { type: 'sheet.replace', commandId: 'utf8Oversize', expectedRevision: 0, name: 'Player', playbookId: null, inventory: multibyteInventory }), 'INVALID');
   success(await send('gm1', { type: 'scene.publish', commandId: 'scene2', expectedEpoch: 1, title: 'Two', body: 'Next' }));
   error(await send('p1', { type: 'response.submit', commandId: 'late', promptId: 'prompt_p1', sceneEpoch: 1, expectedRevision: 1, choice: 'A' }), 'STALE_SCENE');
   success(await send('gm1', { type: 'admission.revoke', commandId: 'revoke', uid: 'p1', expectedRevision: 1 }));
@@ -60,6 +62,7 @@ test('scene transition, revocation, malformed commands and cross-player commands
   const room = await getRoom();
   assert.equal(room.receipts.p1.steal, undefined);
   assert.equal(room.receipts.p1.bad, undefined);
+  assert.equal(room.receipts.p2.utf8Oversize, undefined);
   assert.equal(room.receipts.p1.late, undefined);
   assert.equal(room.members.p1.status, 'revoked');
 });

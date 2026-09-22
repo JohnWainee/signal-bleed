@@ -86,7 +86,8 @@ interface SessionAdapter {
   dispose(): void;
 }
 type Admission = { schemaVersion: 1; revision: number; role: 'player' | 'presenter';
-  status: 'pending' | 'admitted' | 'denied' | 'revoked'; name: string };
+  status: 'pending' | 'admitted' | 'denied' | 'revoked'; name: string;
+  roomClosed?: boolean }; // Set true on existing admission projections when the room becomes read-only.
 type SessionEvent =
   | { type: 'admission'; value: Admission }
   | { type: 'scene'; data: Delivery<Scene> }

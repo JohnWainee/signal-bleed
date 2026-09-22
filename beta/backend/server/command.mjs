@@ -180,7 +180,7 @@ function apply(room, uid, roomId, command, slots) {
 export async function submitRoomCommand(database, uid, data, slots = configuredSlots()) {
   if (!id(uid)) return fail('UNAUTHENTICATED');
   if (!exact(data, ['roomId', 'command']) || !id(data.roomId) || !validCommand(data.command)) return fail('INVALID');
-  if (JSON.stringify(data).length > 32_000) return fail('INVALID');
+  if (Buffer.byteLength(JSON.stringify(data), 'utf8') > 32_000) return fail('INVALID');
   let result = fail('CONFLICT');
   const roomRef = database.ref(`betaRooms/v1/${data.roomId}`);
   // Admin's RTDB transaction callback first sees the local cache. Prime it so an
