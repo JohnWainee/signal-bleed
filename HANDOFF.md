@@ -48,6 +48,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (Codex app) — started SB-03 from accepted SB-02 head `5c654ed` on `feat/beta-sb-03-session-model`. Replaced the old global-revision JavaScript prototype with a typed fixture-only SessionAdapter/mock, synthetic multi-actor fixtures, per-entity revisions, scoped receipts, private events and eleven contract tests. Typecheck, package build, alpha smoke/cases/HTML/setting checks and all eleven tests passed. Fable's independent read-only review found no blocker; its missing private markers and authorization-order findings were fixed, and test gaps were narrowed. Final diff/PR checks still need review before acceptance. No Firebase rules, auth, protected files, merge or deployment changed. Draft PR target is the SB-02 branch until PR #7 is integrated.
+**Branch:** `feat/beta-sb-03-session-model` — released
+
 **Agent:** Codex (Codex app) — verified the live Cloudflare project as Workers Static Assets, GitHub connected, production branch `main`, root `/`, `npx wrangler deploy`, and custom domain `signal-bleed.com`. The active production version is the PR #6 main merge; PR #7 branch builds did not deploy to production. Live `/gm/` and `/table/` return 200; `/beta/gm/` and `/beta/src/app/main.ts` return 404. Current main still exposes `/HANDOFF.md` (200); PR #7's locally tested `.assetsignore` closes that path on Worker deployment. Accepted SB-02's hosting gate and marked SB-03 ready. No production deployment performed in this session.
 **Branch:** `feat/beta-sb-02-scaffold` — released
 
