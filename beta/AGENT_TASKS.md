@@ -64,10 +64,10 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 | SB-00 | Review foundation and verify working baseline | Integrator/reviewer | — | DONE; baseline evidence recorded |
 | SB-01 | Reconcile beta instructions and freeze contracts | A + integrator | SB-00 | DONE; contract v1 reviewed |
 | SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | DONE; live Cloudflare topology verified as Workers Static Assets, with beta kept out of production |
-| SB-03 | Typed session model and mock adapter | A | SB-02 | IN REVIEW; typed mock and eleven contract tests pass |
-| SB-04 | Firebase authorization and realtime adapter | A | SB-03 | WAIT |
-| SB-05 | GM control surface and presenter | B | SB-03 | WAIT |
-| SB-06 | Player prompts and persistent personal surface | C | SB-03 | WAIT |
+| SB-03 | Typed session model and mock adapter | A | SB-02 | DONE; independent review, eleven contract tests, package and PR checks pass |
+| SB-04 | Firebase authorization and realtime adapter | A | SB-03 | READY; protected rules change requires AGENTS confirmation |
+| SB-05 | GM control surface and presenter | B | SB-03 | READY |
+| SB-06 | Player prompts and persistent personal surface | C | SB-03 | READY |
 | SB-07 | Wire surfaces and prove four-client M1 | Integrator/reviewer | SB-04–06 | WAIT |
 | SB-08 | Preview packaging and release rehearsal | Integrator | SB-07 | WAIT |
 | SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | READY; Qwen attempt produced no accepted inventory |
@@ -250,7 +250,7 @@ SB-02 result link: [merged PR #7](https://github.com/JohnWainee/signal-bleed/pul
 | Dependency / PR target | SB-02 merged in PR #7; [draft PR #8](https://github.com/JohnWainee/signal-bleed/pull/8) targets `main` |
 | Owned files | `beta/src/session/`, `beta/tests/model.test.mjs`, removal of older `beta/session/session.mjs` and its tests; documentation and handoff updates. No Firebase, alpha runtime, protected file, routing or dependency changes. |
 | Acceptance evidence | `node --experimental-strip-types --test beta/tests/model.test.mjs` 11/11; `npm run beta:typecheck`, `npm run beta:package`, alpha smoke/cases/HTML/setting checks passed. Covers private views, malformed commands, roles, independent answers, receipts, scene epochs, serialized close/answer ordering, admission races, revocation, reconnect and personal revisions. |
-| Review / remaining gate | Fable read-only re-review of `07f768f` found no blocker and verified the prior fixes. Follow-up aligned disconnected role precedence and cross-player denial with the contract; 11/11 tests and package build pass. Final PR checks remain pending. Mock is not backend authorization or four-client multiplayer proof. |
+| Review / result | Fable read-only re-review of `07f768f` found no blocker and verified the prior fixes. Follow-up aligned disconnected role precedence and cross-player denial with the contract; 11/11 tests, package build and five PR checks pass at `898efed`. SB-03 is accepted as a mock model, not backend authorization or four-client multiplayer proof. |
 
 ### Prepared, not dispatched — SB-10 DeepSeek
 
