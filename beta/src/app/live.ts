@@ -1,5 +1,6 @@
 import { get, ref } from 'firebase/database';
 import { bootstrapFirebase } from '../data/firebase-bootstrap.ts';
+import type { RoomCommand } from '../data/firebase-session.ts';
 import type { Admission, Notes, Prompt, Scene, SessionEvent, Sheet } from '../session/model.ts';
 
 const root = document.querySelector<HTMLDivElement>('#app');
@@ -47,28 +48,48 @@ export async function startLive() {
   let stop: (() => void) | null = null;
   let accessLost = false;
   let busy = false;
-  let pending: { label: string; execute: () => Promise<{ ok: boolean; code?: string }> } | null = null;
+  const pendingKey = `SB:beta:pending:${roomId}:${uid}`;
+  const clearStoredPending = () => { try { sessionStorage.removeItem(pendingKey); } catch { /* Private view must still clear. */ } };
+  let pending: { label: string; command: RoomCommand } | null = null;
+  try {
+    const stored = sessionStorage.getItem(pendingKey);
+    if (stored) {
+      const value: unknown = JSON.parse(stored);
+      if (value && typeof value === 'object' && 'label' in value && 'command' in value && typeof value.label === 'string' &&
+        value.command && typeof value.command === 'object' && 'commandId' in value.command && typeof value.command.commandId === 'string') {
+        pending = value as { label: string; command: RoomCommand };
+      } else clearStoredPending();
+    }
+  } catch { /* Storage may be unavailable; a fresh command is blocked below if it cannot be retained. */ }
   const status = el('p'); status.setAttribute('role', 'status');
   const report = (value: string) => { message = value; render(); };
   const retry = async () => {
     if (!pending || busy || accessLost) return;
     busy = true; render();
     try {
-      const result = await pending.execute();
-      if (result.ok || result.code !== 'DISCONNECTED') pending = null;
+      const command = pending.command;
+      const result = await adapter.sendRoomCommand(roomId, command);
+      if (result.ok || result.code !== 'DISCONNECTED') {
+        pending = null;
+        clearStoredPending();
+      }
+      if (result.ok && command.type === 'admission.request') subscribe();
+      if (result.ok && command.type === 'room.create') location.reload();
       report(result.ok ? 'Saved.' : `Not saved: ${result.code ?? 'unknown error'}`);
     } catch { report('Connection interrupted. Retry the exact pending command.'); }
     finally { busy = false; render(); }
   };
-  const run = (label: string, execute: () => Promise<{ ok: boolean; code?: string }>) => {
+  const run = (label: string, command: RoomCommand) => {
     if (pending || busy || accessLost) return;
-    pending = { label, execute }; void retry();
+    try { sessionStorage.setItem(pendingKey, JSON.stringify({ label, command })); }
+    catch { report('Browser session storage is unavailable; command was not sent.'); return; }
+    pending = { label, command }; void retry();
   };
   const subscribe = () => {
     stop?.();
     stop = adapter.watch(roomId, (event: SessionEvent) => {
       if (event.type === 'accessLost') {
-        accessLost = true; pending = null; admission = null;
+        accessLost = true; pending = null; clearStoredPending(); admission = null;
         scene = null; roster = {}; gmDecisions = {}; decisions = {}; sheet = null; notes = null;
         report(`Access lost: ${event.code}. Private views cleared.`); return;
       }
@@ -96,11 +117,7 @@ export async function startLive() {
     if (surface === 'gm' && !owner) {
       root.append(button('Create this room', () => {
         const id = commandId();
-        run('Room creation', async () => {
-          const result = await adapter.createRoom(roomId, id);
-          if (result.ok) location.reload();
-          return result;
-        });
+        run('Room creation', { type: 'room.create', commandId: id });
       }));
       return;
     }
@@ -110,11 +127,7 @@ export async function startLive() {
         const { wrap, input } = field('Display name'); root.append(wrap);
         root.append(button('Request admission', () => {
           const name = input.value.trim(); const id = commandId();
-          run('Admission request', async () => {
-            const result = await adapter.requestAdmission(roomId, surface === 'play' ? 'player' : 'presenter', name, id);
-            if (result.ok) subscribe();
-            return result;
-          });
+          run('Admission request', { type: 'admission.request', commandId: id, role: surface === 'play' ? 'player' : 'presenter', name });
         }));
       }
       return;
@@ -126,16 +139,16 @@ export async function startLive() {
       root.append(button('Publish scene', () => {
         const command = { type: 'scene.publish' as const, commandId: commandId(), expectedEpoch: scene?.epoch ?? 0,
           title: title.input.value, body: body.input.value };
-        run('Scene publication', () => adapter.send(roomId, command));
+        run('Scene publication', command);
       }));
       const rosterSection = el('section'); rosterSection.append(el('h2', 'Admissions'));
       for (const [memberUid, record] of Object.entries(roster)) {
         const row = el('p', `${record.name} · ${record.role} · ${record.status} · ${memberUid}`);
         if (record.status === 'pending') row.append(button('Admit', () => {
-          const id = commandId(); run('Admission decision', () => adapter.decideAdmission(roomId, memberUid, 'admit', record.revision, id));
+          const id = commandId(); run('Admission decision', { type: 'admission.decide', commandId: id, uid: memberUid, decision: 'admit', expectedRevision: record.revision });
         }));
         if (record.status === 'admitted') row.append(button('Revoke', () => {
-          const id = commandId(); run('Revocation', () => adapter.revoke(roomId, memberUid, record.revision, id));
+          const id = commandId(); run('Revocation', { type: 'admission.revoke', commandId: id, uid: memberUid, expectedRevision: record.revision });
         }));
         rosterSection.append(row);
       }
@@ -146,15 +159,15 @@ export async function startLive() {
         const command = { type: 'prompt.open' as const, commandId: commandId(), recipientUid: recipient.input.value.trim(),
           promptId: commandId(), sceneEpoch: scene?.epoch ?? 0,
           question: question.input.value, a: a.input.value, b: b.input.value };
-        run('Private prompt', () => adapter.send(roomId, command));
+        run('Private prompt', command);
       }));
       for (const [recipientUid, prompts] of Object.entries(gmDecisions)) {
         for (const prompt of Object.values(prompts)) {
           const row = el('p', `${recipientUid}: ${prompt.question} · ${prompt.response?.choice ?? (prompt.closed ? 'closed' : 'unanswered')}`);
           if (!prompt.closed && !prompt.response) row.append(button('Close prompt', () => {
-            const id = commandId(); run('Prompt closure', () => adapter.send(roomId, {
+            const id = commandId(); run('Prompt closure', {
               type: 'prompt.close', commandId: id, recipientUid, promptId: prompt.id, expectedRevision: prompt.revision,
-            }));
+            });
           }));
           root.append(row);
         }
@@ -169,7 +182,7 @@ export async function startLive() {
           for (const choice of ['A', 'B'] as const) panel.append(button(`${choice}: ${choice === 'A' ? prompt.a : prompt.b}`, () => {
             const command = { type: 'response.submit' as const, commandId: commandId(), promptId: prompt.id,
               sceneEpoch: prompt.sceneEpoch, expectedRevision: prompt.revision, choice };
-            run('Prompt response', () => adapter.send(roomId, command));
+            run('Prompt response', command);
           }));
         } else panel.append(el('p', 'Closed or expired'));
         root.append(panel);

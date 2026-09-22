@@ -6,7 +6,7 @@ import type { Functions } from 'firebase/functions';
 import { httpsCallable } from 'firebase/functions';
 import type { Admission, Command, Delivery, Failure, Notes, Prompt, Result, Scene, SessionAdapter, SessionEvent, Sheet } from '../session/model.ts';
 
-type RoomCommand = Command | { type: 'room.create'; commandId: string } | { type: 'admission.request'; commandId: string; role: 'player' | 'presenter'; name: string } | { type: 'admission.decide'; commandId: string; uid: string; decision: 'admit' | 'deny'; expectedRevision: number } | { type: 'admission.revoke'; commandId: string; uid: string; expectedRevision: number };
+export type RoomCommand = Command | { type: 'room.create'; commandId: string } | { type: 'admission.request'; commandId: string; role: 'player' | 'presenter'; name: string } | { type: 'admission.decide'; commandId: string; uid: string; decision: 'admit' | 'deny'; expectedRevision: number } | { type: 'admission.revoke'; commandId: string; uid: string; expectedRevision: number };
 type Projection = Extract<SessionEvent, { data: Delivery<unknown> }>;
 const id = (value: string): boolean => /^[A-Za-z0-9_-]{1,128}$/.test(value) && !['__proto__', 'prototype', 'constructor'].includes(value);
 const failed = (code: Failure): Result => ({ ok: false, code });
@@ -57,6 +57,8 @@ export class FirebaseSessionAdapter implements SessionAdapter {
     try { return normalize((await this.call({ roomId, command })).data); }
     catch (error) { return failed(failureFromError(error)); }
   }
+
+  sendRoomCommand(roomId: string, command: RoomCommand): Promise<Result> { return this.command(roomId, command); }
 
   async createRoom(roomId: string, commandId: string): Promise<{ ok: true; roomId: string } | { ok: false; code: Failure }> {
     const result = await this.command(roomId, { type: 'room.create', commandId });
