@@ -48,6 +48,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (independent review session) — focused re-review of follow-up `c0778f0` found no findings. Verified the 32 KB guard now measures UTF-8 bytes; the regression payload is 24,249 JavaScript code units but 64,249 UTF-8 bytes and asserts no receipt, so it specifically distinguishes the old behavior. Verified `Admission.roomClosed` is aligned across the authoritative contract, model, and backend. Exact SHA `c0778f0` is approval-ready for draft PR #9 review, not deployment. Existing production App Check, slot assignment/export-recovery, dependency, routing, rollout, and rollback gates remain open.
+**Branch:** `feat/beta-sb-04-feasibility` — released; independently reviewed
+
 **Agent:** Codex (independent review session) | Codex (integrator) — independent exact-SHA review of `69b3b1e` found no authorization, slot, capacity-transaction, retry, privacy, App Check-boundary, or alpha-preservation blocker. It identified a moderate mismatch where the 32 KB callable guard counted UTF-16 code units rather than UTF-8 bytes, plus a low documentation omission for `Admission.roomClosed`. The integrator changed the guard to `Buffer.byteLength(..., 'utf8')`, added a multibyte oversize regression test, and aligned the authoritative Admission shape. This follow-up requires focused re-verification before review acceptance; no deployment, merge, production configuration, or protected file changed.
 **Branch:** `feat/beta-sb-04-feasibility` — claimed for review-finding fixes
 
