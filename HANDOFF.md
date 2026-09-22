@@ -48,6 +48,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (Codex app) — resumed SB-04 at `3cb475a`: draft PR #9 has five successful checks but no submitted reviews. Re-ran isolated emulator tests (five rules, three transaction, two adapter/callable), eleven model tests, beta typecheck/package, and alpha smoke/cases/HTML/setting checks; all pass. Production dependency audit still reports two moderate transitive `uuid`/`gaxios` findings. Beta pages remain synthetic fixtures without Firebase/App Check bootstrap, so genuine four-client privacy verification is outstanding. Independent CLI reviewer was unavailable (not logged in). No rules, Functions, Worker, or beta route deployed; PR remains draft.
+**Branch:** `feat/beta-sb-04-feasibility` — released for independent review
+
 **Agent:** Codex (Codex app) — after the user approved Blaze reuse and selected a $10 monthly alert, upgraded the separate `signal-bleed` Firebase project to Blaze on the existing `Firebase Payment` billing account (`01ACC7-FD5C4A-2CEF90`), already used by PowerGlove. Firebase confirms Blaze and one project budget; Google Cloud confirms a monthly $10 Signal Bleed budget, email alert thresholds at 50%, 90%, and 100%, and no spend cap. The alert does not limit charges. The SB-04 code remains emulator-verified; no rules, Functions, Worker, or beta route was deployed. Next release gates are independent PR review, production App Check bootstrap, and four-client privacy verification. See `beta/SB04_FEASIBILITY.md` and draft PR #9.
 **Branch:** `feat/beta-sb-04-feasibility` — draft review
 
