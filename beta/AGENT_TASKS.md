@@ -63,8 +63,8 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 |---|---|---|---|---|
 | SB-00 | Review foundation and verify working baseline | Integrator/reviewer | — | DONE; baseline evidence recorded |
 | SB-01 | Reconcile beta instructions and freeze contracts | A + integrator | SB-00 | DONE; contract v1 reviewed |
-| SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | REVIEW-HOST; tests/review passed for Workers, verify actual deployment path before acceptance/merge |
-| SB-03 | Typed session model and mock adapter | A | SB-02 | WAIT |
+| SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | DONE; live Cloudflare topology verified as Workers Static Assets, with beta kept out of production |
+| SB-03 | Typed session model and mock adapter | A | SB-02 | READY |
 | SB-04 | Firebase authorization and realtime adapter | A | SB-03 | WAIT |
 | SB-05 | GM control surface and presenter | B | SB-03 | WAIT |
 | SB-06 | Player prompts and persistent personal surface | C | SB-03 | WAIT |
@@ -221,7 +221,7 @@ PR #6 merged at `373565b188496500f92f57abb8e2f45bcf96b7ce`; current integration 
 | Branch / base | `feat/beta-sb-02-scaffold`; `373565b188496500f92f57abb8e2f45bcf96b7ce` |
 | Dependencies / owned files | SB-01; `beta/package-lock.json`, beta build/packaging documentation, this board and `HANDOFF.md`. Integrator retains sole ownership of shared dependency/routing/configuration files. |
 | Acceptance | Root and beta clean installs, typecheck, build/package, direct/reloaded beta routes, preview alpha routes and asset audit, alpha smoke/case/HTML/setting checks, four reference tests. See `SCAFFOLD.md` for results. |
-| Status / result | REVIEW-HOST; automated and desktop-browser gates passed. Fable review found and re-reviewed Workers asset-containment fix; actual Workers-versus-Pages deployment path remains unverified. No merge/deploy. |
+| Status / result | DONE; automated and desktop-browser gates passed, Fable re-reviewed asset containment, and live Cloudflare dashboard confirmed Workers Static Assets hosting. |
 
 Factory discovery is read-only, not a dispatch: Claude Code 2.1.278 is authenticated and lists Fable 5.1/Sonnet 5 in its local catalog; Ollama is reachable with local Qwen models, but no Signal Bleed Qwen task has run. The DeepSeek pi provider reports `credentials_not_configured`; SB-10 is **not dispatched**. The existing factory Beads queue/worktrees concern another tenant, not this repository. Do not claim those workers for Signal Bleed or share this game's content into that queue. SB-09 and SB-10 packets must name an exact new branch/worktree and base SHA before dispatch. At most three implementation workers may be active, including Codex.
 
@@ -239,7 +239,7 @@ Factory discovery is read-only, not a dispatch: Claude Code 2.1.278 is authentic
 - Sources: `HANDOFF.md`, `AGENTS.md`, this board, `CONTRACTS.md`, `SCAFFOLD.md`, Hawaiʻi setting bible and actual alpha source. Own inventory report only; no shared/router/dependency/protected files. Inventory chart/clocks/clues/links/rolls/case staging/artifacts/puzzles/inbox/notes/print/reference/Hawaiʻi index. Supply exact references, retain/migrate/defer recommendation and gaps; do not assume historical handoff equals current code.
 - Acceptance: read-only source inspection with reproducible `rg`/file references, limitations and unresolved migration questions; no runtime changes, no claim of browser or migration tests. Report actual checks and failures. If the factory cannot complete the packet, mark not dispatched or failed and have Codex do the inventory independently.
 
-SB-02 result link: [draft PR #7](https://github.com/JohnWainee/signal-bleed/pull/7). Reviewed code SHA: `2633f60e255bea98ce21feb44c68d44173630e8c` (Fable read-only re-review). Follow-up documentation may advance the PR head without altering that reviewed containment diff. The next owner is Codex integration: verify whether production is Workers Static Assets or Pages root publishing, then rerun the relevant no-exposure check before marking SB-02 DONE. Sonnet SB-03 stays WAIT and is not dispatched. Fable SB-05 and Qwen SB-06 also remain WAIT.
+SB-02 result link: [draft PR #7](https://github.com/JohnWainee/signal-bleed/pull/7). Reviewed code SHA: `2633f60e255bea98ce21feb44c68d44173630e8c` (Fable read-only re-review). Cloudflare dashboard confirms `signal-bleed.com` is the `signal-bleed` static-assets Worker, connected to this repo, deploying `main` from `/` with `npx wrangler deploy`. The active version remains main `373565b`; PR #7 builds did not deploy. On live main, `/gm/` and `/table/` are 200, beta source and route are 404, and `/HANDOFF.md` is 200; the reviewed `.assetsignore` fixes the latter in local Worker checks. SB-02 is DONE and SB-03 is READY. Fable SB-05 and Qwen SB-06 remain WAIT.
 
 ### Prepared, not dispatched — SB-10 DeepSeek
 
