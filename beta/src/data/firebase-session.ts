@@ -6,7 +6,9 @@ import type { Functions } from 'firebase/functions';
 import { httpsCallable } from 'firebase/functions';
 import type { Admission, Command, Delivery, Failure, Notes, Prompt, Result, Scene, SessionAdapter, SessionEvent, Sheet } from '../session/model.ts';
 
-export type RoomCommand = Command | { type: 'room.create'; commandId: string } | { type: 'admission.request'; commandId: string; role: 'player' | 'presenter'; name: string } | { type: 'admission.decide'; commandId: string; uid: string; decision: 'admit' | 'deny'; expectedRevision: number } | { type: 'admission.revoke'; commandId: string; uid: string; expectedRevision: number };
+export type RoomCommand = Command | { type: 'room.create' | 'room.close'; commandId: string } | { type: 'admission.request'; commandId: string; role: 'player' | 'presenter'; name: string } | { type: 'admission.decide'; commandId: string; uid: string; decision: 'admit' | 'deny'; expectedRevision: number } | { type: 'admission.revoke'; commandId: string; uid: string; expectedRevision: number };
+export type RoomStatus = { ok: true; closed: boolean; limits: { admissions: number; prompts: number; receipts: number; bytes: number; closeReserveBytes: number }; usage: { admissions: number; prompts: number; receipts: number; bytes: number } } | { ok: false; code: Failure };
+const statusFailed = (code: Failure): RoomStatus => ({ ok: false, code });
 type Projection = Extract<SessionEvent, { data: Delivery<unknown> }>;
 const id = (value: string): boolean => /^[A-Za-z0-9_-]{1,128}$/.test(value) && !['__proto__', 'prototype', 'constructor'].includes(value);
 const failed = (code: Failure): Result => ({ ok: false, code });
@@ -42,6 +44,7 @@ export class FirebaseSessionAdapter implements SessionAdapter {
   private readonly auth: Auth;
   private readonly database: Database;
   private readonly call: ReturnType<typeof httpsCallable<{ roomId: string; command: RoomCommand }, Result>>;
+  private readonly statusCall: ReturnType<typeof httpsCallable<{ roomId: string }, RoomStatus>>;
   private readonly watchers = new Set<() => void>();
   private disposed = false;
 
@@ -49,6 +52,7 @@ export class FirebaseSessionAdapter implements SessionAdapter {
     this.auth = auth;
     this.database = database;
     this.call = httpsCallable(functions, 'betaRoomCommand');
+    this.statusCall = httpsCallable(functions, 'betaRoomStatus');
   }
 
   private async command(roomId: string, command: RoomCommand): Promise<Result> {
@@ -59,6 +63,17 @@ export class FirebaseSessionAdapter implements SessionAdapter {
   }
 
   sendRoomCommand(roomId: string, command: RoomCommand): Promise<Result> { return this.command(roomId, command); }
+
+  async roomStatus(roomId: string): Promise<RoomStatus> {
+    if (this.disposed || !this.auth.currentUser) return statusFailed('UNAUTHENTICATED');
+    if (!id(roomId)) return statusFailed('INVALID');
+    try {
+      const value = (await this.statusCall({ roomId })).data;
+      if (value?.ok === true && typeof value.closed === 'boolean' && value.usage && value.limits) return value;
+      if (value?.ok === false && typeof value.code === 'string') return value;
+      return statusFailed('DISCONNECTED');
+    } catch (error) { return statusFailed(failureFromError(error)); }
+  }
 
   async createRoom(roomId: string, commandId: string): Promise<{ ok: true; roomId: string } | { ok: false; code: Failure }> {
     const result = await this.command(roomId, { type: 'room.create', commandId });

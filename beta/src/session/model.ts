@@ -1,14 +1,14 @@
 // Fixture-only model. Firebase authorization and atomic writes belong to SB-04.
 export type Role = 'gm' | 'player' | 'presenter';
 export type Choice = 'A' | 'B';
-export type Failure = 'UNAUTHENTICATED' | 'FORBIDDEN' | 'NOT_FOUND' | 'INVALID' | 'CONFLICT' | 'STALE_SCENE' | 'CLOSED' | 'ALREADY_ANSWERED' | 'COMMAND_ID_REUSED' | 'DISCONNECTED';
+export type Failure = 'UNAUTHENTICATED' | 'FORBIDDEN' | 'NOT_FOUND' | 'INVALID' | 'CONFLICT' | 'STALE_SCENE' | 'CLOSED' | 'ALREADY_ANSWERED' | 'COMMAND_ID_REUSED' | 'ROOM_FULL' | 'ROOM_CLOSED' | 'DISCONNECTED';
 export type Result = { ok: true; commandId: string; entityRevision: number } | { ok: false; code: Failure };
 export type Delivery<T> = { status: 'loading' | 'live' | 'disconnected'; value: T | null };
 export type Scene = { schemaVersion: 1; epoch: number; title: string; body: string };
 export type Prompt = { schemaVersion: 1; id: string; sceneEpoch: number; revision: number; question: string; a: string; b: string; closed: boolean; response: null | { choice: Choice; commandId: string } };
 export type Sheet = { schemaVersion: 1; revision: number; name: string; playbookId: string | null; inventory: { id: string; label: string; quantity: number }[] };
 export type Notes = { schemaVersion: 1; revision: number; text: string };
-export type Admission = { schemaVersion: 1; revision: number; role: 'player' | 'presenter'; status: 'pending' | 'admitted' | 'denied' | 'revoked'; name: string };
+export type Admission = { schemaVersion: 1; revision: number; role: 'player' | 'presenter'; status: 'pending' | 'admitted' | 'denied' | 'revoked'; name: string; roomClosed?: boolean };
 export type Command = { commandId: string } & (
   | { type: 'scene.publish'; expectedEpoch: number; title: string; body: string }
   | { type: 'prompt.open'; recipientUid: string; promptId: string; sceneEpoch: number; question: string; a: string; b: string }

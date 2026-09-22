@@ -113,6 +113,11 @@ test('authenticated callable creates a room and records the accepted command rec
   const created = await gm.adapter.createRoom('callableRoom', 'create1');
   assert.deepEqual(created, { ok: true, roomId: 'callableRoom' });
   assert.deepEqual(await gm.adapter.createRoom('callableRoom', 'create1'), created);
+  const initialStatus = await gm.adapter.roomStatus('callableRoom');
+  assert.equal(initialStatus.ok, true);
+  assert.equal(initialStatus.closed, false);
+  assert.equal(initialStatus.usage.receipts, 1);
+  assert.deepEqual(await player.adapter.roomStatus('callableRoom'), { ok: false, code: 'FORBIDDEN' });
   let stored;
   await env.withSecurityRulesDisabled(async context => { stored = (await context.database(databaseUrl).ref('betaRooms/v1/callableRoom').once('value')).val(); });
   assert.equal(stored.owner, gm.uid);
@@ -128,4 +133,7 @@ test('authenticated callable creates a room and records the accepted command rec
   assert.equal(decisions.data.value.prompt1.question, 'ONLY_PLAYER');
   assert.equal(JSON.stringify(playerEvents).includes('GM_ONLY'), false);
   stop();
+  assert.equal((await gm.adapter.sendRoomCommand('callableRoom', { type: 'room.close', commandId: 'close1' })).ok, true);
+  assert.equal((await gm.adapter.roomStatus('callableRoom')).closed, true);
+  assert.deepEqual(await player.adapter.send('callableRoom', { type: 'notes.replace', commandId: 'afterClose', expectedRevision: 0, text: 'No' }), { ok: false, code: 'ROOM_CLOSED' });
 });

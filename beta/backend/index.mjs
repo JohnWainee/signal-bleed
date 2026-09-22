@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase-admin/app';
 import { getDatabase } from 'firebase-admin/database';
 import { onCall } from 'firebase-functions/v2/https';
-import { submitRoomCommand } from './server/command.mjs';
+import { readRoomStatus, submitRoomCommand } from './server/command.mjs';
 
 const firebaseConfig = process.env.FIREBASE_CONFIG ? JSON.parse(process.env.FIREBASE_CONFIG) : {};
 const projectId = process.env.GCLOUD_PROJECT || process.env.GCP_PROJECT || firebaseConfig.projectId;
@@ -14,4 +14,9 @@ initializeApp({ databaseURL });
 
 export const betaRoomCommand = onCall({ region: 'us-central1', maxInstances: 10, memory: '256MiB', enforceAppCheck: process.env.FUNCTIONS_EMULATOR !== 'true' }, async request => {
   return submitRoomCommand(getDatabase(), request.auth?.uid, request.data);
+});
+
+export const betaRoomStatus = onCall({ region: 'us-central1', maxInstances: 10, memory: '256MiB', enforceAppCheck: process.env.FUNCTIONS_EMULATOR !== 'true' }, async request => {
+  if (!request.data || typeof request.data !== 'object' || Array.isArray(request.data) || Object.keys(request.data).length !== 1) return { ok: false, code: 'INVALID' };
+  return readRoomStatus(getDatabase(), request.auth?.uid, request.data.roomId);
 });

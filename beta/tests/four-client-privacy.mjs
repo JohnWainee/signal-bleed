@@ -86,6 +86,20 @@ try {
   await gm.locator('p').filter({ hasText: `P1 · player · admitted · ${p1Uid}` }).getByRole('button', { name: 'Revoke' }).click();
   await p1.getByText('Private views cleared.').waitFor();
   assert.doesNotMatch(await p1.locator('#app').innerText(), /ONLY_PLAYER_ONE/);
+  gm.once('dialog', dialog => dialog.accept());
+  await gm.getByRole('button', { name: 'Close room (read-only)' }).click();
+  await gm.getByText('Room closed. Existing records are read-only.').waitFor();
+  await gm.reload();
+  await gm.getByText('Room closed. Existing scene and private views remain readable; new commands are disabled.').waitFor();
+  assert.equal(await gm.getByRole('button', { name: 'Publish scene' }).count(), 0);
+  assert.equal(await gm.getByRole('button', { name: 'Close room (read-only)' }).count(), 0);
+  // Closed rooms stay read-only, not hidden: the roster remains visible without admit/revoke controls.
+  await gm.getByRole('heading', { name: 'Admissions' }).waitFor();
+  await gm.getByText(`P2 · player · admitted · ${p2Uid}`).waitFor();
+  assert.equal(await gm.locator('p').filter({ hasText: `P2 · player · admitted · ${p2Uid}` }).getByRole('button').count(), 0);
+  // The room.close receipt reaches every admitted member through their own admission record, without a reload or a failed submit attempt first.
+  await p2.getByText('Room closed. Existing records are read-only.').waitFor();
+  assert.equal(await p2.getByRole('button', { name: 'A: Choice A' }).count(), 0);
   console.log(`PASS four-client UI and RTDB inbound privacy: ${room}; all four identities simultaneously admitted before prompt delivery`);
 } finally {
   await browser.close();

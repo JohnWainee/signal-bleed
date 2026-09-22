@@ -2,12 +2,13 @@ import { before, after, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { initializeApp, deleteApp } from 'firebase-admin/app';
 import { getDatabase } from 'firebase-admin/database';
-import { submitRoomCommand } from '../server/command.mjs';
+import { ROOM_LIMITS, readRoomStatus, submitRoomCommand } from '../server/command.mjs';
 
 let app;
 let database;
 const roomId = 'commandTestRoom';
-const send = (uid, command) => submitRoomCommand(database, uid, { roomId, command });
+const slots = { permits: (room, uid) => (room === roomId && uid === 'gm1') || (room === 'raceRoom' && uid === 'raceGm') || (room.startsWith('limit') && uid === 'limitGm') };
+const send = (uid, command) => submitRoomCommand(database, uid, { roomId, command }, slots);
 const getRoom = async () => (await database.ref(`betaRooms/v1/${roomId}`).get()).val();
 const success = result => assert.equal(result.ok, true, JSON.stringify(result));
 const error = (result, code) => assert.deepEqual(result, { ok: false, code });
@@ -65,7 +66,7 @@ test('scene transition, revocation, malformed commands and cross-player commands
 
 test('close/answer and scene/answer races have one authoritative order; personal revisions stay independent', async () => {
   const raceRoomId = 'raceRoom';
-  const race = (uid, command) => submitRoomCommand(database, uid, { roomId: raceRoomId, command });
+  const race = (uid, command) => submitRoomCommand(database, uid, { roomId: raceRoomId, command }, slots);
   success(await race('raceGm', { type: 'room.create', commandId: 'raceCreate' }));
   success(await race('racePlayer', { type: 'admission.request', commandId: 'raceRequest', role: 'player', name: 'Player' }));
   success(await race('raceGm', { type: 'admission.decide', commandId: 'raceAdmit', uid: 'racePlayer', decision: 'admit', expectedRevision: 0 }));
@@ -100,4 +101,83 @@ test('close/answer and scene/answer races have one authoritative order; personal
   assert.equal(finalRoom.personal.racePlayer.sheet.revision, 1);
   assert.equal(finalRoom.personal.racePlayer.notes.revision, 1);
   assert.equal(finalRoom.receipts.racePlayer.notesStale, undefined);
+});
+
+test('room creation requires its assigned GM slot and slots cannot be claimed by URL alone', async () => {
+  const create = (uid, id) => submitRoomCommand(database, uid, { roomId: id, command: { type: 'room.create', commandId: 'create' } }, slots);
+  error(await create('intruder', 'limitSlot'), 'FORBIDDEN');
+  error(await create('limitGm', 'notAllocated'), 'FORBIDDEN');
+  assert.equal((await database.ref('betaRooms/v1/limitSlot').get()).exists(), false);
+  success(await create('limitGm', 'limitSlot'));
+  error(await create('intruder', 'limitSlot'), 'FORBIDDEN');
+});
+
+test('admission and prompt ceilings reject new growth without losing existing records', async () => {
+  const admissionRoom = 'limitAdmissions';
+  const at = (id, uid, command) => submitRoomCommand(database, uid, { roomId: id, command }, slots);
+  success(await at(admissionRoom, 'limitGm', { type: 'room.create', commandId: 'create' }));
+  const admissions = Object.fromEntries(Array.from({ length: ROOM_LIMITS.admissions }, (_, n) => [`guest${n}`, { schemaVersion: 1, revision: 0, role: 'player', status: 'denied', name: `Guest ${n}` }]));
+  await database.ref(`betaRooms/v1/${admissionRoom}/admissions`).set(admissions);
+  error(await at(admissionRoom, 'extra', { type: 'admission.request', commandId: 'requestExtra', role: 'player', name: 'Extra' }), 'ROOM_FULL');
+  assert.equal((await database.ref(`betaRooms/v1/${admissionRoom}/receipts/extra`).get()).exists(), false);
+  success(await at(admissionRoom, 'guest0', { type: 'admission.request', commandId: 'retryGuest', role: 'player', name: 'Guest zero' }));
+
+  const promptRoom = 'limitPrompts';
+  success(await at(promptRoom, 'limitGm', { type: 'room.create', commandId: 'create' }));
+  success(await at(promptRoom, 'player', { type: 'admission.request', commandId: 'request', role: 'player', name: 'Player' }));
+  success(await at(promptRoom, 'limitGm', { type: 'admission.decide', commandId: 'admit', uid: 'player', decision: 'admit', expectedRevision: 0 }));
+  success(await at(promptRoom, 'limitGm', { type: 'scene.publish', commandId: 'scene', expectedEpoch: 0, title: 'Scene', body: 'Body' }));
+  await database.ref(`betaRooms/v1/${promptRoom}/usedPrompts`).set(Object.fromEntries(Array.from({ length: ROOM_LIMITS.prompts }, (_, n) => [`old${n}`, true])));
+  error(await at(promptRoom, 'limitGm', { type: 'prompt.open', commandId: 'extraPrompt', recipientUid: 'player', promptId: 'newPrompt', sceneEpoch: 1, question: 'Question', a: 'A', b: 'B' }), 'ROOM_FULL');
+  assert.equal((await database.ref(`betaRooms/v1/${promptRoom}/decisions/player/newPrompt`).get()).exists(), false);
+});
+
+test('last ordinary receipt is atomic under a race; close reserve and exact retries survive the cap', async () => {
+  const id = 'limitReceipts';
+  const at = (uid, command) => submitRoomCommand(database, uid, { roomId: id, command }, slots);
+  success(await at('limitGm', { type: 'room.create', commandId: 'create' }));
+  for (const uid of ['one', 'two']) {
+    success(await at(uid, { type: 'admission.request', commandId: `request_${uid}`, role: 'player', name: uid }));
+    success(await at('limitGm', { type: 'admission.decide', commandId: `admit_${uid}`, uid, decision: 'admit', expectedRevision: 0 }));
+  }
+  const existing = (await database.ref(`betaRooms/v1/${id}/receipts`).get()).val();
+  const existingCount = Object.values(existing).reduce((n, group) => n + Object.keys(group).length, 0);
+  existing.limitGm = { ...existing.limitGm, ...Object.fromEntries(Array.from({ length: ROOM_LIMITS.receipts - 2 - existingCount }, (_, n) => [`seed${n}`, { payload: '{}', result: { ok: true, commandId: `seed${n}`, entityRevision: 0 } }])) };
+  await database.ref(`betaRooms/v1/${id}/receipts`).set(existing);
+  const [one, two] = await Promise.all([
+    at('one', { type: 'notes.replace', commandId: 'lastOne', expectedRevision: 0, text: 'One' }),
+    at('two', { type: 'notes.replace', commandId: 'lastTwo', expectedRevision: 0, text: 'Two' }),
+  ]);
+  assert.equal(Number(one.ok) + Number(two.ok), 1);
+  assert.equal([one, two].filter(result => !result.ok)[0].code, 'ROOM_FULL');
+  const winnerUid = one.ok ? 'one' : 'two';
+  const winnerCommand = { type: 'notes.replace', commandId: one.ok ? 'lastOne' : 'lastTwo', expectedRevision: 0, text: one.ok ? 'One' : 'Two' };
+  assert.deepEqual(await at(winnerUid, winnerCommand), one.ok ? one : two);
+  error(await at(winnerUid, { ...winnerCommand, text: 'Changed' }), 'COMMAND_ID_REUSED');
+  const close = { type: 'room.close', commandId: 'closeAtCap' };
+  const closed = await at('limitGm', close);
+  success(closed);
+  assert.deepEqual(await at('limitGm', close), closed);
+  error(await at('limitGm', { type: 'scene.publish', commandId: 'afterClose', expectedEpoch: 0, title: 'No', body: 'No' }), 'ROOM_CLOSED');
+  error(await at('one', { type: 'notes.replace', commandId: 'afterClosePlayer', expectedRevision: one.ok ? 1 : 0, text: 'No' }), 'ROOM_CLOSED');
+  const room = (await database.ref(`betaRooms/v1/${id}`).get()).val();
+  assert.equal(room.closed, true);
+  assert.equal(Object.values(room.receipts).reduce((n, group) => n + Object.keys(group).length, 0), ROOM_LIMITS.receipts);
+  assert.equal(room.receipts.limitGm.afterClose, undefined);
+  const status = await readRoomStatus(database, 'limitGm', id);
+  assert.equal(status.ok, true);
+  assert.equal(status.closed, true);
+  assert.equal(status.usage.receipts, ROOM_LIMITS.receipts);
+  error(await readRoomStatus(database, 'one', id), 'FORBIDDEN');
+});
+
+test('byte ceiling rejects the full transaction while still permitting explicit close', async () => {
+  const id = 'limitBytes';
+  const at = command => submitRoomCommand(database, 'limitGm', { roomId: id, command }, slots);
+  success(await at({ type: 'room.create', commandId: 'create' }));
+  await database.ref(`betaRooms/v1/${id}/gm/notes`).set({ text: 'x'.repeat(ROOM_LIMITS.bytes - ROOM_LIMITS.closeReserveBytes - 300) });
+  error(await at({ type: 'scene.publish', commandId: 'tooLarge', expectedEpoch: 0, title: 'Scene', body: 'Body' }), 'ROOM_FULL');
+  assert.equal((await database.ref(`betaRooms/v1/${id}/shared/scene`).get()).exists(), false);
+  assert.equal((await database.ref(`betaRooms/v1/${id}/receipts/limitGm/tooLarge`).get()).exists(), false);
+  success(await at({ type: 'room.close', commandId: 'closeOversize' }));
 });

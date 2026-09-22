@@ -1,6 +1,6 @@
-# Proposed M1 room capacity and lifecycle revision
+# M1 closed-beta room capacity and lifecycle decision
 
-**Status:** Proposed, not accepted or implemented. **Date:** 2026-09-22. **Decider:** project owner. This document does not amend `beta/CONTRACTS.md`, authorize deletion, or approve production deployment.
+**Status:** Accepted by the project owner for implementation; local code remains under review and undeployed. **Date:** 2026-09-22. **Decider:** project owner. This decision does not authorize deletion or production deployment.
 
 ## Context
 
@@ -26,7 +26,7 @@ The size ceiling is evaluated on the complete proposed room inside the existing 
 | Automatically delete inactive rooms | Bounds long-term storage | Irreversible data loss without export, consent, recovery, or retention policy; not suitable for this closed beta. |
 | Invite-bound room slots plus per-room ceilings (recommended) | Bounds beta data without deleting or weakening receipt idempotency | Limits a session's length and requires manual slot administration and clear UI at capacity. |
 
-## Required contract and implementation work if approved
+## Implementation and verification gates
 
 - Revise `beta/CONTRACTS.md` to replace unlimited room creation/lifetime growth with the slot and ceiling rules, add `ROOM_FULL`/`ROOM_CLOSED`, `room.close`, and explicit read-only semantics. Preserve immutable accepted receipts, authorization order, personal records, and no automatic deletion.
 - Add trusted slot authorization and transaction-time count/byte checks to the callable. Do not implement quota only in UI or RTDB rules. Keep alpha rules unchanged. If a protected file must change, follow `AGENTS.md` confirmation first.
@@ -35,4 +35,4 @@ The size ceiling is evaluated on the complete proposed room inside the existing 
 
 ## Release consequence
 
-This proposal reduces storage-growth exposure but does **not** turn the $10 budget into a spend cap or make the current branch deploy-ready. PR review, dependency findings, production App Check traffic, and the controlled rollout/rollback checks in `beta/SB04_FEASIBILITY.md` still apply. No room is closed, exported, or deleted by this proposal.
+This decision reduces storage-growth exposure but does **not** turn the $10 budget into a spend cap or make the current branch deploy-ready. PR review, dependency findings, production App Check traffic, and the controlled rollout/rollback checks in `beta/SB04_FEASIBILITY.md` still apply. No production room is closed, exported, or deleted by the local implementation.

@@ -1,4 +1,7 @@
 // Trusted SB-04 room transaction. No client can write betaRooms directly.
+import { configuredSlots } from './slots.mjs';
+
+export const ROOM_LIMITS = Object.freeze({ admissions: 24, prompts: 100, receipts: 512, bytes: 512 * 1024, closeReserveBytes: 1024 });
 const forbidden = new Set(['__proto__', 'prototype', 'constructor']);
 const own = (object, key) => Object.hasOwn(object ?? {}, key) ? object[key] : undefined;
 const plain = value => value !== null && typeof value === 'object' && !Array.isArray(value) && Object.getPrototypeOf(value) === Object.prototype;
@@ -13,11 +16,18 @@ const ok = (commandId, entityRevision) => ({ ok: true, commandId, entityRevision
 const emptySheet = () => ({ schemaVersion: 1, revision: 0, name: '', playbookId: null, inventory: [] });
 const emptyNotes = () => ({ schemaVersion: 1, revision: 0, text: '' });
 const playbooks = new Set(['splicer', 'registrar', 'operator', 'diver', 'inspector', 'salvage', 'watch']);
+const receiptCount = room => Object.values(room.receipts ?? {}).reduce((count, issuer) => count + Object.keys(issuer ?? {}).length, 0);
+const roomBytes = room => Buffer.byteLength(JSON.stringify(room), 'utf8');
+const overCapacity = room => Object.keys(room.admissions ?? {}).length > ROOM_LIMITS.admissions ||
+  Object.keys(room.usedPrompts ?? {}).length > ROOM_LIMITS.prompts ||
+  receiptCount(room) > ROOM_LIMITS.receipts - 1 ||
+  roomBytes(room) > ROOM_LIMITS.bytes - ROOM_LIMITS.closeReserveBytes;
 
 export function validCommand(value) {
   if (!plain(value) || !id(value.commandId)) return false;
   switch (value.type) {
     case 'room.create': return exact(value, ['type', 'commandId']);
+    case 'room.close': return exact(value, ['type', 'commandId']);
     case 'admission.request': return exact(value, ['type', 'commandId', 'role', 'name']) && ['player', 'presenter'].includes(value.role) && bounded(value.name, 200);
     case 'admission.decide': return exact(value, ['type', 'commandId', 'uid', 'decision', 'expectedRevision']) && id(value.uid) && ['admit', 'deny'].includes(value.decision) && revision(value.expectedRevision);
     case 'admission.revoke': return exact(value, ['type', 'commandId', 'uid', 'expectedRevision']) && id(value.uid) && revision(value.expectedRevision);
@@ -31,11 +41,13 @@ export function validCommand(value) {
   }
 }
 
-function apply(room, uid, command) {
+function apply(room, uid, roomId, command, slots) {
   if (!room) {
     if (command.type !== 'room.create') return { result: fail('NOT_FOUND') };
-    const created = { schemaVersion: 1, owner: uid, epoch: 0, admissions: {}, members: {}, shared: {}, gm: {}, decisions: {}, personal: {}, receipts: {}, usedPrompts: {} };
+    if (!slots.permits(roomId, uid)) return { result: fail('FORBIDDEN') };
+    const created = { schemaVersion: 1, owner: uid, epoch: 0, closed: false, admissions: {}, members: {}, shared: {}, gm: {}, decisions: {}, personal: {}, receipts: {}, usedPrompts: {} };
     created.receipts[uid] = { [command.commandId]: { payload: canonical(command), result: ok(command.commandId, 0) } };
+    if (overCapacity(created)) return { result: fail('ROOM_FULL') };
     return { room: created, result: ok(command.commandId, 0) };
   }
   if (command.type === 'room.create') {
@@ -51,14 +63,21 @@ function apply(room, uid, command) {
   const player = admitted && member.role === 'player';
   if (command.type === 'admission.request') {
     if (owner) return { result: fail('FORBIDDEN') };
-  } else if (command.type === 'admission.decide' || command.type === 'admission.revoke' || command.type === 'scene.publish' || command.type === 'prompt.open' || command.type === 'prompt.close') {
+  } else if (command.type === 'admission.decide' || command.type === 'admission.revoke' || command.type === 'scene.publish' || command.type === 'prompt.open' || command.type === 'prompt.close' || command.type === 'room.close') {
     if (!owner) return { result: fail('FORBIDDEN') };
   } else if (!player) return { result: fail('FORBIDDEN') };
   const prior = own(own(room.receipts, uid), command.commandId);
   if (prior) return { result: prior.payload === canonical(command) ? prior.result : fail('COMMAND_ID_REUSED') };
+  if (room.closed) return { result: fail('ROOM_CLOSED') };
 
   let entityRevision = 0;
   switch (command.type) {
+    case 'room.close':
+      room.closed = true;
+      // Existing own-admission listeners carry the read-only signal to every admitted client.
+      for (const admission of Object.values(room.admissions)) admission.roomClosed = true;
+      entityRevision = room.epoch;
+      break;
     case 'admission.request': {
       const current = own(room.admissions, uid);
       if (current?.status === 'admitted' || (current && current.role !== command.role)) return { result: fail('CONFLICT') };
@@ -154,10 +173,11 @@ function apply(room, uid, command) {
   const result = ok(command.commandId, entityRevision);
   room.receipts[uid] ??= {};
   room.receipts[uid][command.commandId] = { payload: canonical(command), result };
+  if (command.type !== 'room.close' && overCapacity(room)) return { result: fail('ROOM_FULL') };
   return { room, result };
 }
 
-export async function submitRoomCommand(database, uid, data) {
+export async function submitRoomCommand(database, uid, data, slots = configuredSlots()) {
   if (!id(uid)) return fail('UNAUTHENTICATED');
   if (!exact(data, ['roomId', 'command']) || !id(data.roomId) || !validCommand(data.command)) return fail('INVALID');
   if (JSON.stringify(data).length > 32_000) return fail('INVALID');
@@ -168,9 +188,24 @@ export async function submitRoomCommand(database, uid, data) {
   const initial = (await roomRef.get()).val();
   await roomRef.transaction(current => {
     const state = current ?? initial;
-    const outcome = apply(state ? copy(state) : null, uid, data.command);
+    const outcome = apply(state ? copy(state) : null, uid, data.roomId, data.command, slots);
     result = outcome.result;
     return outcome.room;
   }, undefined, false);
   return result;
+}
+
+// GM-only metadata query; it never returns room contents or bypasses command authorization.
+export async function readRoomStatus(database, uid, roomId) {
+  if (!id(uid)) return fail('UNAUTHENTICATED');
+  if (!id(roomId)) return fail('INVALID');
+  const room = (await database.ref(`betaRooms/v1/${roomId}`).get()).val();
+  // FORBIDDEN uniformly for any non-owner, so a probe cannot learn whether an unassigned slot has been created yet.
+  if (!room || room.owner !== uid) return fail('FORBIDDEN');
+  return { ok: true, closed: room.closed === true, limits: ROOM_LIMITS, usage: {
+    admissions: Object.keys(room.admissions ?? {}).length,
+    prompts: Object.keys(room.usedPrompts ?? {}).length,
+    receipts: receiptCount(room),
+    bytes: roomBytes(room),
+  } };
 }
