@@ -44,6 +44,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (ChatGPT Work Mode) — added `beta/AGENT_TASKS.md` with 14 scoped tasks, dependency order, three implementation lanes, integration ownership, review gates and an assignment prompt. Added `beta/LIFEPATH_TUNING_PROPOSAL.md` after recovering the prior four-phase design (Origin, Career, Incident, Fallout): choose direction, roll, choose consequence, record change. Distinguishes confirmed player agency/free playbook choice from proposed dice/content tuning. No runtime or protected files changed; docs reviewed against current branch conventions. First dispatch: SB-00 independent baseline review and SB-10 source/content reconciliation. No agents dispatched, issues created, merge or deployment performed.
+**Branch:** `feat/beta-session-foundation` — released
+
 **Agent:** Codex (ChatGPT Work Mode) — started the beta session foundation from main at `624e8cb5b82917478024e227938687c221eb0125`, following the newer September 21–22 design-session direction: GM-led scenes, read-only presenter, private player A/B prompts, and eventual Vite/TypeScript migration on existing Cloudflare/Firebase hosting. Added a transport-independent session module, four passing Node tests, and `beta/README.md` with the migration sequence and limitations. No Firebase adapter, UI, lifepath content, alpha tag, production configuration, or protected files changed. Direct terminal cloning was blocked; files committed through GitHub. Alpha checks not run locally. Independent review and connected four-client verification remain outstanding before merge. The recent design decisions were retrieved through conversation context; pin status itself was not available.
 **Branch:** `feat/beta-session-foundation` — released
 
