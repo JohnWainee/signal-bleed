@@ -38,11 +38,12 @@ After explicit user approval, the protected `firebase.rules.json` gained exactly
 
 ## Release checklist and rollback boundary
 
-- [x] Local rules, callable, adapter, model, beta build/package, and alpha regression checks passed; five PR checks passed at `aca6a7b` before this follow-up diff.
+- [x] Local rules, callable, adapter, model, beta build/package, and alpha regression checks passed; five PR checks passed on implementation head `fc0814e`.
 - [x] Four simultaneous browser identities and inbound RTDB frame privacy assertions passed in the isolated demo emulator.
 - [x] Independent second-agent review of the follow-up diff; its positive-capture test finding was fixed and retested.
-- [ ] Green CI on the eventual pushed head and a submitted GitHub PR review; GitHub has no submitted review yet.
-- [ ] Finish independent review and regression verification of the accepted room-lifecycle implementation; configure at most ten fixed slot-ID → GM-UID bindings in the Functions deployment environment, and document manual export/recovery before allowing beta rooms. Resolve/accept two moderate transitive `uuid`/`gaxios` advisories.
+- [x] Green CI on implementation head `fc0814e` and an exact-SHA independent review artifact in `reviews/SB-04.md`; the documentation-only closeout must also be green before merge. The project owner selected this artifact plus owner merge authorization because no second GitHub reviewer account is available.
+- [x] Independent review and regression verification of the accepted room-lifecycle implementation completed. Manual export/recovery is documented in `OPERATIONS.md`; the two moderate transitive `uuid`/`gaxios` advisories are accepted only for the closed beta with the reachability and reassessment boundary recorded in the review.
+- [ ] Configure one fixed slot-ID → owner GM-UID binding for the initial canary; leave the other nine slots unassigned.
 - [ ] Verify production App Check token acquisition and callable requests in a controlled beta rollout without enabling enforcement on alpha's RTDB API.
 - [ ] Review exact rules/Function deployment plan and Worker beta asset routing separately. Do not replace `/gm/` or modify the alpha rules. Record the pre-deploy rules and Function versions so a failed beta rollout can restore them; stop beta traffic first if private payloads leak, unauthorized reads succeed, App Check rejects legitimate clients, or cost rises unexpectedly. The $10 alert is not a spend cap.
 

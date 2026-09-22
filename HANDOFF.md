@@ -48,6 +48,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (Codex app) — closed the SB-04 review record on the pushed implementation: added `beta/reviews/SB-04.md`, documented private export/emulator recovery and rollback in `beta/OPERATIONS.md`, recorded the bounded closed-beta acceptance of the two moderate transitive `gaxios`/`uuid` findings, and aligned the feasibility checklist/task board. Re-ran beta typecheck/package, eleven model tests, alpha smoke/cases/HTML/setting checks, the full isolated emulator suite (1 slot, 5 rules, 7 command/capacity/closure, 2 adapter/callable), and the four simultaneous Chromium-context UI/inbound-frame privacy test; all passed. No rules, Functions, Worker assets, slot assignments, or production service changed. PR #9 remains the merge boundary; live canary gates remain open.
+**Branch:** `feat/beta-sb-04-feasibility` — released; accepted for merge
+
 **Agent:** Codex (independent review session) — focused re-review of follow-up `c0778f0` found no findings. Verified the 32 KB guard now measures UTF-8 bytes; the regression payload is 24,249 JavaScript code units but 64,249 UTF-8 bytes and asserts no receipt, so it specifically distinguishes the old behavior. Verified `Admission.roomClosed` is aligned across the authoritative contract, model, and backend. Exact SHA `c0778f0` is approval-ready for draft PR #9 review, not deployment. Existing production App Check, slot assignment/export-recovery, dependency, routing, rollout, and rollback gates remain open.
 **Branch:** `feat/beta-sb-04-feasibility` — released; independently reviewed
 
