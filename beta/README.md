@@ -41,3 +41,7 @@ Keep existing Cloudflare/Firebase hosting. Produce a beta preview before an in-p
 ## Validation limits
 
 Four local Node tests cover the session contract and data isolation projections. They do not prove Firebase authorization, browser rendering, network synchronization, or compatibility with the existing deployed application. No alpha checks were run locally because terminal cloning was blocked; source changes are submitted through the GitHub connection.
+
+## Agent implementation plan
+
+See [AGENT_TASKS.md](AGENT_TASKS.md) for task ownership, dependencies, acceptance checks and the copyable assignment prompt. Start with SB-00 and SB-10. See [LIFEPATH_TUNING_PROPOSAL.md](LIFEPATH_TUNING_PROPOSAL.md) for the recovered four-phase direction and proposed choice tuning; exact rules/content remain subject to source reconciliation and review.
