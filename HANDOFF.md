@@ -5,6 +5,8 @@ Nothing here needs authoring — only pushing, wiring, and one config paste.
 
 **Current beta context (2026-09-22):** The active setting is Hawaiʻi — Emergency Republic. See `rules/hawaii-setting-bible.md` and `beta/HAWAII_MIGRATION.md`. The alpha checklist below and older session entries are historical; their former setting descriptions are superseded.
 
+**Deployment status:** Cloudflare dashboard verified `signal-bleed.com` is a static-assets Worker named `signal-bleed`, connected to `JohnWainee/signal-bleed`. It deploys from `/` with `npx wrangler deploy`, and `main` is the production branch. The old Pages setup checklist below is historical. SB-02's `.assetsignore` applies to this Worker; the beta remains a local preview until a reviewed release package is configured.
+
 ## Your tasks, in order
 
 1. **Push to GitHub.** Create a repo (suggest `signal-bleed`, private) and push `main`.
@@ -45,6 +47,16 @@ per-field sync refactor.
 Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
+
+**Agent:** Codex (Codex app) — verified the live Cloudflare project as Workers Static Assets, GitHub connected, production branch `main`, root `/`, `npx wrangler deploy`, and custom domain `signal-bleed.com`. The active production version is the PR #6 main merge; PR #7 branch builds did not deploy to production. Live `/gm/` and `/table/` return 200; `/beta/gm/` and `/beta/src/app/main.ts` return 404. Current main still exposes `/HANDOFF.md` (200); PR #7's locally tested `.assetsignore` closes that path on Worker deployment. Accepted SB-02's hosting gate and marked SB-03 ready. No production deployment performed in this session.
+**Branch:** `feat/beta-sb-02-scaffold` — released
+
+**Agent:** Codex (Codex app; model ID not exposed) — resumed SB-02 after confirming PR #7 ownership and main at `373565b188496500f92f57abb8e2f45bcf96b7ce`. Generated the beta lockfile; clean root/beta installs, typecheck/build/package, alpha smoke/cases/HTML/setting checks and four reference tests pass. Desktop-browser direct/reload and packaged alpha/reference/print checks passed; phone/16:9 viewports inspected. Fable's independent static review found root Worker asset exposure; `.assetsignore` now blocks unbuilt beta/tooling URLs in local Wrangler while alpha routes remain live, and Fable judged the fix non-blocking by static re-review. The actual Workers-versus-Pages production path remains unverified, so SB-02 is REVIEW-HOST and [draft PR #7](https://github.com/JohnWainee/signal-bleed/pull/7) must not merge until confirmed. Its body has exact evidence and limits. No Firebase, multiplayer, physical-device, merge or deployment verification is claimed. Qwen SB-09 invocation yielded no usable report; DeepSeek is unavailable and SB-10 not dispatched. Next: verify hosting topology, then accept SB-02 and dispatch Sonnet SB-03 from the accepted head. See `beta/SCAFFOLD.md` and `beta/AGENT_TASKS.md`. A separate design-direction session was opened at the user's request.
+**Branch:** `feat/beta-sb-02-scaffold` — released
+
+**Agent:** Codex (ChatGPT Work Mode) — user authorized merge and continuation. PR #6 merged at `373565b188496500f92f57abb8e2f45bcf96b7ce` after all four CI jobs passed head `8e7b55e0c8c5e9d02a03fb814f90bb1d90e6db3b`. Integration base is now main. Started SB-02 fixture scaffold: three beta entry pages, TypeScript display code, Vite config, separate pinned beta package, root convenience scripts and allowlisted preview packaging. No Firebase wiring or protected files edited. npm registry requests return HTTP 403; no lockfile, clean install, build, typecheck or browser verification possible here. SB-02 remains blocked draft; next agent must install dependencies, generate/commit beta/package-lock.json, verify build/direct routes and packaging before SB-03. See beta/SCAFFOLD.md.
+**Branch:** `feat/beta-session-foundation` — merged
+**Branch:** `feat/beta-sb-02-scaffold` — released
 
 **Agent:** Codex (ChatGPT Work Mode) — completed SB-00 baseline evidence and SB-01 M1 contract design. CI run 35677113746 at ba03bc542cb9098b077df9cfb9d08a93039051a2 passed smoke, cases-validate, html-sanity and handoff-freshness; four local beta tests pass. Independent hawaii_review found no prototype-scope blocker; contract feedback fixed room-create retry identity, schema versions and initial record revisions. Added beta/CONTRACTS.md, review evidence and scoped Vite/TypeScript exception to AGENTS. Next: SB-02 fixture scaffold, then SB-03 typed model; backend epoch/receipt feasibility remains SB-04. No runtime/protected files changed, no merge/deploy. Browser/emulator/device verification remains outstanding.
 **Branch:** `feat/beta-session-foundation` — released

@@ -54,3 +54,7 @@ Use [Hawaiʻi — Emergency Republic](../rules/hawaii-setting-bible.md) for all 
 ## M1 implementation contract
 
 `CONTRACTS.md` v1 supersedes the preliminary namespace/revision sketch above. SB-00 baseline checks and SB-01 contract review are recorded in `reviews/SB-00-01.md`. Next task is SB-02: fixture-only Vite/TypeScript scaffold at `/beta/gm/`, `/beta/play/`, `/beta/present/`, preserving alpha routes. Then SB-03 migrates the reference module to the typed contract before parallel backend/surface implementation.
+
+## SB-02 scaffold draft
+
+PR #6 is merged; main is the integration base. Draft PR #7 adds three fixture-only entry pages, a reproducible lockfile, build and preview packaging. See [SCAFFOLD.md](SCAFFOLD.md) for verified setup and remaining review/device limits. This is not a connected multiplayer session. The root Cloudflare Worker continues to serve alpha; `.assetsignore` excludes beta source and fixtures until the reviewed release task changes the asset directory.
