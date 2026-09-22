@@ -44,6 +44,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (ChatGPT Work Mode) — drafted `beta/LIFEPATH_FIRST_PATH.md` (LP-B: The Name That Stayed), grounded in The Hours setting bible and core mystery principles. Includes four phases, direction choices, explicit 2d6 variants, A/B effects, recurring NPC/document callbacks, visibility rules, and one illustrative complete outcome. All new NPC/content/lifepath procedures are labeled proposals; no canonical rules or runtime changed. LP-B is drafted, not playtested or approved; next step is the user walkthrough and choice tuning. Exact core/setting terminology drift remains outside this draft.
+**Branch:** `feat/beta-session-foundation` — released
+
 **Agent:** Codex (ChatGPT Work Mode) — added `beta/AGENT_TASKS.md` with 14 scoped tasks, dependency order, three implementation lanes, integration ownership, review gates and an assignment prompt. Added `beta/LIFEPATH_TUNING_PROPOSAL.md` after recovering the prior four-phase design (Origin, Career, Incident, Fallout): choose direction, roll, choose consequence, record change. Distinguishes confirmed player agency/free playbook choice from proposed dice/content tuning. No runtime or protected files changed; docs reviewed against current branch conventions. First dispatch: SB-00 independent baseline review and SB-10 source/content reconciliation. No agents dispatched, issues created, merge or deployment performed.
 **Branch:** `feat/beta-session-foundation` — released
 
