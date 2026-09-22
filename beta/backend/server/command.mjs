@@ -1,0 +1,171 @@
+// Trusted SB-04 room transaction. No client can write betaRooms directly.
+const forbidden = new Set(['__proto__', 'prototype', 'constructor']);
+const own = (object, key) => Object.hasOwn(object ?? {}, key) ? object[key] : undefined;
+const plain = value => value !== null && typeof value === 'object' && !Array.isArray(value) && Object.getPrototypeOf(value) === Object.prototype;
+const exact = (value, fields) => plain(value) && Object.keys(value).length === fields.length && fields.every(field => Object.hasOwn(value, field)) && Object.keys(value).every(field => !forbidden.has(field));
+const id = value => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value) && !forbidden.has(value);
+const revision = value => Number.isSafeInteger(value) && value >= 0;
+const bounded = (value, max, empty = false) => typeof value === 'string' && value.length <= max && (empty || value.trim().length > 0);
+const copy = value => structuredClone(value);
+const canonical = value => JSON.stringify(value, (_key, item) => plain(item) ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b))) : item);
+const fail = code => ({ ok: false, code });
+const ok = (commandId, entityRevision) => ({ ok: true, commandId, entityRevision });
+const emptySheet = () => ({ schemaVersion: 1, revision: 0, name: '', playbookId: null, inventory: [] });
+const emptyNotes = () => ({ schemaVersion: 1, revision: 0, text: '' });
+const playbooks = new Set(['splicer', 'registrar', 'operator', 'diver', 'inspector', 'salvage', 'watch']);
+
+export function validCommand(value) {
+  if (!plain(value) || !id(value.commandId)) return false;
+  switch (value.type) {
+    case 'room.create': return exact(value, ['type', 'commandId']);
+    case 'admission.request': return exact(value, ['type', 'commandId', 'role', 'name']) && ['player', 'presenter'].includes(value.role) && bounded(value.name, 200);
+    case 'admission.decide': return exact(value, ['type', 'commandId', 'uid', 'decision', 'expectedRevision']) && id(value.uid) && ['admit', 'deny'].includes(value.decision) && revision(value.expectedRevision);
+    case 'admission.revoke': return exact(value, ['type', 'commandId', 'uid', 'expectedRevision']) && id(value.uid) && revision(value.expectedRevision);
+    case 'scene.publish': return exact(value, ['type', 'commandId', 'expectedEpoch', 'title', 'body']) && revision(value.expectedEpoch) && bounded(value.title, 200) && bounded(value.body, 2000);
+    case 'prompt.open': return exact(value, ['type', 'commandId', 'recipientUid', 'promptId', 'sceneEpoch', 'question', 'a', 'b']) && id(value.recipientUid) && id(value.promptId) && revision(value.sceneEpoch) && bounded(value.question, 2000) && bounded(value.a, 200) && bounded(value.b, 200);
+    case 'prompt.close': return exact(value, ['type', 'commandId', 'recipientUid', 'promptId', 'expectedRevision']) && id(value.recipientUid) && id(value.promptId) && revision(value.expectedRevision);
+    case 'response.submit': return exact(value, ['type', 'commandId', 'promptId', 'sceneEpoch', 'expectedRevision', 'choice']) && id(value.promptId) && revision(value.sceneEpoch) && revision(value.expectedRevision) && ['A', 'B'].includes(value.choice);
+    case 'sheet.replace': return exact(value, ['type', 'commandId', 'expectedRevision', 'name', 'playbookId', 'inventory']) && revision(value.expectedRevision) && bounded(value.name, 200, true) && (value.playbookId === null || playbooks.has(value.playbookId)) && Array.isArray(value.inventory) && value.inventory.length <= 100 && value.inventory.every(item => exact(item, ['id', 'label', 'quantity']) && id(item.id) && bounded(item.label, 200) && Number.isInteger(item.quantity) && item.quantity >= 0 && item.quantity <= 999) && new Set(value.inventory.map(item => item.id)).size === value.inventory.length;
+    case 'notes.replace': return exact(value, ['type', 'commandId', 'expectedRevision', 'text']) && revision(value.expectedRevision) && bounded(value.text, 2000, true);
+    default: return false;
+  }
+}
+
+function apply(room, uid, command) {
+  if (!room) {
+    if (command.type !== 'room.create') return { result: fail('NOT_FOUND') };
+    const created = { schemaVersion: 1, owner: uid, epoch: 0, admissions: {}, members: {}, shared: {}, gm: {}, decisions: {}, personal: {}, receipts: {}, usedPrompts: {} };
+    created.receipts[uid] = { [command.commandId]: { payload: canonical(command), result: ok(command.commandId, 0) } };
+    return { room: created, result: ok(command.commandId, 0) };
+  }
+  if (command.type === 'room.create') {
+    if (uid !== room.owner) return { result: fail('FORBIDDEN') };
+    const priorCreate = own(own(room.receipts, uid), command.commandId);
+    return { result: priorCreate?.payload === canonical(command) ? priorCreate.result : priorCreate ? fail('COMMAND_ID_REUSED') : fail('CONFLICT') };
+  }
+  // RTDB omits empty objects when storing a room; restore absent collections in the transaction copy.
+  for (const field of ['admissions', 'members', 'shared', 'gm', 'decisions', 'personal', 'receipts', 'usedPrompts']) room[field] ??= {};
+  const owner = uid === room.owner;
+  const member = own(room.members, uid);
+  const admitted = member?.status === 'admitted';
+  const player = admitted && member.role === 'player';
+  if (command.type === 'admission.request') {
+    if (owner) return { result: fail('FORBIDDEN') };
+  } else if (command.type === 'admission.decide' || command.type === 'admission.revoke' || command.type === 'scene.publish' || command.type === 'prompt.open' || command.type === 'prompt.close') {
+    if (!owner) return { result: fail('FORBIDDEN') };
+  } else if (!player) return { result: fail('FORBIDDEN') };
+  const prior = own(own(room.receipts, uid), command.commandId);
+  if (prior) return { result: prior.payload === canonical(command) ? prior.result : fail('COMMAND_ID_REUSED') };
+
+  let entityRevision = 0;
+  switch (command.type) {
+    case 'admission.request': {
+      const current = own(room.admissions, uid);
+      if (current?.status === 'admitted' || (current && current.role !== command.role)) return { result: fail('CONFLICT') };
+      const next = { schemaVersion: 1, revision: current ? current.revision + 1 : 0, role: command.role, status: 'pending', name: command.name };
+      room.admissions[uid] = next;
+      entityRevision = next.revision;
+      break;
+    }
+    case 'admission.decide': {
+      const current = own(room.admissions, command.uid);
+      if (!current) return { result: fail('NOT_FOUND') };
+      if (current.status !== 'pending' || current.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
+      const next = { ...current, revision: current.revision + 1, status: command.decision === 'admit' ? 'admitted' : 'denied' };
+      room.admissions[command.uid] = next;
+      if (next.status === 'admitted') {
+        room.members[command.uid] = { schemaVersion: 1, revision: next.revision, role: next.role, status: 'admitted', name: next.name };
+        if (next.role === 'player') {
+          room.personal[command.uid] ??= { sheet: emptySheet(), notes: emptyNotes() };
+          room.decisions[command.uid] ??= {};
+        }
+      }
+      entityRevision = next.revision;
+      break;
+    }
+    case 'admission.revoke': {
+      const current = own(room.admissions, command.uid);
+      if (!current) return { result: fail('NOT_FOUND') };
+      if (current.status !== 'admitted' || current.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
+      const next = { ...current, revision: current.revision + 1, status: 'revoked' };
+      room.admissions[command.uid] = next;
+      room.members[command.uid] = { ...room.members[command.uid], revision: next.revision, status: 'revoked' };
+      entityRevision = next.revision;
+      break;
+    }
+    case 'scene.publish':
+      if (room.epoch !== command.expectedEpoch) return { result: fail('CONFLICT') };
+      entityRevision = ++room.epoch;
+      room.shared.scene = { schemaVersion: 1, epoch: room.epoch, title: command.title, body: command.body };
+      break;
+    case 'prompt.open': {
+      const target = own(room.members, command.recipientUid);
+      if (target?.status !== 'admitted' || target.role !== 'player') return { result: fail('FORBIDDEN') };
+      if (!room.shared.scene || command.sceneEpoch !== room.epoch) return { result: fail('STALE_SCENE') };
+      if (own(room.usedPrompts, command.promptId)) return { result: fail('CONFLICT') };
+      room.usedPrompts[command.promptId] = true;
+      room.decisions[command.recipientUid] ??= {};
+      room.decisions[command.recipientUid][command.promptId] = { schemaVersion: 1, id: command.promptId, sceneEpoch: room.epoch, revision: 0, question: command.question, a: command.a, b: command.b, closed: false, response: null };
+      break;
+    }
+    case 'prompt.close': {
+      const prompt = own(own(room.decisions, command.recipientUid), command.promptId);
+      if (!prompt) return { result: fail('NOT_FOUND') };
+      if (prompt.sceneEpoch !== room.epoch) return { result: fail('STALE_SCENE') };
+      if (prompt.closed) return { result: fail('CLOSED') };
+      if (prompt.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
+      prompt.closed = true;
+      entityRevision = ++prompt.revision;
+      break;
+    }
+    case 'response.submit': {
+      const prompt = own(own(room.decisions, uid), command.promptId);
+      if (!prompt) return { result: fail('FORBIDDEN') };
+      if (prompt.sceneEpoch !== room.epoch || command.sceneEpoch !== room.epoch) return { result: fail('STALE_SCENE') };
+      if (prompt.response) return { result: fail('ALREADY_ANSWERED') };
+      if (prompt.closed) return { result: fail('CLOSED') };
+      if (prompt.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
+      prompt.response = { choice: command.choice, commandId: command.commandId };
+      entityRevision = ++prompt.revision;
+      break;
+    }
+    case 'sheet.replace': {
+      const sheet = room.personal[uid]?.sheet;
+      if (!sheet) return { result: fail('NOT_FOUND') };
+      if (sheet.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
+      entityRevision = sheet.revision + 1;
+      room.personal[uid].sheet = { schemaVersion: 1, revision: entityRevision, name: command.name, playbookId: command.playbookId, inventory: copy(command.inventory) };
+      break;
+    }
+    case 'notes.replace': {
+      const notes = room.personal[uid]?.notes;
+      if (!notes) return { result: fail('NOT_FOUND') };
+      if (notes.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
+      entityRevision = notes.revision + 1;
+      room.personal[uid].notes = { schemaVersion: 1, revision: entityRevision, text: command.text };
+      break;
+    }
+  }
+  const result = ok(command.commandId, entityRevision);
+  room.receipts[uid] ??= {};
+  room.receipts[uid][command.commandId] = { payload: canonical(command), result };
+  return { room, result };
+}
+
+export async function submitRoomCommand(database, uid, data) {
+  if (!id(uid)) return fail('UNAUTHENTICATED');
+  if (!exact(data, ['roomId', 'command']) || !id(data.roomId) || !validCommand(data.command)) return fail('INVALID');
+  if (JSON.stringify(data).length > 32_000) return fail('INVALID');
+  let result = fail('CONFLICT');
+  const roomRef = database.ref(`betaRooms/v1/${data.roomId}`);
+  // Admin's RTDB transaction callback first sees the local cache. Prime it so an
+  // uncached existing room is not mistaken for a missing room and aborted.
+  const initial = (await roomRef.get()).val();
+  await roomRef.transaction(current => {
+    const state = current ?? initial;
+    const outcome = apply(state ? copy(state) : null, uid, data.command);
+    result = outcome.result;
+    return outcome.room;
+  }, undefined, false);
+  return result;
+}

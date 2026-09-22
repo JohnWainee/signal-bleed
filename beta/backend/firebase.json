@@ -1,0 +1,7 @@
+{
+  "database": { "rules": "rules.proposed.json" },
+  "emulators": {
+    "database": { "host": "127.0.0.1", "port": 9001 },
+    "ui": { "enabled": false }
+  }
+}

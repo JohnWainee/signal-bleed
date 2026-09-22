@@ -1,0 +1,22 @@
+{
+  "name": "signal-bleed-beta-backend",
+  "private": true,
+  "version": "0.1.0",
+  "main": "index.mjs",
+  "type": "module",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "test:rules": "node --test test/rules.test.mjs",
+    "test:command": "node --test test/command.test.mjs",
+    "emulator:test": "firebase emulators:exec --only database --project demo-signal-bleed-beta --config firebase.json 'npm run test:rules && npm run test:command'"
+  },
+  "dependencies": {
+    "firebase-admin": "14.4.0",
+    "firebase-functions": "7.4.0"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "5.0.2",
+    "firebase": "12.19.0",
+    "firebase-tools": "15.30.2"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "rules": {
+    "rooms": {
+      "$roomId": {
+        "shared": {
+          ".read": "auth != null",
+          ".write": "auth != null"
+        },
+        "meta": {
+          ".read": "auth != null",
+          ".write": "!data.exists() || root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid"
+        },
+        "gm": {
+          ".read": "root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid",
+          ".write": "root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid"
+        },
+        "players": {
+          "$uid": {
+            ".read": "auth.uid === $uid || root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid",
+            ".write": "auth.uid === $uid || root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid"
+          }
+        }
+      }
+    },
+    "betaRooms": {
+      "v1": {
+        "$roomId": {
+          ".read": false,
+          ".write": false,
+          "owner": {
+            ".read": "auth != null && data.val() === auth.uid"
+          },
+          "admissions": {
+            ".read": "auth != null && root.child('betaRooms/v1').child($roomId).child('owner').val() === auth.uid",
+            "$uid": {
+              ".read": "auth != null && auth.uid === $uid"
+            }
+          },
+          "members": {
+            ".read": "auth != null && root.child('betaRooms/v1').child($roomId).child('owner').val() === auth.uid",
+            "$uid": {
+              ".read": "auth != null && auth.uid === $uid && data.child('status').val() === 'admitted'"
+            }
+          },
+          "shared": {
+            "scene": {
+              ".read": "auth != null && (root.child('betaRooms/v1').child($roomId).child('owner').val() === auth.uid || root.child('betaRooms/v1').child($roomId).child('members').child(auth.uid).child('status').val() === 'admitted')"
+            }
+          },
+          "gm": {
+            "notes": {
+              ".read": "auth != null && root.child('betaRooms/v1').child($roomId).child('owner').val() === auth.uid"
+            }
+          },
+          "decisions": {
+            ".read": "auth != null && root.child('betaRooms/v1').child($roomId).child('owner').val() === auth.uid",
+            "$uid": {
+              ".read": "auth != null && auth.uid === $uid && root.child('betaRooms/v1').child($roomId).child('members').child($uid).child('status').val() === 'admitted' && root.child('betaRooms/v1').child($roomId).child('members').child($uid).child('role').val() === 'player'"
+            }
+          },
+          "personal": {
+            "$uid": {
+              ".read": "auth != null && auth.uid === $uid && root.child('betaRooms/v1').child($roomId).child('members').child($uid).child('status').val() === 'admitted' && root.child('betaRooms/v1').child($roomId).child('members').child($uid).child('role').val() === 'player'"
+            }
+          },
+          "receipts": {
+            "$uid": {
+              ".read": "auth != null && auth.uid === $uid && (root.child('betaRooms/v1').child($roomId).child('owner').val() === auth.uid || root.child('betaRooms/v1').child($roomId).child('members').child($uid).child('status').val() === 'admitted')"
+            }
+          }
+        }
+      }
+    }
+  }
+}
