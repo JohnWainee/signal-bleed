@@ -63,7 +63,7 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 |---|---|---|---|---|
 | SB-00 | Review foundation and verify working baseline | Integrator/reviewer | — | DONE; baseline evidence recorded |
 | SB-01 | Reconcile beta instructions and freeze contracts | A + integrator | SB-00 | DONE; contract v1 reviewed |
-| SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | BLOCKED-ENV; draft scaffold, install/build pending |
+| SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | REVIEW; install/build/browser gates passed, independent final review pending |
 | SB-03 | Typed session model and mock adapter | A | SB-02 | WAIT |
 | SB-04 | Firebase authorization and realtime adapter | A | SB-03 | WAIT |
 | SB-05 | GM control surface and presenter | B | SB-03 | WAIT |
@@ -212,3 +212,15 @@ Coordinator Codex completed SB-00 evidence and SB-01 design on integration branc
 ### Dispatch record — merge and SB-02 scaffold
 
 PR #6 merged at `373565b188496500f92f57abb8e2f45bcf96b7ce`; current integration base is main. Codex prepared SB-02 on `feat/beta-sb-02-scaffold` from that exact commit. Status: BLOCKED-ENV (npm HTTP 403; cannot generate a trustworthy lockfile or verify build/typecheck/browser). Source and packaging are reviewable; completion requires the commands/checks in `SCAFFOLD.md`. Branch released for a dependency-enabled implementation session. SB-03 remains WAIT. The earlier “no owner” record is historical.
+
+### Dispatch record — SB-02 resumed, 2026-09-21 HST
+
+| Field | Current record |
+|---|---|
+| Task / owner / model | SB-02; Codex integrator (Codex app; exact model ID not exposed in this runtime); active implementation |
+| Branch / base | `feat/beta-sb-02-scaffold`; `373565b188496500f92f57abb8e2f45bcf96b7ce` |
+| Dependencies / owned files | SB-01; `beta/package-lock.json`, beta build/packaging documentation, this board and `HANDOFF.md`. Integrator retains sole ownership of shared dependency/routing/configuration files. |
+| Acceptance | Root and beta clean installs, typecheck, build/package, direct/reloaded beta routes, preview alpha routes and asset audit, alpha smoke/case/HTML/setting checks, four reference tests. See `SCAFFOLD.md` for results. |
+| Status / result | REVIEW; automated and desktop-browser gates passed. Independent final review and PR #7 evidence update pending. No merge/deploy. |
+
+Factory discovery is read-only, not a dispatch: Claude Code 2.1.278 is authenticated and lists Fable 5.1/Sonnet 5 in its local catalog; Ollama is reachable with local Qwen models, but no Signal Bleed Qwen task has run. The DeepSeek pi provider reports `credentials_not_configured`; SB-10 is **not dispatched**. The existing factory Beads queue/worktrees concern another tenant, not this repository. Do not claim those workers for Signal Bleed or share this game's content into that queue. SB-09 and SB-10 packets must name an exact new branch/worktree and base SHA before dispatch. At most three implementation workers may be active, including Codex.

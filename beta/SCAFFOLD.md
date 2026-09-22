@@ -1,4 +1,4 @@
-# SB-02 fixture scaffold — draft
+# SB-02 fixture scaffold — verification record
 
 Branch: `feat/beta-sb-02-scaffold`, based on main merge `373565b188496500f92f57abb8e2f45bcf96b7ce`. PR #6 was merged after the user's explicit instruction and all four checks passed its final head.
 
@@ -14,12 +14,11 @@ Branch: `feat/beta-sb-02-scaffold`, based on main merge `373565b188496500f92f57a
 
 Checked official [Vite setup](https://vite.dev/guide/), [multi-page build guidance](https://vite.dev/guide/build.html#multi-page-app), [Vite 8.3.0 release](https://github.com/vitejs/vite/releases/tag/v8.3.0), and [TypeScript 6.0.2 release](https://github.com/microsoft/TypeScript/releases/tag/v6.0.2). Use Node >=22.12.0. TypeScript 6.0.2 is a deliberate stable pin, not a claim that it is the newest release. Vite transpilation is separate from the explicit typecheck command.
 
-## Resume in a dependency-enabled checkout
+## Reproduce in a dependency-enabled checkout
 
 ```sh
 npm ci
 npm --prefix beta install
-# Commit the generated beta/package-lock.json after checking the dependency diff.
 npm --prefix beta ci
 npm run beta:typecheck
 npm run beta:build
@@ -33,8 +32,14 @@ Run alpha smoke, cases, HTML sanity, setting validation and the four reference t
 
 ## Evidence and open gates
 
-Passed locally: Node syntax checks for main.ts and both build/packaging scripts; fixture role-shape check; existing four beta reference tests. These are not a Vite build, TypeScript semantic check or browser test.
+Verified 2026-09-21 HST in a clean checkout of PR #7 head `4f8efe9b8805dbe5ee6878ef4c8d27b38abf93f1` using Node 22.23.2 and npm 10.9.8:
 
-Blocked: npm registry reads for vite/typescript returned HTTP 403 in this runtime. No trusted lockfile could be generated; it is intentionally absent, not fabricated. Clean beta install, typecheck, Vite build, actual packaged-output audit and browser verification remain outstanding. SB-02 is BLOCKED-ENV and its PR must remain draft until those gates pass. SB-03 is not unlocked by the existence of these files.
+- `npm ci`, `npm --prefix beta install`, and `npm --prefix beta ci` passed with zero reported vulnerabilities. Generated lockfile v3 has exact root pins TypeScript 6.0.2 and Vite 8.3.0; all resolved packages point to `registry.npmjs.org`.
+- `npm run beta:typecheck` and `npm run beta:package` passed. Vite 8.3.0 emitted three HTML entry points and hashed CSS/JS assets; the packaging script produced `preview-beta/`.
+- `npm run smoke`, `npm run cases:validate`, `npm run html:sanity`, `npm run setting:validate`, and `node --test beta/tests/session.test.mjs` passed (4/4 reference tests). Alpha smoke reported no page errors.
+- In an actual browser, direct Vite routes `/beta/gm/`, `/beta/play/`, `/beta/present/` loaded. GM state changed to loading; player choice A showed a local preview result and reset on refresh; all three routes reloaded. Presenter was inspected at a 16:9 viewport, player at 390×844, and keyboard Tab reached the player navigation. These are desktop browser/viewport checks, not physical-device tests.
+- Served `preview-beta/` separately: all three built beta routes loaded directly/reloaded. `/reference/gm/` redirected to the intact alpha `/gm/`; `/table/`, `/hawaii/`, and the Hawaiʻi, Hours, and Vespers print pages loaded. Browser error log was empty for the inspected session. The output file list contains alpha allowlisted assets/content, three beta entry pages, hashed JS/CSS, and the redirect; no beta source/tests/config, node_modules, or repository metadata. `preview-beta/`, `dist-beta/`, and beta node_modules remain gitignored.
 
-Independent read-only review by `hawaii_review` found no concrete static blocker. Reviewer confirmed that `/reference/gm/` is only a temporary redirect, not independent preservation for cutover, and state controls are local to the GM fixture. Coordinator retained both limitations; no build/browser approval is implied.
+Independent final review of the new lockfile and evidence is pending. Keep PR #7 draft pending that review and CI on the pushed SHA. This fixture has no Firebase auth, persistence, real multiplayer, authorization, or private-network proof; the four reference tests do not establish those behaviors. Real iPad/phone/TV checks remain unperformed. The existing `/reference/gm/` redirect points back to `/gm/`, so SB-08 must create independent preservation before any eventual route replacement. SB-03 stays WAIT until SB-02 is accepted; no production build setting, protected file, merge, or deployment was changed.
+
+The earlier `hawaii_review` static pass found no concrete blocker on the scaffold source, but predates this installation and browser verification. It is not the pending final-diff review.

@@ -46,6 +46,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (Codex app; model ID not exposed) — resumed SB-02 at PR #7 head `4f8efe9b8805dbe5ee6878ef4c8d27b38abf93f1` after confirming the branch was released and `main` remained `373565b188496500f92f57abb8e2f45bcf96b7ce`. Generated beta lockfile; clean root/beta installs, TypeScript check, Vite build/package, alpha smoke/cases/HTML/setting checks and four beta reference tests pass. Desktop-browser direct/reload checks passed for the fixture routes and packaged alpha/reference/print routes; phone/16:9 viewports inspected. No Firebase, multiplayer, physical-device, merge or deployment verification is claimed. Independent final review and PR #7 evidence update remain before SB-02 acceptance; see `beta/SCAFFOLD.md`. DeepSeek unavailable, Qwen not dispatched. Separate design-direction session opened at user's request.
+**Branch:** `feat/beta-sb-02-scaffold` — claimed
+
 **Agent:** Codex (ChatGPT Work Mode) — user authorized merge and continuation. PR #6 merged at `373565b188496500f92f57abb8e2f45bcf96b7ce` after all four CI jobs passed head `8e7b55e0c8c5e9d02a03fb814f90bb1d90e6db3b`. Integration base is now main. Started SB-02 fixture scaffold: three beta entry pages, TypeScript display code, Vite config, separate pinned beta package, root convenience scripts and allowlisted preview packaging. No Firebase wiring or protected files edited. npm registry requests return HTTP 403; no lockfile, clean install, build, typecheck or browser verification possible here. SB-02 remains blocked draft; next agent must install dependencies, generate/commit beta/package-lock.json, verify build/direct routes and packaging before SB-03. See beta/SCAFFOLD.md.
 **Branch:** `feat/beta-session-foundation` — merged
 **Branch:** `feat/beta-sb-02-scaffold` — released
