@@ -5,9 +5,9 @@ Status: reviewed rules addition, trusted callable, and Firebase SessionAdapter p
 ## Verified baseline
 
 - Production UI is served by Cloudflare Workers Static Assets from `main`; beta files are excluded by `.assetsignore`.
-- The Firebase project `signal-bleed` is on the Spark plan (console inspection, 2026-09-21 HST). Its Realtime Database is `signal-bleed-default-rtdb` in `us-central1`.
+- The Firebase project `signal-bleed` is on the Blaze plan (console inspection, 2026-09-21 HST). Its Realtime Database is `signal-bleed-default-rtdb` in `us-central1`.
 - At baseline, the console's deployed RTDB rules matched the repository's former `firebase.rules.json`: they grant broad authenticated access in the existing `rooms` alpha namespace and define no beta namespace. The protected repository file now contains the additive beta proposal, but the console rules have not been republished. Preserve the alpha subtree exactly until an independently reviewed alpha migration.
-- The user approved a Blaze-based Functions direction for SB-04 and asked to reuse the billing account already used for Eat the Reich. Signal Bleed remains its own Firebase project. It has **not** been upgraded; no billing, function deployment, or rules publication has occurred.
+- The user approved a Blaze-based Functions direction for SB-04 and asked to reuse the billing account already used for Eat the Reich. Signal Bleed remains its own Firebase project. The console now confirms Blaze linked to the existing `Firebase Payment` account (`01ACC7-FD5C4A-2CEF90`), also used by PowerGlove. Google Cloud lists a monthly, Signal Bleed project-only $10 budget with alerts at 50%, 90%, and 100%; its spend cap status is `Not applicable`. The budget sends alerts and does not stop charges. No function deployment or rules publication has occurred.
 
 ## Why a trusted command endpoint is needed
 
@@ -26,7 +26,7 @@ After explicit user approval, the protected `firebase.rules.json` gained exactly
 1. Emulator tests seed an isolated fake project, evaluate the proposed rules as unauthenticated, GM, two players, presenter, pending applicant, revoked member and cross-room identity. Verify denied parent/private reads, all direct beta writes, and allowed leaf reads, including actual returned payloads.
 2. Callable emulator tests run concurrent p1/p2 responses, close/answer and scene/answer races, duplicate IDs with same/different payloads, lost acknowledgement retries, admission/revocation, refresh and re-admission. Assert the entity and receipt are both present or both absent.
 3. Keep function tests separate from production Firebase credentials. Do not log private payloads or cache them in the service worker. Limit callable payload size and function scale; record billing and deployment settings before production release.
-4. The production Firebase project must be upgraded to Blaze before Functions deployment; [Firebase's Functions setup](https://firebase.google.com/docs/functions/get-started) permits local emulation on Spark but requires Blaze for deployment. The billing change and production deploy remain undone.
+4. The production Firebase project is now on Blaze, which [Firebase's Functions setup](https://firebase.google.com/docs/functions/get-started) requires for deployment. The $10 monthly budget is an alert, not a spending limit. Production deployment remains undone and gated on App Check bootstrap, independent review, and four-client privacy verification.
 
 The RTDB emulator needs Java. Homebrew OpenJDK 26 is available at `/opt/homebrew/opt/openjdk/bin/java`; the system `/usr/bin/java` shim does not resolve it. Run `PATH=/opt/homebrew/opt/openjdk/bin:$PATH npm run emulator:test` from `beta/backend`. The branch passes five rules tests, three command transaction tests, and two Firebase Auth/Database/Functions adapter tests. Alpha smoke/cases/HTML/setting checks, the eleven mock model tests, and beta preview packaging also pass. A deployed callable, production App Check, and the four-client browser run have not been exercised.
 
