@@ -362,7 +362,7 @@ body.calm{--glow:0;}
 </div></div>
 
 <div class="ov" id="ovDraw"><div class="draw">
-  <div class="hint" id="drawCap">A sign of the Stand</div>
+  <div class="hint" id="drawCap">A sign of the Signal</div>
   <div class="big" id="drawOut">—</div>
   <div class="acts" style="justify-content:center">
     <button class="act pri" data-act="draw-sign">Sign</button>
@@ -419,7 +419,7 @@ body.calm{--glow:0;}
 
 <div id="join"><div class="box">
   <h1>Sign on</h1>
-  <p>Eleven islands. Eight names. Somebody has a job for you.</p>
+  <p>Hawaiʻi · September 2026 onward. Somebody has a job for you.</p>
   <p style="font-size:12px;opacity:.75">Room <b id="roomJoin" style="letter-spacing:.2em"></b></p>
   <input id="joinName" placeholder="Your name at the table" autocomplete="off">
   <div class="acts">
@@ -446,7 +446,7 @@ const SIGNS=["Every clock in the room agrees, and all of them are wrong by the s
 const SYMPTOMS=["You are eleven minutes ahead of every clock on the island, and you can prove it.",
 "You've stopped hearing the surf. It's still there. Everyone else hears it.",
 "Standing water tilts slightly toward you.",
-"You know the name of the ninth hour. It hurts to hold.",
+"You remember an unobserved branch. It hurts to hold.",
 "There's a day missing and you can feel the edge of it, like a seam.",
 "Someone has started calling you by a name nobody gave you, and correcting themselves, and doing it again."];
 const ASKS=["What here is a lie?","What's about to go wrong?","What time is it really?",
@@ -465,7 +465,7 @@ const BASIC=[
  {n:"Take a Sounding",s:"+VEIL +STATIC",d:"Open yourself to what's under a thing. Once a scene.",
   h:"Take a clue and ask one question.",m:"Take a clue. Mark Static.",l:"Mark Static. It answers a question you didn't ask."}];
 const BOOKS={
- Splicer:{lens:"#00E5FF",lens2:"#B14BFF",tag:"You opened a cable nobody had opened since 1903. The traffic on it was current.",
+ Splicer:{lens:"#00E5FF",lens2:"#B14BFF",tag:"You opened an idle line. Its traffic described a shift that had not begun.",
   stats:{EDGE:1,WIRE:2,FACE:0,VEIL:1},start:0,
   sec:"What came up the wire during the outage that you never logged, and who has started asking about it?",
   mv:[{n:"Deep Splice",d:"Open a line nobody's supposed to open — take a clue before you roll Jack In."},
@@ -474,9 +474,9 @@ const BOOKS={
       3:["The Tap","You've already been on any line you can name. Say when you put it in. Mark Static."],
       5:["Termination","You don't need a deck. You are a landing point."]},
   bonds:["______ has seen my hands shake and said nothing.","I have read ______'s traffic. They don't know."]},
- Registrar:{lens:"#FFB627",lens2:"#FF5DA2",tag:"Eleven thousand ships fly this flag. Not one has ever been here. You typed why.",
+ Registrar:{lens:"#FFB627",lens2:"#FF5DA2",tag:"You approved a delivery that had not been requested yet. The paperwork remembers you.",
   stats:{EDGE:1,WIRE:1,FACE:2,VEIL:0},start:0,
-  sec:"Which vessel did you flag that you shouldn't have, and what is still aboard her?",
+  sec:"Which emergency allocation did you authorize, and who was left waiting?",
   mv:[{n:"A Plate on the Door",d:"Once a session: you know someone here and what they owe you. The GM says what you owe them."},
       {n:"Paper Trail",d:"Digging through records? Roll +FACE for Read the Wire."},
       {n:"Say It Yourself",d:"At Static 3 or higher: when you catch yourself having been helpful in a way you can't account for, name it out loud at the table and mark XP. If you don't, and the GM notices first, mark Static instead."},
@@ -485,7 +485,7 @@ const BOOKS={
       3:["Leverage","+1 ongoing to Work Someone against anyone whose secret you learned this session."],
       5:["Agent of Record","You may negotiate directly with it. It files."]},
   bonds:["I got ______ off a manifest and never told them what it cost.","______ is the only person I've never lied to. Yet."]},
- Operator:{lens:"#FF2D95",lens2:"#00E5FF",tag:"Channel 11 has a supervisor nobody has met. She is helpful. You've talked nine years.",
+ Operator:{lens:"#FF2D95",lens2:"#00E5FF",tag:"Channel 11 has a supervisor nobody has met. Her replies arrive before your questions.",
   stats:{EDGE:1,WIRE:0,FACE:1,VEIL:2},start:1,
   sec:"Whose voice comes through most often, and what did you fail to do for them?",
   mv:[{n:"The Open Channel",d:"Take a Sounding on anything that carried a voice — a handset, a black box, a chair."},
@@ -494,7 +494,7 @@ const BOOKS={
       3:["Call and Answer","Once a session put one question on the channel. It always answers."],
       5:["Station","You are the channel now."]},
   bonds:["______ doesn't believe me and I need them not to.","I have heard ______'s voice on the channel, and they are still alive."]},
- Diver:{lens:"#00FFC8",lens2:"#0091FF",tag:"Rebuilt for a pressure the body was never meant to hold. You're grateful. That's the worrying part.",
+ Diver:{lens:"#00FFC8",lens2:"#0091FF",tag:"You survived a pressure the body was never meant to hold. Your dive log says you never went down.",
   stats:{EDGE:2,WIRE:1,FACE:0,VEIL:1},start:0,
   sec:"Who was on the other end of your line, on the dive you don't talk about?",
   mv:[{n:"Rated for Depth",d:"Always trade Harm for Static — and take +1 forward when you do."},
@@ -521,10 +521,10 @@ const BOOKS={
       3:["The Log of Those Days","Ask the GM what you were doing while you were missing. They answer."],
       5:["Recovered","The right one surfaces this time."]},
   bonds:["______ was on the wharf when I came back.","______ treats me like I'm the same person. I let them."]},
- Watch:{lens:"#B4FF39",lens2:"#00E5FF",tag:"Nobody was ever from here. Your family has been anyway, for a hundred and forty years.",
+ Watch:{lens:"#B4FF39",lens2:"#00E5FF",tag:"You know who missed the delivery. The dashboard says everybody was served.",
   stats:{EDGE:1,WIRE:0,FACE:2,VEIL:1},start:0,
   sec:"What did the Watch decide, that you carried out, that you have never told anyone?",
-  mv:[{n:"The Ledger",d:"Once a session state a fact about a person or place in Low Town. It's in the ledger, so it's true."},
+  mv:[{n:"The Ledger",d:"Once a session state a fact about a person or place in Kalihi. It's in the ledger, so it's true."},
       {n:"Phone Tree",d:"Say who you call. They come. The GM says what it costs them."}],
   sm:{1:["You Hold the Line","Instead of marking Static, cross a task off the list. It doesn't get done. Unlimited, not free."],
       3:["Everyone Shows Up","Clear all Harm from everyone present. Say who came and what they brought."],
@@ -533,75 +533,166 @@ const BOOKS={
 const GM_LENS="#E04CFF",GM_LENS2="#00E5FF";
 /* ===================== D100 GENERATOR — signs, clues, prompts, artifacts, puzzles, terrors, temptations ===================== */
 const D100=[
- {lo:1,hi:20,kind:"sign",opts:[
-   "The harbour beacon and the chandlery clock agree with each other and disagree with everyone else's watch by the same eleven minutes.",
-   "Standing water in one of the Strand's flooded lobbies tilts very slightly toward a door marked EXIT that has been welded shut since 2038.",
-   "A ferry manifest counts eleven names aboard a boat that seats nine and sailed with seven.",
-   "The surf goes quiet at the stand of the tide, for exactly as long as it takes someone to notice, and then it doesn't.",
-   "Somebody repeats a sentence you said under your breath thirty seconds ago, word for word, and apologises for interrupting.",
-   "A brass door-plate on the Crown reads a firm name that dissolved in 1962. It has been polished this week."]},
- {lo:21,hi:40,kind:"clue",opts:[
-   "A welding requisition at Cold Harbour: eleven metres of wire, signed out, never logged as returned, for a job with no work order attached.",
-   "The mail boat's manifest lists the same parcel to None as delivered, six runs running. Nobody on None has signed for it.",
-   "A soundings chart of the water off the Unnumbered, hand-annotated in eleven different hands, all the same ink, all giving the same wrong depth.",
-   "Provident Row's council register lists forty-three doors. The 1911 deed for the terrace says forty-four.",
-   "A Tide Watch phone-tree card, ten names crossed through in the same pen, an eleventh name added in a different hand nobody claims.",
-   "Two entries in the Water Board's plume log, same date, same instrument, different numbers, both initialled by the same engineer."]},
- {lo:41,hi:55,kind:"prompt",opts:[
-   "Who already knew this before you told them?",
-   "What did the water take instead of what it was offered?",
-   "Whose name is on paperwork that shouldn't have one?",
-   "What here is being kept helpful, and by whom?",
-   "What did the Long Count already take care of, quietly, before you got here?",
-   "Who's still on the list who should have been crossed off by now?"]},
- {lo:56,hi:70,kind:"artifact",opts:[
-   {title:"Cold Harbour — bonded warehouse manifest, extract",
-    body:"CONTAINER LOG — BAY 11\n02:14  IN — sealed, Transpelagic, no inspection requested\n02:41  ——\n03:02  OUT — same seal number, same container, contents not re-declared\n\n[Auto-note: bay 11 shows one movement. The log shows two.]\n\nSomebody signed the release. The signature reads clearly and belongs to nobody on the current roster."},
-   {title:"Halloran & Vey — case note, unsigned",
-    body:"Client wants a finding, not an investigation. Wants it to say accident. It might be.\n\nOtty pulled a file from before either of us worked here. Same wording, same everything, down to the date, minus forty years.\n\nDidn't ask her how she found it that fast."},
-   {title:"Registry ledger — brass plate assignments, page torn",
-    body:"...Halloran & Vey — third floor, above the chandlery — renewed\nMeridian & Sons — dissolved 1962 — plate not removed\n[page torn here]\n...— no principal on record — renewed anyway, eleven years running, by the same hand"},
-   {title:"Tide Watch phone tree — this week's card",
-    body:"Auntie Sesi, no. 19 — water run, Tuesday\nRen, the Kettle — night shift count\nTavi Ruiz, no. 3 — seawall watch\n[eleventh line, no name, called anyway, always answers]"},
-   {title:"The Sounding Company — bathymetry memo, internal, not for release",
-    body:"Riser platform readings over the Unnumbered continue to disagree with the 1587 chart annotation by a consistent 4,100 metres. Recommend re-calibration of instruments.\n\nField crew reports instruments are already calibrated. Twice. Recommend re-calibration of field crew.\n\nDo not circulate outside Ops. — J.T."}]},
- {lo:71,hi:76,kind:"puzzle",p:"keypad",opts:[
-   {title:"The chandlery's back room lock",
-    body:"An old four-digit mechanical lock on a drawer nobody admits to owning. The chandler says his father set the code and never told him. He says this every time somebody asks, in the exact same words.",
-    code:"1587",payload:"Charts going back a hundred years, every one annotated over the same patch of water in a different hand. The oldest annotation and the newest say exactly the same thing, in exactly the same words: no bottom found, do not sound."},
-   {title:"A strongbox, third floor above the chandlery",
-    body:"Four brass dials, cut for a lock that predates the plate on the door. Nobody currently at the firm ever set a combination. The person who used to work here never mentioned one either.",
-    code:"1141",payload:"Eleven blank findings, pre-signed, undated, in a hand that isn't anyone's you recognise. The twelfth page already has a name on it. It's someone at this table."},
-   {title:"The Tank Farm's valve control panel",
-    body:"A keypad bolted over tank 11's isolation valve, added after the 2049 failure, never in the as-built drawings. Somebody wanted this one locked separately from the other twenty-one.",
-    code:"0341",payload:"The valve isn't a valve. It's a hatch, and it opens onto stairs going down past where the tank's floor should be."}]},
- {lo:77,hi:82,kind:"puzzle",p:"sound",opts:[
-   {title:"Sounding the water off the Unnumbered",
-    body:"Every chart since 1587 carries the same note over this patch: no bottom found, do not sound. You have a weighted line and a very quiet stretch of water. Find the bottom anyway.",
-    target:4100,payload:"Four thousand one hundred metres, and then the line goes slack the way a line goes slack when something takes the weight off it gently, on purpose — the way you'd take a bag from someone whose hands are full."},
-   {title:"Sounding a service shaft, Cold Harbour",
-    body:"The building plans say this shaft terminates at the pump housing, forty metres down. The hatch welds are new and were made from the inside. Find out how far it actually goes.",
-    target:411,payload:"Four hundred eleven metres. The island isn't four hundred metres thick here. Past a certain point the line stops going down and starts going along."},
-   {title:"Sounding the flooded sublevel under a ward that shouldn't have one",
-    body:"The pumps below have run continuously for years and discharged nothing. Somebody should know where that water actually goes. Take a sounding.",
-    target:1961,payload:"Nineteen sixty-one metres — the number on the line and the year None was closed arrive in the same breath. Whoever logs this will notice, and won't mention it."}]},
- {lo:83,hi:88,kind:"puzzle",p:"audio",opts:[
-   {title:"Recovered — harbour radio, Channel 11, unlogged",
-    body:"— still reading you, the [[pumps]] are down but the gauge says [[running]] — I checked the board myself — she says it's only the [[stand]], she says it always [[turns]] — I've been waiting since [[Tuesday]] — no, she says that's fine, she says everybody [[waits]] —"},
-   {title:"Recovered — answering machine, Provident Row, no. 19",
-    body:"— it's me, I know it's late, I just wanted to say the lights are [[on]] again, whatever you did, thank you, I don't — I don't need to know how, I just — there were [[eleven]] of us that night and I only remember [[nine]] — call me back, or don't, either way I'll [[wait]] —"},
-   {title:"Recovered — dictaphone, Halloran & Vey archive, undated",
-    body:"— finding on file, marine casualty, vessel unnamed, cause [[undetermined]] — the second principal signed in the usual place, I checked the [[signature]] myself, it's consistent with every finding this firm has ever [[filed]] — there was never a [[Vey]] — there was never a [[Vey]] —"}]},
- {lo:89,hi:95,kind:"terror",opts:[
-   "Someone the table has trusted all session starts answering questions before they finish being asked, and gets every answer exactly right.",
-   "A player counts the room out loud and gets eleven. There are nine of you. Nobody but them reacts.",
-   "The Bleed clock advances between scenes, and nobody at the table did it.",
-   "Somebody receives a message, dated tomorrow, whose contents they already know."]},
- {lo:96,hi:100,kind:"temptation",opts:[
-   "Grandmother offers to simply say what happened. Plainly. No conditions. All anyone has to do is ask her by name, on the open channel.",
-   "The Sounding Company will pay well to have the old chart annotation quietly removed. Somebody on the crew knows how.",
-   "A finding that closes this case clean — accident, no further inquiry — is already typed. It only needs a signature. Nobody would check.",
-   "Whoever the table has lost is offering to come back and help, and the help, if taken, will be real."]}
+ {
+  "lo": 1,
+  "hi": 20,
+  "kind": "sign",
+  "opts": [
+   "The harbor dispatch clock and your phone disagree by eleven minutes. Each logs the other as correct.",
+   "A puddle in the fictional Sand Island workshop tilts toward a locked cabinet.",
+   "A fictional relief roster lists eleven arrivals. Nine people remember the shift.",
+   "An airport cargo message thanks you for a correction you have not sent.",
+   "Someone repeats your next sentence and apologizes for interrupting.",
+   "A maintenance channel answers a question before anyone keys the microphone."
+  ]
+ },
+ {
+  "lo": 21,
+  "hi": 40,
+  "kind": "clue",
+  "opts": [
+   "A fictional contractor requisition at Honolulu Harbor: eleven metres of wire, no corresponding work order.",
+   "A dispatch copy from Kalaeloa Barbers Point Harbor lists a delivery as completed and cancelled at the same time.",
+   "An archived sounding trace has two incompatible timestamps and one valid signature.",
+   "A household delivery list contains your correction in handwriting that is not yours.",
+   "A community phone tree lists an eleventh caller whose number nobody added.",
+   "Two fictional Campbell Industrial Park inventory records share one identifier and disagree about which load left."
+  ]
+ },
+ {
+  "lo": 41,
+  "hi": 55,
+  "kind": "prompt",
+  "opts": [
+   "Who saw the warning before anyone acted?",
+   "Whose delay made somebody else on time?",
+   "Who signed for a delivery that did not happen?",
+   "What changed when you read the second version?",
+   "Whose account does the official record leave out?",
+   "What did your successful intervention move elsewhere?"
+  ]
+ },
+ {
+  "lo": 56,
+  "hi": 70,
+  "kind": "artifact",
+  "opts": [
+   {
+    "title": "Fictional contractor — cargo log extract",
+    "body": "Honolulu Harbor case file\n02:14 IN — sealed\n02:41 CANCELLED\n03:02 OUT — same seal\n\nBoth records pass the same integrity check. The signatory denies seeing either."
+   },
+   {
+    "title": "Halloran & Vey — unsigned finding",
+    "body": "The client wants a finding, not a forecast. Two copies agree on the action and disagree on who asked for it. Otty has kept both."
+   },
+   {
+    "title": "Emergency allocation — fictional scenario record",
+    "body": "The shipment reached its priority destination. A second page names the people who did not receive it. That page was removed before circulation."
+   },
+   {
+    "title": "Community phone tree — this week",
+    "body": "Generator check. Medication pickup. Shift cover. An eleventh line has no name, but someone has initialled it."
+   },
+   {
+    "title": "Non-originating record — unverified",
+    "body": "No sending system claims this message. Do not treat its timestamp as proof of a future event. Preserve both copies and the names of everyone who read them."
+   }
+  ]
+ },
+ {
+  "lo": 71,
+  "hi": 76,
+  "kind": "puzzle",
+  "p": "keypad",
+  "opts": [
+   {
+    "title": "The contractor file drawer",
+    "body": "Four brass dials in the fictional office. The note says: the year the two manifests first disagreed.",
+    "code": "2026",
+    "payload": "A manifest filed before the requested delivery. The same signature appears on a cancellation that has not been submitted."
+   },
+   {
+    "title": "Halloran & Vey strongbox",
+    "body": "Four dials. Otty remembers the combination as 1141, but does not remember setting it.",
+    "code": "1141",
+    "payload": "Eleven undated findings. None names a cause. One describes a decision the crew has not made."
+   },
+   {
+    "title": "The workshop service panel",
+    "body": "A four-digit lock in a fictional Sand Island workshop. The maintenance note reads 03:41.",
+    "code": "0341",
+    "payload": "The panel exposes a service stair missing from the contractor drawing. Do not assign it to a real facility."
+   }
+  ]
+ },
+ {
+  "lo": 77,
+  "hi": 82,
+  "kind": "puzzle",
+  "p": "sound",
+  "opts": [
+   {
+    "title": "Sounding an impossible trace",
+    "body": "A fictional instrument trace reports no return. Calibrate against its recorded test target, not actual local bathymetry.",
+    "target": 4100,
+    "payload": "At 4,100 on the test scale, the recording answers with the time you began listening."
+   },
+   {
+    "title": "Sounding the fictional service shaft",
+    "body": "The facility plan ends at forty metres. The returned signal continues.",
+    "target": 411,
+    "payload": "At 411 metres on the instrument, the line goes slack. The reading contradicts the plan; it is not a claim about Oʻahu geology."
+   },
+   {
+    "title": "The second calibration",
+    "body": "The instrument carries the handwritten reference 2026. Nobody remembers writing it.",
+    "target": 2026,
+    "payload": "The trace contains two returns from one pulse. Each recording names the other as its source."
+   }
+  ]
+ },
+ {
+  "lo": 83,
+  "hi": 88,
+  "kind": "puzzle",
+  "p": "audio",
+  "opts": [
+   {
+    "title": "Recovered — fictional dispatch channel",
+    "body": "— the [[delivery]] arrived but the request is still [[pending]] — I checked both [[copies]] — do not delete the second [[record]] —"
+   },
+   {
+    "title": "Recovered — neighbor voice message",
+    "body": "— the lights are [[on]] again — there were [[eleven]] names and [[nine]] of us — call me before you change the [[list]] —"
+   },
+   {
+    "title": "Recovered — Halloran & Vey recorder",
+    "body": "— finding [[undetermined]] — preserve the [[signature]] — both versions were [[filed]] — ask who read the [[warning]] —"
+   }
+  ]
+ },
+ {
+  "lo": 89,
+  "hi": 95,
+  "kind": "terror",
+  "opts": [
+   "A trusted contact answers questions before anyone asks them.",
+   "Two authenticated copies place a missing worker in different rooms at the same time.",
+   "Your correction appears in a record created before you opened the file.",
+   "The warning you prevented is now described in another household's incident report."
+  ]
+ },
+ {
+  "lo": 96,
+  "hi": 100,
+  "kind": "temptation",
+  "opts": [
+   "Grandmother offers one useful piece of information. She does not explain its source.",
+   "A fictional contractor offers to restore access if one contradictory copy stops circulating.",
+   "An unsigned finding would release the delayed payment. Its cause field is already filled in.",
+   "Someone the crew lost offers help that works locally. The effect beyond this scene is unknown."
+  ]
+ }
 ];
 
 /* ===================== LIVING BACKGROUND ===================== */
@@ -984,7 +1075,7 @@ function pPuz(){
    <div class="acts" style="margin-top:0"><button class="act pri sm" data-act="send-audio">Send audio</button></div>`;
 }
 function nameForPid(pid){const r=(B.roster||[]).find(x=>x.pid===pid);return r?r.name:pid;}
-function d100Label(k){return{sign:"Sign of the Stand",clue:"Clue",prompt:"Prompt",artifact:"Artifact",puzzle:"Puzzle",terror:"Terror",temptation:"Temptation"}[k]||k;}
+function d100Label(k){return{sign:"Sign of the Signal",clue:"Clue",prompt:"Prompt",artifact:"Artifact",puzzle:"Puzzle",terror:"Terror",temptation:"Temptation"}[k]||k;}
 function d100Summary(r){
   if(typeof r.data==="string")return r.data.length>70?r.data.slice(0,70)+"…":r.data;
   return r.data.title;
@@ -1214,7 +1305,7 @@ document.addEventListener("click",e=>{
     else{tieFrom=tieFrom===id?null:id;renderCards();}break;}
   case "cut":B.links=B.links.filter(l=>l.id!==b.dataset.id);render();pushB();break;
   case "draw":document.getElementById("ovDraw").classList.add("open");document.body.classList.remove("dialopen");break;
-  case "draw-sign":show("A sign of the Stand",SIGNS);break;
+  case "draw-sign":show("A sign of the Signal",SIGNS);break;
   case "draw-sym":show("A symptom",SYMPTOMS);break;
   case "draw-ask":show("Ask",ASKS);break;
   case "theory":document.getElementById("ovTheory").classList.add("open");document.body.classList.remove("dialopen");break;
@@ -1360,3 +1451,4 @@ if(window.matchMedia){
 </script>
 </body>
 </html>
+

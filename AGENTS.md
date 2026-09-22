@@ -18,6 +18,10 @@ else).** There is no separate `CLAUDE.md` — Claude Code falls back to
 reading `AGENTS.md` directly when no `CLAUDE.md` is present, so keeping one
 file avoids drift between two copies of the same policy.
 
+## Setting authority — Hawaiʻi
+
+The user explicitly replaced the former fictional archipelago across Signal Bleed on 2026-09-22. `rules/hawaii-setting-bible.md` is the setting authority. Use real places and the approved Emergency Republic timeline; no old island-count, invented settlement history or mandatory evacuation ending. `hours/`, `print/hours.html`, `print/vespers.html` and the old bible path are compatibility URLs, not alternative canon. Historical HANDOFF entries describe past work, not current lore. New content must distinguish accepted timeline events from proposed case details and respect the selected scenario date.
+
 ## Session continuity — READ FIRST
 
 **`HANDOFF.md` (repo root) is the cross-session state file.** At the START
@@ -171,3 +175,4 @@ canvas/deterministic-core-specific applies here:
   file, for intentionally pausing mid-step.
 
 Both are wired in `.claude/settings.json`.
+

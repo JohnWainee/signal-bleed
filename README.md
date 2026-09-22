@@ -1,18 +1,21 @@
-# SIGNAL BLEED — alpha playtest build
+# SIGNAL BLEED — Hawaiʻi / Emergency Republic
 
 An investigative horror tabletop RPG and its digital play surface, the **Chart Table**:
 a shared multiplayer board for phones, tablets, and laptops. Players join by room code;
 the GM runs a private Portal for clues, sealed secrets, puzzles, and company clocks.
 
-**Live structure**
+**Setting:** [Hawaiʻi — Emergency Republic](rules/hawaii-setting-bible.md). Real places; fictional alternate history beginning September 2026. September Compression → Emergency Republic → Branch Event One → Observer Trials. The beta branch is not a production deployment.
+
+**Site structure**
 
 | Path | What it is |
 |---|---|
 | `/` | Landing page |
 | `/table/` | The Chart Table (multiplayer app) |
 | `/gm/` | Searchable GM reference |
-| `/print/vespers.html`, `/print/hours.html` | Print packs |
-| `/hours/` | The Hours setting chart & record |
+| `/print/hawaii.html` | Print packs |
+| `/hawaii/` | Hawaiʻi places and fictional timeline |
+| `/hours/`, legacy print URLs | Compatibility pages serving the current Hawaiʻi content |
 | `/cases/` | Case files (JSON) |
 | `/rules/` | Rules and setting documents (markdown, source of truth) |
 
@@ -39,3 +42,4 @@ into `firebase-config.js`, paste `firebase.rules.json` into the RTDB rules tab.
 
 `node smoke-test.js` runs a headless jsdom pass over the table app: joins as GM,
 exercises the Portal clocks tab, marks the Bleed, and round-trips an export.
+

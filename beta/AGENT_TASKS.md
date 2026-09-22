@@ -3,6 +3,10 @@
 Updated: 2026-09-22. Planning baseline: draft PR #6, branch `feat/beta-session-foundation`, commit `0b317bf9aec850f4c955f208412b978768147eb3`.
 Re-fetch branch state before starting; this document does not freeze future repository changes.
 
+## Setting authority
+
+The user replaced the former archipelago across Signal Bleed with **Hawaiʻi — Emergency Republic**. Read `rules/hawaii-setting-bible.md` before implementing content. Preserve September Compression (2026), Branch Event One (2027), Observer Trials (2028–2029), 2030 displacement and an undated later fragmentation. No invented campaign-present year. Date-gate lifepaths and fixtures. The first path is now a later-start Hawaiʻi example, still a proposal.
+
 ## Goal and first milestone
 
 Build the beta in the existing Signal Bleed repository, retaining Cloudflare Workers static assets and Firebase. The GM directs the tabletop session from an iPad; the TV/projector follows; player phones hold persistent personal information and short private choices. Lifepath rolls must never restrict playbook choice.
@@ -17,7 +21,7 @@ Do not add 3D rendering, a generic multi-game engine, native apps, automated cas
 
 ## What exists and what is unproven
 
-- Alpha contains the Chart Table, GM reference, Hours chart, case/rules files, Firebase config/rules, and Cloudflare config.
+- Alpha contains the Chart Table, GM reference, Hawaiʻi location index, case/rules files, Firebase config/rules, and Cloudflare config.
 - PR #6 adds an in-memory session module and four Node tests. It does not add UI, transport, persistence, Firebase security enforcement, or lifepath rules.
 - Existing alpha shared-state permissions are unsuitable for the beta's GM-only model.
 - The reference module's room-wide revision is not the final database concurrency design.
@@ -153,7 +157,7 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 
 **Deliver:** `beta/PARITY.md` and export/migration specification.
 **Own:** docs and explicitly scoped migration fixtures/tests.
-**Do:** inventory the alpha chart, clocks, clues, links, rolls, case loading/staging, artifacts/puzzles/inbox, character notes, print/reference pages, and Hours map. Inspect actual code; do not assume handoff entries describing old branches reflect current main.
+**Do:** inventory the alpha chart, clocks, clues, links, rolls, case loading/staging, artifacts/puzzles/inbox, character notes, print/reference pages, and Hawaiʻi location index. Inspect actual code; do not assume handoff entries describing old branches reflect current main.
 **Accept:** every existing capability marked retain, migrate, or explicitly deferred with rationale; do not silently remove essential session tools to declare beta replacement. Define export/version handling, private data retention, import validation and rollback. Destructive/ambiguous migration requires a reviewed user decision.
 **Exclude:** rewriting all alpha features in one task. Any required parity implementation becomes a separately scoped card before SB-13.
 
@@ -199,3 +203,4 @@ Copy this and replace TASK_ID and branch details:
 The coordinator records: task ID; owner/session; task branch; base SHA; status; dependency PRs; implementation PR; reviewed SHA; test evidence; unresolved decisions; next owner. Claims are coordinated centrally; a stale HANDOFF entry is not a distributed lock.
 
 Keep tasks to one coherent, reviewable behavior. If a task grows beyond that, split it along the stated deliverables while retaining the acceptance gate. Estimates should be made by the implementing agent after repository inspection; no calendar promises are implied here.
+

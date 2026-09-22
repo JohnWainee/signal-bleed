@@ -12,6 +12,8 @@ const PAGES = [
   'table/index.html',
   'gm/index.html',
   'hours/index.html',
+  'hawaii/index.html',
+  'print/hawaii.html',
   'print/hours.html',
   'print/vespers.html',
 ]
@@ -60,3 +62,4 @@ for (const page of PAGES) {
 }
 
 process.exit(failed ? 1 : 0)
+

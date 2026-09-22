@@ -1,33 +1,29 @@
 {
   "format": "signal-bleed-case",
   "version": 1,
-
   "title": "Eleven Minutes",
-  "byline": "A night technician is missing from a bonded data warehouse. The client keeps getting his tense wrong.",
+  "byline": "Hawaiʻi case: a technician is missing from a fictional Honolulu Harbor contractor. The client keeps getting his tense wrong.",
   "depth": 3,
-
   "job": {
     "client": "Vess, compliance officer, Transpelagic — nervous in a way that isn't about the missing man",
-    "brief": "Find Miren Adeyemi, night technician, Ossuary Cold Storage, Cold Harbour. Missing nine days.",
-    "pay": "Forty thousand, half up front, no questions — roughly four times the going rate",
+    "brief": "Find Miren Adeyemi, night technician, Ossuary Cold Storage, Honolulu Harbor. Missing nine days.",
+    "pay": "A fictional contract fee of $40,000, half up front; unusually high for this job, not a real-world rate estimate",
     "deadline": "Before the quarterly audit lands. Six days."
   },
-
   "wrongDetail": "Vess refers to Miren in the present tense, then corrects himself to the past tense, then corrects back. He does this six or seven times and never notices.",
-
   "locations": [
     {
-      "name": "Ossuary Cold Storage, sublevel 4",
+      "name": "Ossuary Cold Storage — fictional Honolulu Harbor premises, sublevel 4",
       "sense": "Cold enough to see your breath in the tropics. A hum you feel in your teeth. Smells like copper and cut grass.",
       "who": "Talia Oduya, day-shift tech, working a double she didn't volunteer for"
     },
     {
-      "name": "Miren's room, Low Town",
+      "name": "Miren's fictional room in Kalihi",
       "sense": "Immaculate. Nothing personal on any surface. One chair, facing a blank wall, two metres of load-bearing concrete.",
       "who": "His landlady, who has already re-let it and feels bad about it"
     },
     {
-      "name": "The Kettle, a canteen on the Ladder",
+      "name": "The Kettle — fictional canteen in Chinatown",
       "sense": "Frying oil, wet stone, a fan that ticks. Open all night because the night shift is the only trade.",
       "who": "Ren, who owns it, wants nothing, and knows everyone's schedule"
     },
@@ -37,34 +33,74 @@
       "who": "Nobody. The tools are still in there."
     },
     {
-      "name": "Vess's office, the Crown",
+      "name": "Vess's fictional downtown Honolulu office",
       "sense": "Too clean. Air conditioning fighting the humidity and losing. One drawer locked.",
       "who": "Vess, and a second chair nobody sits in"
     }
   ],
-
   "npcs": [
-    { "name": "Vess", "want": "this closed quietly, before the audit", "hiding": "he filed Miren's death certificate four days before Miren went missing" },
-    { "name": "Talia Oduya", "want": "Miren's shift, which pays better", "hiding": "an affair with a rep from a competitor" },
-    { "name": "Ren", "want": "nothing at all", "hiding": "nothing — which makes what she remembers worse" },
-    { "name": "Dr. Halim", "want": "off the chain, on any boat", "hiding": "eleven patient files she never submitted" },
-    { "name": "Grandmother", "want": "to be helpful", "hiding": "—" }
+    {
+      "name": "Vess",
+      "want": "this closed quietly, before the audit",
+      "hiding": "he filed Miren's death certificate four days before Miren went missing"
+    },
+    {
+      "name": "Talia Oduya",
+      "want": "Miren's shift, which pays better",
+      "hiding": "an affair with a rep from a competitor"
+    },
+    {
+      "name": "Ren",
+      "want": "nothing at all",
+      "hiding": "nothing — which makes what she remembers worse"
+    },
+    {
+      "name": "Dr. Halim",
+      "want": "off Oʻahu, on any boat",
+      "hiding": "eleven patient files she never submitted"
+    },
+    {
+      "name": "Grandmother",
+      "want": "to be helpful",
+      "hiding": "—"
+    }
   ],
-
   "clues": [
-    { "text": "The maintenance log has eleven minutes missing. Every night. For six years." },
-    { "text": "Miren's earpiece is still transmitting. Intermittently. From inside the building." },
-    { "text": "Shaft 11 was welded shut from the inside. The welds are new. The tools are still in there." },
-    { "text": "Eleven people have left Ossuary in six years. All resigned by message. All messages sent at 3:41 a.m." },
-    { "text": "Miren's room has one chair facing a blank wall. The wall is load-bearing and two metres thick." },
-    { "text": "Dr. Halim's eleven unsubmitted files all describe the same symptom, in eleven different hands." },
-    { "text": "The night shift roster is written in a hand nobody at Ossuary recognises." },
-    { "text": "Vess filed Miren's death certificate four days before Miren went missing." },
-    { "text": "Ren says the night shift always orders eleven bowls. There have never been eleven of them." },
-    { "text": "A datapad recovered from sublevel 4 holds one photograph of sublevel 4, taken from inside the wall." },
-    { "text": "Channel 11's duty supervisor has signed off every shift for six years. Personnel has no such post.", "face": true }
+    {
+      "text": "The maintenance log has eleven minutes missing. Every night. For six years."
+    },
+    {
+      "text": "Miren's earpiece is still transmitting. Intermittently. From inside the building."
+    },
+    {
+      "text": "Shaft 11 was welded shut from the inside. The welds are new. The tools are still in there."
+    },
+    {
+      "text": "Eleven people have left Ossuary in six years. All resigned by message. All messages sent at 3:41 a.m."
+    },
+    {
+      "text": "Miren's room has one chair facing a blank wall. The wall is load-bearing and two metres thick."
+    },
+    {
+      "text": "Dr. Halim's eleven unsubmitted files all describe the same symptom, in eleven different hands."
+    },
+    {
+      "text": "The night shift roster is written in a hand nobody at Ossuary recognises."
+    },
+    {
+      "text": "Vess filed Miren's death certificate four days before Miren went missing."
+    },
+    {
+      "text": "Ren says the night shift always orders eleven bowls. There have never been eleven of them."
+    },
+    {
+      "text": "A datapad recovered from sublevel 4 holds one photograph of sublevel 4, taken from inside the wall."
+    },
+    {
+      "text": "Channel 11's duty supervisor has signed off every shift for six years. Personnel has no such post.",
+      "face": true
+    }
   ],
-
   "artifacts": [
     {
       "title": "Ossuary Cold Storage — maintenance log, extract",
@@ -77,7 +113,6 @@
       "body": "Re: your query about the Channel 11 duty supervisor.\n\nThere is no Channel 11 duty supervisor post and there never has been. I've checked back to the founding of the harbour authority.\n\nI did ask around. Eleven people told me they speak to her regularly. Four gave me her name. It was a different name each time.\n\nPlease don't put this in writing again.\n\n— K."
     }
   ],
-
   "puzzles": [
     {
       "type": "keypad",
@@ -99,26 +134,24 @@
       "to": "all",
       "body": "Shaft 11 goes down past the waterline. The building's plans say it terminates at forty metres, at the pump housing.\n\nYou have a weighted line and a very quiet afternoon. Find the bottom.",
       "target": 411,
-      "payload": "Four hundred and eleven metres.\n\nThe island is not four hundred metres thick here. The shaft does not terminate at the pump housing, and past a certain depth the line stops going down and starts going along.\n\nSomething at the end of it takes the weight off, gently, the way you'd take a bag from someone whose hands are full."
+      "payload": "Four hundred and eleven metres.\n\nThe facility plan ends at forty metres. The shaft does not terminate at the pump housing, and past a certain depth the line stops going down and starts going along.\n\nSomething at the end of it takes the weight off, gently, the way you'd take a bag from someone whose hands are full."
     }
   ],
-
   "rings": {
     "terrors": [
       "The cold in sublevel 4 is wrong — not mechanical cold. Someone's breath fogs when they're standing in the corridor, which is not refrigerated.",
       "Talia counts the night shift out loud as they leave and gets eleven. There are nine. She does not react.",
       "The earpiece transmits while someone is holding it. It's Miren's voice, and it's answering questions asked in the room right now, eleven minutes late.",
       "Someone the crew has spoken to this case sends a resignation message at 3:41 a.m. They are standing in front of the crew at the time.",
-      "Grandmother uses one of the crew's names on the open channel, and says they've been very helpful, and thanks them by their full legal name, which they have told nobody on the chain."
+      "Grandmother uses one of the crew's names on the open channel, and says they've been very helpful, and thanks them by their full legal name, which they have told nobody on Oʻahu."
     ],
     "temptations": [
       "Vess offers double if they'll close it as an industrial accident today. He isn't lying about the money.",
-      "Halim will hand over all eleven files — if someone gets her name onto a manifest leaving the chain.",
+      "Halim will hand over all eleven files — if someone gets her name onto a manifest leaving Oʻahu.",
       "The Channel 11 supervisor is genuinely helpful. She answers correctly. She has never once been wrong.",
       "Shaft 11 can be re-opened. The welds are new and thin, and whoever did them did it from inside, which means there was a reason, which means there's an answer down there.",
       "Grandmother offers to simply tell them what happened to Miren. Plainly. No conditions. All they have to do is ask her directly, on the open channel, by name."
     ]
   },
-
-  "notes": "DO NOT DECIDE WHAT HAPPENED TO MIREN. You don't know. Neither do I.\n\nRun Ring 1 slow — let them do the job competently for a full hour before anything is wrong. Vess survives this case regardless of the theory; he is worse in the next one.\n\nGrandmother is never on screen. She is only ever a voice on a channel, and she is only ever helpful. Nobody investigates her in this case — mention her once, in passing, from someone who assumes the crew already knows who she is, and let them shrug it off.\n\nDepth 3. Let them find six or seven clues. Let them Theorize in Ring 4. Whatever they say is what happened."
+  "notes": "HAWAIʻI — EMERGENCY REPUBLIC. Choose a scenario date from September 2026 onward. Companies, staff and interiors are fictional. Records claiming years of anomalous operation are non-originating evidence, not a settled pre-2026 program history. Later JIITG/Observer revelations require the appropriate scenario date.\n\nDO NOT DECIDE WHAT HAPPENED TO MIREN. You don't know. Neither do I.\n\nRun Ring 1 slow — let them do the job competently for a full hour before anything is wrong. Vess survives this case regardless of the theory; he is worse in the next one.\n\nGrandmother is never on screen. She is only ever a voice on a channel, and she is only ever helpful. Nobody investigates her in this case — mention her once, in passing, from someone who assumes the crew already knows who she is, and let them shrug it off.\n\nDepth 3. Let them find six or seven clues. Let them Theorize in Ring 4. Whatever they say is what happened."
 }

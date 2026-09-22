@@ -45,3 +45,8 @@ Four local Node tests cover the session contract and data isolation projections.
 ## Agent implementation plan
 
 See [AGENT_TASKS.md](AGENT_TASKS.md) for task ownership, dependencies, acceptance checks and the copyable assignment prompt. Start with SB-00 and SB-10. See [LIFEPATH_TUNING_PROPOSAL.md](LIFEPATH_TUNING_PROPOSAL.md) for the recovered four-phase direction and proposed choice tuning; exact rules/content remain subject to source reconciliation and review.
+
+
+## Current setting
+
+Use [Hawaiʻi — Emergency Republic](../rules/hawaii-setting-bible.md) for all places, chronology and program references. The former archipelago is superseded. The first four-phase fixture spans September 2026–2029; it does not fix the campaign-present date.

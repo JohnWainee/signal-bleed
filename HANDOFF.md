@@ -3,6 +3,8 @@
 **State:** repo complete and committed on `main` (1 commit). Code is done and smoke-tested.
 Nothing here needs authoring — only pushing, wiring, and one config paste.
 
+**Current beta context (2026-09-22):** The active setting is Hawaiʻi — Emergency Republic. See `rules/hawaii-setting-bible.md` and `beta/HAWAII_MIGRATION.md`. The alpha checklist below and older session entries are historical; their former setting descriptions are superseded.
+
 ## Your tasks, in order
 
 1. **Push to GitHub.** Create a repo (suggest `signal-bleed`, private) and push `main`.
@@ -43,6 +45,9 @@ per-field sync refactor.
 Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
+
+**Agent:** Codex (ChatGPT Work Mode) — migrated active Signal Bleed content to Hawaiʻi / Emergency Republic after recovering the previous-session choices. Added `rules/hawaii-setting-bible.md`, updated app/GM/print/core/case/season/beta content and compatibility pages, and dated the proposed lifepath to the 2026–2029 events. Independent review's identity-custody issue fixed. `setting:validate`, case validation, four beta tests and eight-page local link audit pass. npm dependency access blocked (403), Chromium unavailable: existing jsdom/browser checks not claimed. See `beta/HAWAII_MIGRATION.md` for scope, evidence, map/data-migration limits and follow-up. No protected configuration, merge or deploy changed.
+**Branch:** `feat/beta-session-foundation` — released
 
 **Agent:** Codex (ChatGPT Work Mode) — drafted `beta/LIFEPATH_FIRST_PATH.md` (LP-B: The Name That Stayed), grounded in The Hours setting bible and core mystery principles. Includes four phases, direction choices, explicit 2d6 variants, A/B effects, recurring NPC/document callbacks, visibility rules, and one illustrative complete outcome. All new NPC/content/lifepath procedures are labeled proposals; no canonical rules or runtime changed. LP-B is drafted, not playtested or approved; next step is the user walkthrough and choice tuning. Exact core/setting terminology drift remains outside this draft.
 **Branch:** `feat/beta-session-foundation` — released

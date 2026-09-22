@@ -3,249 +3,131 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SIGNAL BLEED — Print Pack</title>
+<title>SIGNAL BLEED — Hawaiʻi — Print Pack</title>
 <style>
   :root{
-    --paper:#E7E9E4;
-    --panel:#DBDED7;
-    --ink:#14171A;
-    --soft:#565C60;
-    --rule:#A9AEA7;
-    --signal:#8A2B2B;
-    --mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, Consolas, monospace;
-    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --paper:#E9E6DB;
+    --panel:#DDDACE;
+    --ink:#191C18;
+    --soft:#5C6259;
+    --rule:#A9AD9F;
+    --signal:#A8382B;
+    --sea:#3E5B52;
+    --mono: ui-monospace,"SF Mono","Roboto Mono",Menlo,Consolas,monospace;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
   }
-
   *{box-sizing:border-box;}
-  html{-webkit-text-size-adjust:100%;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:var(--mono);
-    font-size:9.4pt;
-    line-height:1.42;
-  }
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--mono);font-size:9.4pt;line-height:1.42;}
 
-  .sheet{
-    width:8.5in;
-    min-height:11in;
-    margin:0 auto 24px;
-    padding:0.5in 0.55in;
-    background:var(--paper);
-    position:relative;
-  }
+  .sheet{width:8.5in;min-height:11in;margin:0 auto 24px;padding:0.5in 0.55in;
+    background:var(--paper);position:relative;}
 
-  /* ---------- masthead ---------- */
-  .mast{
-    display:flex;
-    align-items:flex-end;
-    justify-content:space-between;
-    border-bottom:2px solid var(--ink);
-    padding-bottom:5px;
-    margin-bottom:3px;
-  }
-  .mast h1{
-    font-family:var(--mono);
-    font-size:19pt;
-    letter-spacing:0.30em;
-    font-weight:700;
-    margin:0;
-    text-transform:uppercase;
-  }
-  .mast .filed{
-    font-size:7pt;
-    letter-spacing:0.14em;
-    color:var(--soft);
-    text-transform:uppercase;
-    text-align:right;
-    line-height:1.5;
-  }
-  .subrule{
-    border-bottom:1px solid var(--rule);
-    margin-bottom:14px;
-    padding-bottom:3px;
-    font-size:7pt;
-    letter-spacing:0.22em;
-    color:var(--soft);
-    text-transform:uppercase;
-  }
+  /* masthead */
+  .mast{display:flex;align-items:flex-end;justify-content:space-between;
+    border-bottom:2px solid var(--ink);padding-bottom:5px;margin-bottom:3px;}
+  .mast h1{font-size:18pt;letter-spacing:.30em;font-weight:700;margin:0;text-transform:uppercase;}
+  .mast .filed{font-size:7pt;letter-spacing:.14em;color:var(--soft);
+    text-transform:uppercase;text-align:right;line-height:1.5;}
+  .subrule{border-bottom:1px solid var(--rule);margin-bottom:14px;padding-bottom:3px;
+    font-size:7pt;letter-spacing:.22em;color:var(--soft);text-transform:uppercase;}
 
-  /* ---------- type ---------- */
-  h2{
-    font-size:8pt;
-    letter-spacing:0.24em;
-    text-transform:uppercase;
-    margin:16px 0 6px;
-    padding-bottom:2px;
-    border-bottom:1px solid var(--ink);
-    font-weight:700;
-  }
+  /* tide line — signature rule */
+  .tideline{height:8px;margin:10px 0 14px;
+    background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 9px);
+    border-bottom:1px solid var(--ink);opacity:.55;}
+
+  h2{font-size:8pt;letter-spacing:.24em;text-transform:uppercase;margin:16px 0 6px;
+    padding-bottom:2px;border-bottom:1px solid var(--ink);font-weight:700;}
   h2:first-of-type{margin-top:6px;}
-  h3{
-    font-size:9pt;
-    letter-spacing:0.13em;
-    text-transform:uppercase;
-    margin:10px 0 3px;
-    font-weight:700;
-  }
+  h3{font-size:9pt;letter-spacing:.13em;text-transform:uppercase;margin:10px 0 3px;font-weight:700;}
   p{margin:0 0 7px;}
-  .fic{
-    font-family:var(--serif);
-    font-size:10.5pt;
-    font-style:italic;
-    line-height:1.45;
-    color:var(--ink);
-  }
+  .fic{font-family:var(--serif);font-size:10.5pt;font-style:italic;line-height:1.45;}
   .soft{color:var(--soft);}
   .sig{color:var(--signal);font-weight:700;}
-  strong{font-weight:700;}
-
-  ul{margin:0 0 7px;padding-left:15px;}
-  li{margin-bottom:3px;}
-
+  ul{margin:0 0 7px;padding-left:15px;} li{margin-bottom:3px;}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 22px;}
-  .cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 16px;}
 
-  /* ---------- move blocks ---------- */
   .move{margin-bottom:9px;}
-  .move .name{
-    font-weight:700;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-  }
-  .move .name .stat{color:var(--signal);font-weight:400;letter-spacing:0.05em;}
+  .move .name{font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+  .move .name .stat{color:var(--signal);font-weight:400;letter-spacing:.05em;}
   .move .r{display:block;padding-left:11px;text-indent:-11px;}
-  .tag{
-    display:inline-block;
-    min-width:26px;
-    font-weight:700;
-  }
+  .tag{display:inline-block;min-width:26px;font-weight:700;}
 
-  .ask{
-    font-family:var(--serif);
-    font-style:italic;
-    font-size:10pt;
-    border-left:2px solid var(--signal);
-    padding:2px 0 2px 9px;
-    margin:5px 0 8px;
-  }
+  .ask{font-family:var(--serif);font-style:italic;font-size:10pt;
+    border-left:2px solid var(--signal);padding:2px 0 2px 9px;margin:5px 0 8px;}
   .ask div{margin-bottom:1px;}
 
-  /* ---------- signature: degrading static track ---------- */
-  .track{display:flex;align-items:center;gap:7px;margin:5px 0 3px;}
-  .box{
-    width:22px;height:22px;
-    border:1.5px solid var(--ink);
-    display:block;
-  }
-  .box.s2{border-width:1.5px;}
-  .box.s3{transform:rotate(-1.5deg);}
-  .box.s4{transform:rotate(2.5deg) skewX(-4deg);border-style:solid;border-right-style:dashed;}
-  .box.s5{
-    transform:rotate(-4deg) skewX(7deg);
-    border-color:var(--signal);
-    border-style:dashed;
-    box-shadow:2px -1px 0 rgba(138,43,43,.35);
-  }
-  .tracklabel{
-    font-size:6.6pt;letter-spacing:0.18em;color:var(--soft);
-    text-transform:uppercase;margin-left:4px;
-  }
+  /* SIGNATURE: static as a depth sounding */
+  .sound{display:flex;align-items:flex-end;gap:0;margin:6px 0 2px;}
+  .mark{width:34px;text-align:center;}
+  .mark .bx{height:20px;border:1.5px solid var(--ink);border-top:none;margin:0 2px;}
+  .mark.m2 .bx{height:26px;}
+  .mark.m3 .bx{height:33px;transform:skewX(-2deg);}
+  .mark.m4 .bx{height:41px;transform:skewX(4deg);border-right-style:dashed;}
+  .mark.m5 .bx{height:50px;transform:skewX(-7deg);border-color:var(--signal);border-style:dashed;border-top:none;}
+  .mark .n{font-size:6.4pt;letter-spacing:.1em;color:var(--soft);padding-top:2px;}
+  .mark.m5 .n{color:var(--signal);font-weight:700;}
+  .soundcap{font-size:6.6pt;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-top:2px;}
 
   .harm{display:flex;gap:7px;align-items:center;margin:4px 0;}
   .hbox{width:18px;height:18px;border:1.5px solid var(--ink);}
-  .hlab{font-size:6.6pt;letter-spacing:0.14em;color:var(--soft);text-transform:uppercase;}
+  .hlab{font-size:6.6pt;letter-spacing:.14em;color:var(--soft);text-transform:uppercase;}
 
-  /* ---------- form fields ---------- */
   .field{margin-bottom:7px;}
-  .flabel{
-    font-size:6.8pt;letter-spacing:0.2em;text-transform:uppercase;
-    color:var(--soft);display:block;margin-bottom:2px;
-  }
+  .flabel{font-size:6.8pt;letter-spacing:.2em;text-transform:uppercase;color:var(--soft);
+    display:block;margin-bottom:2px;}
   .line{border-bottom:1px solid var(--rule);height:15px;}
   .line.tall{height:19px;}
 
   .statrow{display:flex;gap:9px;margin:4px 0 10px;}
-  .statcell{
-    flex:1;border:1.5px solid var(--ink);padding:4px 5px 5px;text-align:center;
-  }
-  .statcell .n{font-size:7pt;letter-spacing:0.2em;font-weight:700;}
-  .statcell .v{
-    border-bottom:1px solid var(--rule);height:17px;margin-top:4px;
-  }
-  .statcell .d{font-size:6.2pt;color:var(--soft);letter-spacing:0.06em;margin-top:3px;line-height:1.25;}
+  .statcell{flex:1;border:1.5px solid var(--ink);padding:4px 5px 5px;text-align:center;}
+  .statcell .n{font-size:7pt;letter-spacing:.2em;font-weight:700;}
+  .statcell .v{border-bottom:1px solid var(--rule);height:17px;margin-top:4px;}
+  .statcell .d{font-size:6.2pt;color:var(--soft);margin-top:3px;}
 
-  .redact{
-    display:inline-block;background:var(--ink);color:var(--ink);
-    padding:0 26px;height:9px;vertical-align:middle;
-  }
+  .redact{display:inline-block;background:var(--ink);color:var(--ink);padding:0 26px;height:9px;vertical-align:middle;}
+  .panel{background:var(--panel);border-left:3px solid var(--sea);padding:8px 10px;margin:8px 0;}
 
-  .panel{
-    background:var(--panel);
-    border-left:3px solid var(--ink);
-    padding:8px 10px;
-    margin:8px 0;
-  }
-
-  .cardhead{
-    display:flex;justify-content:space-between;align-items:baseline;
-    border-bottom:2px solid var(--ink);padding-bottom:4px;margin-bottom:4px;
-  }
-  .cardhead .title{
-    font-size:16pt;letter-spacing:0.20em;font-weight:700;text-transform:uppercase;
-  }
-  .cardhead .code{font-size:7pt;letter-spacing:0.18em;color:var(--soft);}
-
-  .lock{
-    font-size:6.6pt;letter-spacing:0.16em;color:var(--signal);
-    text-transform:uppercase;font-weight:700;
-  }
-
+  .cardhead{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:2px solid var(--ink);padding-bottom:4px;margin-bottom:4px;}
+  .cardhead .title{font-size:16pt;letter-spacing:.20em;font-weight:700;text-transform:uppercase;}
+  .cardhead .code{font-size:7pt;letter-spacing:.18em;color:var(--soft);}
+  .lock{font-size:6.6pt;letter-spacing:.16em;color:var(--signal);text-transform:uppercase;font-weight:700;}
   .xp{display:flex;gap:5px;align-items:center;}
   .xpdot{width:11px;height:11px;border:1.3px solid var(--ink);border-radius:50%;}
 
-  .foot{
-    position:absolute;bottom:0.34in;left:0.55in;right:0.55in;
-    border-top:1px solid var(--rule);padding-top:3px;
-    font-size:6.4pt;letter-spacing:0.16em;color:var(--soft);
-    text-transform:uppercase;display:flex;justify-content:space-between;
-  }
+  .foot{position:absolute;bottom:0.34in;left:0.55in;right:0.55in;border-top:1px solid var(--rule);
+    padding-top:3px;font-size:6.4pt;letter-spacing:.16em;color:var(--soft);
+    text-transform:uppercase;display:flex;justify-content:space-between;}
 
   table{width:100%;border-collapse:collapse;margin-bottom:8px;}
   td{padding:2px 6px 2px 0;vertical-align:top;}
-  td.k{font-weight:700;letter-spacing:0.1em;white-space:nowrap;width:62px;}
-
+  td.k{font-weight:700;letter-spacing:.1em;white-space:nowrap;width:62px;}
   .dtable td.k{width:16px;color:var(--signal);}
 
-  /* ---------- print ---------- */
   @media print{
     @page{size:letter;margin:0.45in;}
     body{background:#fff;font-size:9pt;}
-    .sheet{
-      width:auto;min-height:auto;margin:0;padding:0;
-      page-break-after:always;background:#fff;
-    }
+    .sheet{width:auto;min-height:auto;margin:0;padding:0;page-break-after:always;background:#fff;}
     .sheet:last-child{page-break-after:auto;}
     .foot{position:fixed;bottom:0.16in;left:0;right:0;}
-    .panel{background:#EDEEEA;}
+    .panel{background:#EFEDE4;}
   }
-  @media (max-width:900px){
-    .sheet{width:100%;padding:18px;}
-    .cols,.cols3{grid-template-columns:1fr;}
-  }
+  @media (max-width:900px){ .sheet{width:100%;padding:18px;} .cols{grid-template-columns:1fr;} }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
+<p class="noprint" style="padding:12px">Hawaiʻi — Emergency Republic · fictional alternate timeline from September 2026. <a href="../hawaii/">Setting reference</a></p>
 
-<!-- ============ SHEET 1 — PLAYER REFERENCE ============ -->
+<!-- ===== 1 · REFERENCE ===== -->
 <section class="sheet">
   <div class="mast">
     <h1>Signal Bleed</h1>
-    <div class="filed">Player reference<br>Sheet 1 of 9 · v0.1</div>
+    <div class="filed">Hawaiʻi · player reference<br>Sheet 1 of 9 · v0.2</div>
   </div>
-  <div class="subrule">Keep this where everyone can see it</div>
+  <div class="subrule">Honolulu · keep this where everyone can see it</div>
 
   <h2>The core roll</h2>
   <p>When a move tells you to, roll <strong>2d6 + a stat</strong>. Never otherwise.</p>
@@ -258,14 +140,8 @@
 
   <h2>The stats</h2>
   <div class="cols">
-    <div>
-      <p><strong>EDGE</strong> — speed, violence, nerve.<br>
-      <strong>WIRE</strong> — machines, systems, intrusion.</p>
-    </div>
-    <div>
-      <p><strong>FACE</strong> — reading people, leverage, lying well.<br>
-      <strong>VEIL</strong> — the part of you that notices what shouldn't be there.</p>
-    </div>
+    <div><p><strong>EDGE</strong> — speed, violence, nerve.<br><strong>WIRE</strong> — machines, systems, the cable, cold competence.</p></div>
+    <div><p><strong>FACE</strong> — reading people, leverage, lying well.<br><strong>VEIL</strong> — the part of you that notices what shouldn't be there.</p></div>
   </div>
 
   <h2>Basic moves</h2>
@@ -306,15 +182,15 @@
     <div>
       <div class="move">
         <div class="name">Jack In <span class="stat">(+WIRE +STATIC)</span></div>
-        <div class="soft">Interface with a system that shouldn't exist.</div>
+        <div class="soft">Interface with a system that shouldn't still be running — a dead node, a length of cable nobody opened, something wet where it should be dry.</div>
         <span class="r"><span class="tag">10+</span>You get what you came for. Take a Clue.</span>
-        <span class="r"><span class="tag">7–9</span>You get it, but choose one: mark Static · something on the other side knows your name now · advance the Bleed.</span>
-        <span class="r"><span class="tag">6−</span>Mark Static. The GM says what came back through with you.</span>
+        <span class="r"><span class="tag">7–9</span>You get it, but choose one: mark Static · something on the other end has your name now · advance the Bleed.</span>
+        <span class="r"><span class="tag">6−</span>Mark Static. The GM says what came ashore with you.</span>
       </div>
 
       <div class="move">
         <div class="name">Take a Sounding <span class="stat">(+VEIL +STATIC)</span></div>
-        <div class="soft">Open yourself deliberately. Once per scene, no more.</div>
+        <div class="soft">Open yourself deliberately to what's under a thing. Hold the object, work the channel, stand in the water and listen. Once per scene, no more.</div>
         <span class="r"><span class="tag">10+</span>Take a Clue and ask one question from Read the Wire.</span>
         <span class="r"><span class="tag">7–9</span>Take a Clue. Mark Static.</span>
         <span class="r"><span class="tag">6−</span>Mark Static, and it answers a question you didn't ask.</span>
@@ -329,34 +205,35 @@
       </div>
 
       <div class="panel">
-        <strong>THE OFFER.</strong> Anyone at the table can offer a specific complication for <strong>+1</strong> to a roll about to happen. Take it or refuse it, freely. If you take it, the complication happens whether you succeed or not.
-        <div class="fic" style="margin-top:5px;">"+1 if the cameras get your face."<br>"+1 if you have to leave her behind."</div>
+        <strong>THE OFFER.</strong> Anyone at the table can offer a specific complication for <strong>+1</strong> to a roll about to happen. Take it or refuse, freely. If you take it, it happens whether you succeed or not.
+        <div class="fic" style="margin-top:5px;">"+1 if the fictional contractor logs your badge."<br>"+1 if you go back down without a tender."</div>
       </div>
     </div>
   </div>
 
+  <div class="tideline"></div>
+
   <h2>End of session</h2>
-  <p>Did we learn something true about the Bleed? <span class="soft">Everyone marks XP.</span> · Did someone act on their Dark Secret in the open? <span class="soft">They mark XP.</span> · Did anyone burn a Bond? <span class="soft">They mark XP.</span></p>
+  <p>Did we learn something true about the Signal? <span class="soft">Everyone marks XP.</span> · Did someone act on their Dark Secret in the open? <span class="soft">They mark XP.</span> · Did anyone burn a Bond? <span class="soft">They mark XP.</span></p>
   <p><strong>Three XP:</strong> raise a stat by +1 (max +3) · take a move from another playbook · heal a burned Bond by making it about someone new.</p>
 
-  <div class="foot"><span>Signal Bleed · player reference</span><span>Nothing in this game explains itself</span></div>
+  <div class="foot"><span>Signal Bleed · hawaiʻi · reference</span><span>No bottom found</span></div>
 </section>
 
-<!-- ============ SHEET 2 — DECK-RUNNER ============ -->
+<!-- ===== 2 · SPLICER ===== -->
 <section class="sheet">
   <div class="cardhead">
     <div class="title">The Splicer</div>
-    <div class="code">Personnel record · <span class="redact"></span></div>
+    <div class="code">Contractor personnel · cert. <span class="redact"></span></div>
   </div>
   <div class="subrule">Playbook · Sheet 2 of 9</div>
-  <p class="fic">You went deeper than the job required, and something down there was <em>arranged</em>. Not built. Arranged.</p>
+  <p class="fic">You opened a length of cable that hadn't been opened before the outage, and the traffic on it was current.</p>
 
   <div class="cols">
     <div>
-      <div class="field"><span class="flabel">Name / handle</span><div class="line tall"></div></div>
-      <div class="field"><span class="flabel">Look — pick or invent</span><div class="line"></div>
-        <div class="soft" style="font-size:7.4pt;">sleepless · surgically neat · borrowed clothes · too still</div>
-      </div>
+      <div class="field"><span class="flabel">Name / call sign</span><div class="line tall"></div></div>
+      <div class="field"><span class="flabel">Look</span><div class="line"></div>
+        <div class="soft" style="font-size:7.4pt;">sleepless · burn scars on the fingertips · contractor lanyard they never hand back</div></div>
 
       <span class="flabel">Stats — suggested spread</span>
       <div class="statrow">
@@ -366,19 +243,21 @@
         <div class="statcell"><div class="n">VEIL</div><div class="v"></div><div class="d">+1</div></div>
       </div>
 
-      <span class="flabel">Static — starts at 0. It only goes up.</span>
-      <div class="track">
-        <span class="box s1"></span><span class="box s2"></span><span class="box s3"></span><span class="box s4"></span><span class="box s5"></span>
-        <span class="tracklabel">5 = claimed</span>
+      <span class="flabel">Static — soundings taken. It only goes deeper.</span>
+      <div class="sound">
+        <div class="mark m1"><div class="bx"></div><div class="n">1</div></div>
+        <div class="mark m2"><div class="bx"></div><div class="n">2</div></div>
+        <div class="mark m3"><div class="bx"></div><div class="n">3</div></div>
+        <div class="mark m4"><div class="bx"></div><div class="n">4</div></div>
+        <div class="mark m5"><div class="bx"></div><div class="n">NO BTM</div></div>
       </div>
-      <p class="soft" style="font-size:7.6pt;">Add Static to VEIL rolls and to anything that touches the other side. Take a Symptom each mark. Unlock a Static Move at 1, 3 and 5.</p>
+      <div class="soundcap">Add Static to VEIL and to anything touching the other side</div>
+      <p class="soft" style="font-size:7.6pt;margin-top:6px;">Take a Symptom each mark. Unlock a Static Move at 1, 3 and 5. At 5 you are observed — take your Moment, then the GM takes you.</p>
 
       <span class="flabel">Harm</span>
-      <div class="harm">
-        <span class="hbox"></span><span class="hlab">Winded</span>
+      <div class="harm"><span class="hbox"></span><span class="hlab">Winded</span>
         <span class="hbox"></span><span class="hlab">Wounded</span>
-        <span class="hbox"></span><span class="hlab">Wasted</span>
-      </div>
+        <span class="hbox"></span><span class="hlab">Wasted</span></div>
       <p class="soft" style="font-size:7.6pt;">You may always mark Static instead of Harm. Say what your body does that a body shouldn't.</p>
 
       <span class="flabel">XP</span>
@@ -387,61 +266,47 @@
 
     <div>
       <h3>Moves — take both</h3>
-      <div class="move">
-        <div class="name">Deep Splice</div>
-        When you go somewhere in the network nobody is supposed to reach, take a Clue automatically <em>before</em> you roll Jack In.
-      </div>
-      <div class="move">
-        <div class="name">Cold Hands</div>
-        When you're working and something horrifying happens, you may ignore it entirely for one exchange. Then it's worse.
-      </div>
+      <div class="move"><div class="name">Deep Splice</div>
+        When you open a line nobody is supposed to open, take a Clue automatically <em>before</em> you roll Jack In.</div>
+      <div class="move"><div class="name">Cold Hands</div>
+        When you're working and something horrifying happens, you may ignore it entirely for one exchange. Then it's worse.</div>
 
       <h3>Static moves</h3>
-      <div class="move">
-        <div class="lock">Unlocks at Static 1</div>
-        <div class="name">Traffic Memory</div>
-        Once per session, ask the GM <em>"Where have I seen this before?"</em> They answer truthfully, even if the answer is impossible.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 3</div>
-        <div class="name">The Tap</div>
-        You have already been inside any system you can name. Say when you put the door in. Mark Static.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 5</div>
-        <div class="name">Termination</div>
-        You do not need a deck anymore.
-      </div>
+      <div class="move"><div class="lock">Unlocks at Static 1</div><div class="name">Traffic Memory</div>
+        Once per session, ask the GM <em>"Where have I heard this before?"</em> They answer truthfully, even if the answer is impossible.</div>
+      <div class="move"><div class="lock">Unlocks at Static 3</div><div class="name">The Tap</div>
+        You have already been on any line you can name. Say when you put it in. Mark Static.</div>
+      <div class="move"><div class="lock">Unlocks at Static 5</div><div class="name">Termination</div>
+        You do not need a deck. You are a landing point.</div>
 
-      <h3>Dark secret <span class="soft" style="font-weight:400;letter-spacing:0;">— GM reads this privately</span></h3>
-      <p class="fic" style="margin-bottom:3px;">What did you take out of the deep net that you never reported? Who is looking for it?</p>
+      <h3>Dark secret <span class="soft" style="font-weight:400;letter-spacing:0;">— GM reads privately</span></h3>
+      <p class="fic" style="margin-bottom:3px;">What came up the wire during the outage that you never logged, and who has started asking about it?</p>
       <div class="line"></div><div class="line"></div><div class="line"></div>
 
       <h3>Bonds — two. Burning one stops a Static mark. Once each.</h3>
       <div class="field"><div class="line"></div>
         <div class="soft" style="font-size:7.6pt;">______ has seen my hands shake and said nothing.</div></div>
       <div class="field"><div class="line"></div>
-        <div class="soft" style="font-size:7.6pt;">I have read ______'s private files. They don't know.</div></div>
+        <div class="soft" style="font-size:7.6pt;">I have read ______'s traffic. They don't know.</div></div>
     </div>
   </div>
-  <div class="foot"><span>Signal Bleed · the splicer</span><span>Arranged. Not built.</span></div>
+  <div class="foot"><span>Signal Bleed · the splicer</span><span>The line was live</span></div>
 </section>
 
-<!-- ============ SHEET 3 — FIXER ============ -->
+<!-- ===== 3 · REGISTRAR ===== -->
 <section class="sheet">
   <div class="cardhead">
     <div class="title">The Registrar</div>
-    <div class="code">Personnel record · <span class="redact"></span></div>
+    <div class="code">Emergency allocation · clerk no. <span class="redact"></span></div>
   </div>
   <div class="subrule">Playbook · Sheet 3 of 9</div>
-  <p class="fic">You know where the bodies are buried because you filed the paperwork.</p>
+  <p class="fic">You approved a delivery that had not been requested yet. The paperwork remembers you.</p>
 
   <div class="cols">
     <div>
-      <div class="field"><span class="flabel">Name / handle</span><div class="line tall"></div></div>
+      <div class="field"><span class="flabel">Name</span><div class="line tall"></div></div>
       <div class="field"><span class="flabel">Look</span><div class="line"></div>
-        <div class="soft" style="font-size:7.4pt;">expensive coat · four phones · never sits with their back to a door</div>
-      </div>
+        <div class="soft" style="font-size:7.4pt;">good linen in bad humidity · four phones · never sits facing away from a door</div></div>
 
       <span class="flabel">Stats — suggested spread</span>
       <div class="statrow">
@@ -451,18 +316,19 @@
         <div class="statcell"><div class="n">VEIL</div><div class="v"></div><div class="d">0</div></div>
       </div>
 
-      <span class="flabel">Static — starts at 0</span>
-      <div class="track">
-        <span class="box s1"></span><span class="box s2"></span><span class="box s3"></span><span class="box s4"></span><span class="box s5"></span>
-        <span class="tracklabel">5 = claimed</span>
+      <span class="flabel">Static — soundings taken</span>
+      <div class="sound">
+        <div class="mark m1"><div class="bx"></div><div class="n">1</div></div>
+        <div class="mark m2"><div class="bx"></div><div class="n">2</div></div>
+        <div class="mark m3"><div class="bx"></div><div class="n">3</div></div>
+        <div class="mark m4"><div class="bx"></div><div class="n">4</div></div>
+        <div class="mark m5"><div class="bx"></div><div class="n">NO BTM</div></div>
       </div>
 
-      <span class="flabel">Harm</span>
-      <div class="harm">
-        <span class="hbox"></span><span class="hlab">Winded</span>
+      <span class="flabel" style="margin-top:8px;">Harm</span>
+      <div class="harm"><span class="hbox"></span><span class="hlab">Winded</span>
         <span class="hbox"></span><span class="hlab">Wounded</span>
-        <span class="hbox"></span><span class="hlab">Wasted</span>
-      </div>
+        <span class="hbox"></span><span class="hlab">Wasted</span></div>
 
       <span class="flabel">XP</span>
       <div class="xp"><span class="xpdot"></span><span class="xpdot"></span><span class="xpdot"></span></div>
@@ -477,61 +343,47 @@
 
     <div>
       <h3>Moves — take both</h3>
-      <div class="move">
-        <div class="name">A Plate on the Door</div>
-        Once per session, declare that you know someone here and what they owe you. It's true. The GM decides what <em>you</em> owe <em>them</em>.
-      </div>
-      <div class="move">
-        <div class="name">Paper Trail</div>
-        When you dig through records, corporate or criminal, roll +FACE instead of +WIRE for Read the Wire.
-      </div>
+      <div class="move"><div class="name">A Plate on the Door</div>
+        Once per session, declare that you know someone here and what they owe you. It's true. The GM decides what <em>you</em> owe <em>them</em>.</div>
+      <div class="move"><div class="name">Paper Trail</div>
+        When you dig through records — manifests, filings, the brass-plate companies — roll +FACE instead of +WIRE for Read the Wire.</div>
 
       <h3>Static moves</h3>
-      <div class="move">
-        <div class="lock">Unlocks at Static 1</div>
-        <div class="name">The Other Ledger</div>
-        You can see what a person is most afraid of losing. You cannot turn this off.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 3</div>
-        <div class="name">Leverage</div>
-        +1 ongoing to Work Someone against anyone whose secret you learned this session. The knowledge sits in you badly.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 5</div>
-        <div class="name">Agent of Record</div>
-        You may negotiate directly with it. It listens.
-      </div>
+      <div class="move"><div class="lock">Unlocks at Static 1</div><div class="name">The Other Ledger</div>
+        You can see what a person is most afraid of losing. You cannot turn this off.</div>
+      <div class="move"><div class="lock">Unlocks at Static 3</div><div class="name">Leverage</div>
+        +1 ongoing to Work Someone against anyone whose secret you learned this session. The knowledge sits in you badly.</div>
+      <div class="move"><div class="lock">Unlocks at Static 5</div><div class="name">Agent of Record</div>
+        You may negotiate directly with it. It files.</div>
 
       <h3>Dark secret</h3>
-      <p class="fic" style="margin-bottom:3px;">Which corp still has a file open on you, and what's in it?</p>
+      <p class="fic" style="margin-bottom:3px;">Which emergency allocation did you authorize, and who was left waiting?</p>
       <div class="line"></div><div class="line"></div><div class="line"></div>
 
       <h3>Bonds</h3>
       <div class="field"><div class="line"></div>
-        <div class="soft" style="font-size:7.6pt;">I got ______ out of something and never told them what it cost.</div></div>
+        <div class="soft" style="font-size:7.6pt;">I got ______ off a manifest and never told them what it cost.</div></div>
       <div class="field"><div class="line"></div>
         <div class="soft" style="font-size:7.6pt;">______ is the only person I've never lied to. Yet.</div></div>
     </div>
   </div>
-  <div class="foot"><span>Signal Bleed · the registrar</span><span>Everything is owned by someone</span></div>
+  <div class="foot"><span>Signal Bleed · the registrar</span><span>Forty minutes and a fee</span></div>
 </section>
 
-<!-- ============ SHEET 4 — MEDIUM ============ -->
+<!-- ===== 4 · OPERATOR ===== -->
 <section class="sheet">
   <div class="cardhead">
     <div class="title">The Operator</div>
-    <div class="code">Personnel record · <span class="redact"></span></div>
+    <div class="code">Harbour radio · watch <span class="redact"></span></div>
   </div>
   <div class="subrule">Playbook · Sheet 4 of 9</div>
-  <p class="fic">The dead don't speak. But something using their voice does, and it's getting better at the impression.</p>
+  <p class="fic">Channel 11 has a duty supervisor nobody has met. She is unfailingly helpful. Her replies arrive before your questions.</p>
 
   <div class="cols">
     <div>
-      <div class="field"><span class="flabel">Name / handle</span><div class="line tall"></div></div>
+      <div class="field"><span class="flabel">Name / call sign</span><div class="line tall"></div></div>
       <div class="field"><span class="flabel">Look</span><div class="line"></div>
-        <div class="soft" style="font-size:7.4pt;">dead person's coat · hands always occupied · listens to the wrong side of the room</div>
-      </div>
+        <div class="soft" style="font-size:7.4pt;">one ear always uncovered · dead man's jacket · listens to the wrong side of the room</div></div>
 
       <span class="flabel">Stats — suggested spread</span>
       <div class="statrow">
@@ -542,85 +394,72 @@
       </div>
 
       <span class="flabel">Static — <span class="sig">you start at 1</span></span>
-      <div class="track">
-        <span class="box s1" style="background:var(--ink);"></span><span class="box s2"></span><span class="box s3"></span><span class="box s4"></span><span class="box s5"></span>
-        <span class="tracklabel">5 = claimed</span>
+      <div class="sound">
+        <div class="mark m1"><div class="bx" style="background:var(--ink);"></div><div class="n">1</div></div>
+        <div class="mark m2"><div class="bx"></div><div class="n">2</div></div>
+        <div class="mark m3"><div class="bx"></div><div class="n">3</div></div>
+        <div class="mark m4"><div class="bx"></div><div class="n">4</div></div>
+        <div class="mark m5"><div class="bx"></div><div class="n">NO BTM</div></div>
       </div>
-      <p class="soft" style="font-size:7.6pt;">You begin the game already able to use your first Static Move.</p>
+      <p class="soft" style="font-size:7.6pt;margin-top:6px;">You begin play already able to use your first Static Move.</p>
 
       <span class="flabel">Harm</span>
-      <div class="harm">
-        <span class="hbox"></span><span class="hlab">Winded</span>
+      <div class="harm"><span class="hbox"></span><span class="hlab">Winded</span>
         <span class="hbox"></span><span class="hlab">Wounded</span>
-        <span class="hbox"></span><span class="hlab">Wasted</span>
-      </div>
+        <span class="hbox"></span><span class="hlab">Wasted</span></div>
 
       <span class="flabel">XP</span>
       <div class="xp"><span class="xpdot"></span><span class="xpdot"></span><span class="xpdot"></span></div>
 
       <div class="panel" style="margin-top:12px;">
-        <span class="flabel">Voices you've heard, and whose they were</span>
+        <span class="flabel">Voices on the channel, and whose they were</span>
         <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
       </div>
     </div>
 
     <div>
       <h3>Moves — take both</h3>
-      <div class="move">
-        <div class="name">The Open Channel</div>
-        You can Take a Sounding on anything that held a person's data — an earpiece, a phone, a chair they sat in for twenty years.
-      </div>
-      <div class="move">
-        <div class="name">Second Watch</div>
-        When you first enter a place, the GM tells you one thing about it that isn't visible.
-      </div>
+      <div class="move"><div class="name">The Open Channel</div>
+        You can Take a Sounding on anything that carried a person's voice — a handset, a black box, a chair in a watchroom somebody sat in for twenty years.</div>
+      <div class="move"><div class="name">Second Watch</div>
+        When you first enter a place, the GM tells you one thing about it that isn't visible.</div>
 
       <h3>Static moves</h3>
-      <div class="move">
-        <div class="lock">Unlocks at Static 1 — you have this now</div>
-        <div class="name">Take It</div>
-        When someone else would mark Static, you may take it instead. Describe what you pull out of them.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 3</div>
-        <div class="name">Call and Answer</div>
-        Once per session, ask the other side one direct question. It answers. It always answers.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 5</div>
-        <div class="name">Station</div>
-        You are the door now.
-      </div>
+      <div class="move"><div class="lock">Unlocks at Static 1 — you have this now</div><div class="name">Take It</div>
+        When someone else would mark Static, you may take it instead. Describe what you pull out of them.</div>
+      <div class="move"><div class="lock">Unlocks at Static 3</div><div class="name">Call and Answer</div>
+        Once per session, put one direct question on the channel. It answers. It always answers.</div>
+      <div class="move"><div class="lock">Unlocks at Static 5</div><div class="name">Station</div>
+        You are the channel now.</div>
 
       <h3>Dark secret</h3>
-      <p class="fic" style="margin-bottom:3px;">Who speaks to you most often, and what did you do to them?</p>
+      <p class="fic" style="margin-bottom:3px;">Whose voice comes through most often, and what did you fail to do for them?</p>
       <div class="line"></div><div class="line"></div><div class="line"></div>
 
       <h3>Bonds</h3>
       <div class="field"><div class="line"></div>
         <div class="soft" style="font-size:7.6pt;">______ doesn't believe me and I need them not to.</div></div>
       <div class="field"><div class="line"></div>
-        <div class="soft" style="font-size:7.6pt;">I have heard ______'s voice on the other side, and they are still alive.</div></div>
+        <div class="soft" style="font-size:7.6pt;">I have heard ______'s voice on the channel, and they are still alive.</div></div>
     </div>
   </div>
   <div class="foot"><span>Signal Bleed · the operator</span><span>It always answers</span></div>
 </section>
 
-<!-- ============ SHEET 5 — CHROME PRIEST ============ -->
+<!-- ===== 5 · DIVER ===== -->
 <section class="sheet">
   <div class="cardhead">
     <div class="title">The Diver</div>
-    <div class="code">Personnel record · <span class="redact"></span></div>
+    <div class="code">Saturation ticket · med. <span class="redact"></span></div>
   </div>
   <div class="subrule">Playbook · Sheet 5 of 9</div>
-  <p class="fic">Your implants are not upgrades. They're relics. You did not buy them; you were given them.</p>
+  <p class="fic">You survived a pressure the body was never meant to hold. Your dive log says you never went down.</p>
 
   <div class="cols">
     <div>
-      <div class="field"><span class="flabel">Name / handle</span><div class="line tall"></div></div>
+      <div class="field"><span class="flabel">Name</span><div class="line tall"></div></div>
       <div class="field"><span class="flabel">Look</span><div class="line"></div>
-        <div class="soft" style="font-size:7.4pt;">visible seams · devotional scarring · moves like it costs something</div>
-      </div>
+        <div class="soft" style="font-size:7.4pt;">visible ports and seams · joints that click · moves like it costs something</div></div>
 
       <span class="flabel">Stats — suggested spread</span>
       <div class="statrow">
@@ -630,86 +469,73 @@
         <div class="statcell"><div class="n">VEIL</div><div class="v"></div><div class="d">+1</div></div>
       </div>
 
-      <span class="flabel">Static — starts at 0</span>
-      <div class="track">
-        <span class="box s1"></span><span class="box s2"></span><span class="box s3"></span><span class="box s4"></span><span class="box s5"></span>
-        <span class="tracklabel">5 = claimed</span>
+      <span class="flabel">Static — soundings taken</span>
+      <div class="sound">
+        <div class="mark m1"><div class="bx"></div><div class="n">1</div></div>
+        <div class="mark m2"><div class="bx"></div><div class="n">2</div></div>
+        <div class="mark m3"><div class="bx"></div><div class="n">3</div></div>
+        <div class="mark m4"><div class="bx"></div><div class="n">4</div></div>
+        <div class="mark m5"><div class="bx"></div><div class="n">NO BTM</div></div>
       </div>
 
-      <span class="flabel">Harm</span>
-      <div class="harm">
-        <span class="hbox"></span><span class="hlab">Winded</span>
+      <span class="flabel" style="margin-top:8px;">Harm</span>
+      <div class="harm"><span class="hbox"></span><span class="hlab">Winded</span>
         <span class="hbox"></span><span class="hlab">Wounded</span>
-        <span class="hbox"></span><span class="hlab">Wasted</span>
-      </div>
-      <p class="soft" style="font-size:7.6pt;"><strong>Consecrated:</strong> trade Harm for Static freely — and take +1 forward when you do.</p>
+        <span class="hbox"></span><span class="hlab">Wasted</span></div>
+      <p class="soft" style="font-size:7.6pt;"><strong>Rated for Depth:</strong> trade Harm for Static freely — and take +1 forward when you do.</p>
 
       <span class="flabel">XP</span>
       <div class="xp"><span class="xpdot"></span><span class="xpdot"></span><span class="xpdot"></span></div>
 
       <div class="panel" style="margin-top:12px;">
-        <span class="flabel">Your relics — what they are, what they were</span>
+        <span class="flabel">Your gear — what it is, what it was for</span>
         <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
       </div>
     </div>
 
     <div>
       <h3>Moves — take both</h3>
-      <div class="move">
-        <div class="name">Rated for Depth</div>
-        You may always trade Harm for Static, and when you do, take +1 forward.
-      </div>
-      <div class="move">
-        <div class="name">Procedure</div>
-        When you perform a ritual over a machine — cleaning, blessing, breaking — treat it as Take a Sounding, and you may do it twice in a scene.
-      </div>
+      <div class="move"><div class="name">Rated for Depth</div>
+        You may always trade Harm for Static, and when you do, take +1 forward.</div>
+      <div class="move"><div class="name">Procedure</div>
+        When you run the full procedure over a piece of equipment — checks, strip-down, the things you say while you do it — treat it as Take a Sounding, and you may do it twice in a scene.</div>
 
       <h3>Static moves</h3>
-      <div class="move">
-        <div class="lock">Unlocks at Static 1</div>
-        <div class="name">The Body Wasn't Made for This</div>
-        Ignore one Harm box permanently. Something inside you takes over the job.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 3</div>
-        <div class="name">Buddy Breathing</div>
-        Clear all Harm from another person. You mark Static. They dream about you afterward.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 5</div>
-        <div class="name">Saturation</div>
-        You are no longer a person. You are a site.
-      </div>
+      <div class="move"><div class="lock">Unlocks at Static 1</div><div class="name">The Body Wasn't Made for This</div>
+        Ignore one Harm box permanently. Something in the rebuild takes over the job.</div>
+      <div class="move"><div class="lock">Unlocks at Static 3</div><div class="name">Buddy Breathing</div>
+        Clear all Harm from another person. You mark Static. They dream about you afterward.</div>
+      <div class="move"><div class="lock">Unlocks at Static 5</div><div class="name">Saturation</div>
+        You don't come up anymore.</div>
 
       <h3>Dark secret</h3>
-      <p class="fic" style="margin-bottom:3px;">Who installed the first one, and what did they make you promise?</p>
+      <p class="fic" style="margin-bottom:3px;">Who was on the other end of your line, on the dive you don't talk about?</p>
       <div class="line"></div><div class="line"></div><div class="line"></div>
 
       <h3>Bonds</h3>
       <div class="field"><div class="line"></div>
-        <div class="soft" style="font-size:7.6pt;">______ has seen what's under the plating.</div></div>
+        <div class="soft" style="font-size:7.6pt;">______ has seen what the pressure did.</div></div>
       <div class="field"><div class="line"></div>
-        <div class="soft" style="font-size:7.6pt;">I am keeping ______ alive with something I shouldn't have.</div></div>
+        <div class="soft" style="font-size:7.6pt;">I am keeping ______ breathing with something I shouldn't have.</div></div>
     </div>
   </div>
-  <div class="foot"><span>Signal Bleed · the diver</span><span>You were given them</span></div>
+  <div class="foot"><span>Signal Bleed · the diver</span><span>Rated to four thousand</span></div>
 </section>
 
-<!-- ============ SHEET 6 — BADGE ============ -->
+<!-- ===== 6 · INSPECTOR ===== -->
 <section class="sheet">
   <div class="cardhead">
     <div class="title">The Inspector</div>
-    <div class="code">Personnel record · <span class="redact"></span></div>
+    <div class="code">Marine casualty · file <span class="redact"></span></div>
   </div>
   <div class="subrule">Playbook · Sheet 6 of 9</div>
-  <p class="fic">You closed the case. The case did not close.</p>
+  <p class="fic">You determined a cause. You signed it. The wreck has not accepted your finding.</p>
 
   <div class="cols">
     <div>
-      <div class="field"><span class="flabel">Name / handle</span><div class="line tall"></div></div>
+      <div class="field"><span class="flabel">Name</span><div class="line tall"></div></div>
       <div class="field"><span class="flabel">Look</span><div class="line"></div>
-        <div class="soft" style="font-size:7.4pt;">still dresses like it · one thing they never got rid of · tired in a specific way</div>
-      </div>
+        <div class="soft" style="font-size:7.4pt;">still dresses like it · one thing they never handed back · tired in a specific way</div></div>
 
       <span class="flabel">Stats — generalist, or swap to +2/+1/+1/0</span>
       <div class="statrow">
@@ -719,58 +545,46 @@
         <div class="statcell"><div class="n">VEIL</div><div class="v"></div><div class="d">+1</div></div>
       </div>
 
-      <span class="flabel">Static — starts at 0</span>
-      <div class="track">
-        <span class="box s1"></span><span class="box s2"></span><span class="box s3"></span><span class="box s4"></span><span class="box s5"></span>
-        <span class="tracklabel">5 = claimed</span>
+      <span class="flabel">Static — soundings taken</span>
+      <div class="sound">
+        <div class="mark m1"><div class="bx"></div><div class="n">1</div></div>
+        <div class="mark m2"><div class="bx"></div><div class="n">2</div></div>
+        <div class="mark m3"><div class="bx"></div><div class="n">3</div></div>
+        <div class="mark m4"><div class="bx"></div><div class="n">4</div></div>
+        <div class="mark m5"><div class="bx"></div><div class="n">NO BTM</div></div>
       </div>
 
-      <span class="flabel">Harm</span>
-      <div class="harm">
-        <span class="hbox"></span><span class="hlab">Winded</span>
+      <span class="flabel" style="margin-top:8px;">Harm</span>
+      <div class="harm"><span class="hbox"></span><span class="hlab">Winded</span>
         <span class="hbox"></span><span class="hlab">Wounded</span>
-        <span class="hbox"></span><span class="hlab">Wasted</span>
-      </div>
+        <span class="hbox"></span><span class="hlab">Wasted</span></div>
 
       <span class="flabel">XP</span>
       <div class="xp"><span class="xpdot"></span><span class="xpdot"></span><span class="xpdot"></span></div>
 
       <div class="panel" style="margin-top:12px;">
-        <span class="flabel">The first case — what you know, what you buried</span>
+        <span class="flabel">The first wreck — what you found, what you left out</span>
         <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
       </div>
     </div>
 
     <div>
       <h3>Moves — take both</h3>
-      <div class="move">
-        <div class="name">The Casualty File</div>
-        You worked a case like this before. Once per session, state one thing you learned then. It's true now.
-      </div>
-      <div class="move">
-        <div class="name">Pressure</div>
-        When you interrogate someone who is more afraid of you than of what they're hiding, take +1 to Work Someone. Judging that correctly is the hard part.
-      </div>
+      <div class="move"><div class="name">The Casualty File</div>
+        You worked a wreck like this before. Once per session, state one thing you learned then. It's true now.</div>
+      <div class="move"><div class="name">Pressure</div>
+        When you question someone who is more afraid of you than of what they're hiding, take +1 to Work Someone. Judging that correctly is the hard part.</div>
 
       <h3>Static moves</h3>
-      <div class="move">
-        <div class="lock">Unlocks at Static 1</div>
-        <div class="name">Under Observation</div>
-        You always know when you're being watched. Now you also know by what.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 3</div>
-        <div class="name">Reopen the Finding</div>
-        Name a Clue the group discarded. It's back, and it means something else.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 5</div>
-        <div class="name">Cause Determined</div>
-        You finally understand the first case. You may not tell anyone.
-      </div>
+      <div class="move"><div class="lock">Unlocks at Static 1</div><div class="name">Under Observation</div>
+        You always know when you're being watched. Now you also know by what.</div>
+      <div class="move"><div class="lock">Unlocks at Static 3</div><div class="name">Reopen the Finding</div>
+        Name a Clue the group discarded. It's back, and it means something else.</div>
+      <div class="move"><div class="lock">Unlocks at Static 5</div><div class="name">Cause Determined</div>
+        You finally understand the first wreck. You may not tell anyone.</div>
 
       <h3>Dark secret</h3>
-      <p class="fic" style="margin-bottom:3px;">What did you bury to make the first case go away, and who paid for it?</p>
+      <p class="fic" style="margin-bottom:3px;">What did you leave out of the report, and who countersigned it?</p>
       <div class="line"></div><div class="line"></div><div class="line"></div>
 
       <h3>Bonds</h3>
@@ -780,24 +594,23 @@
         <div class="soft" style="font-size:7.6pt;">______ knows what I did and hasn't used it.</div></div>
     </div>
   </div>
-  <div class="foot"><span>Signal Bleed · the inspector</span><span>The case did not close</span></div>
+  <div class="foot"><span>Signal Bleed · the inspector</span><span>Finding not accepted</span></div>
 </section>
 
-<!-- ============ SHEET 7 — HOLLOW ============ -->
+<!-- ===== 7 · SALVAGE ===== -->
 <section class="sheet">
   <div class="cardhead">
     <div class="title">The Salvage</div>
     <div class="code">Declared total loss · claim <span class="redact"></span> · <span class="sig">settled</span></div>
   </div>
-  <div class="subrule">Playbook · Sheet 7 of 9 · optional</div>
+  <div class="subrule">Playbook · Sheet 7 of 9</div>
   <p class="fic">You went overboard on the eleventh. They paid out on the nineteenth. You walked up the wharf on the twenty-second.</p>
 
   <div class="cols">
     <div>
-      <div class="field"><span class="flabel">Name / handle</span><div class="line tall"></div></div>
+      <div class="field"><span class="flabel">Name</span><div class="line tall"></div></div>
       <div class="field"><span class="flabel">Look</span><div class="line"></div>
-        <div class="soft" style="font-size:7.4pt;">correct but unconvincing · blinks on a schedule · the scar that didn't come back with you</div>
-      </div>
+        <div class="soft" style="font-size:7.4pt;">correct but unconvincing · blinks on a schedule · the scar that didn't come back with you</div></div>
 
       <span class="flabel">Stats — suggested spread</span>
       <div class="statrow">
@@ -808,18 +621,19 @@
       </div>
 
       <span class="flabel">Static — <span class="sig">you start at 2</span></span>
-      <div class="track">
-        <span class="box s1" style="background:var(--ink);"></span><span class="box s2" style="background:var(--ink);"></span><span class="box s3"></span><span class="box s4"></span><span class="box s5"></span>
-        <span class="tracklabel">5 = claimed</span>
+      <div class="sound">
+        <div class="mark m1"><div class="bx" style="background:var(--ink);"></div><div class="n">1</div></div>
+        <div class="mark m2"><div class="bx" style="background:var(--ink);"></div><div class="n">2</div></div>
+        <div class="mark m3"><div class="bx"></div><div class="n">3</div></div>
+        <div class="mark m4"><div class="bx"></div><div class="n">4</div></div>
+        <div class="mark m5"><div class="bx"></div><div class="n">NO BTM</div></div>
       </div>
-      <p class="soft" style="font-size:7.6pt;">You are already halfway down. Play like someone who knows it.</p>
+      <p class="soft" style="font-size:7.6pt;margin-top:6px;">You are already halfway down. Play like someone who knows it.</p>
 
       <span class="flabel">Harm</span>
-      <div class="harm">
-        <span class="hbox"></span><span class="hlab">Winded</span>
+      <div class="harm"><span class="hbox"></span><span class="hlab">Winded</span>
         <span class="hbox"></span><span class="hlab">Wounded</span>
-        <span class="hbox"></span><span class="hlab">Wasted</span>
-      </div>
+        <span class="hbox"></span><span class="hlab">Wasted</span></div>
 
       <span class="flabel">XP</span>
       <div class="xp"><span class="xpdot"></span><span class="xpdot"></span><span class="xpdot"></span></div>
@@ -832,31 +646,18 @@
 
     <div>
       <h3>Moves — take both</h3>
-      <div class="move">
-        <div class="name">Declared a Total Loss</div>
-        The first time you'd be Wasted in a session, you aren't. You wake up somewhere else, wrong. Mark Static.
-      </div>
-      <div class="move">
-        <div class="name">The Interval</div>
-        You remember things that haven't happened. Once per session, describe one, and the GM works it in.
-      </div>
+      <div class="move"><div class="name">Declared a Total Loss</div>
+        The first time you'd be Wasted in a session, you aren't. You come to somewhere else, wrong. Mark Static.</div>
+      <div class="move"><div class="name">The Interval</div>
+        You remember things that haven't happened. Once per session, describe one, and the GM works it in.</div>
 
       <h3>Static moves</h3>
-      <div class="move">
-        <div class="lock">Unlocks at Static 1 — you have this now</div>
-        <div class="name">Not All of Me Came Up</div>
-        You may leave part of yourself somewhere. It keeps watching. You keep receiving.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 3</div>
-        <div class="name">The Log of Those Days</div>
-        Ask the GM what you were doing during the eleven days you were missing. They answer.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 5</div>
-        <div class="name">Recovered</div>
-        The right one surfaces this time.
-      </div>
+      <div class="move"><div class="lock">Unlocks at Static 1 — you have this now</div><div class="name">Not All of Me Came Up</div>
+        You may leave part of yourself somewhere. It keeps watching. You keep receiving.</div>
+      <div class="move"><div class="lock">Unlocks at Static 3</div><div class="name">The Log of Those Days</div>
+        Ask the GM what you were doing during the eleven days you were missing. They answer.</div>
+      <div class="move"><div class="lock">Unlocks at Static 5</div><div class="name">Recovered</div>
+        The right one surfaces this time.</div>
 
       <h3>Dark secret</h3>
       <p class="fic" style="margin-bottom:3px;">Who filed the claim on you, and what did they ask you to do about it?</p>
@@ -872,19 +673,20 @@
   <div class="foot"><span>Signal Bleed · the salvage</span><span>Paid out on the nineteenth</span></div>
 </section>
 
-<!-- ============ SHEET 8 — WATCH ============ -->
+<!-- ===== 8 · WATCH ===== -->
 <section class="sheet">
   <div class="cardhead">
     <div class="title">The Watch</div>
-    <div class="code">Personnel record · <span class="redact"></span></div>
+    <div class="code">community network · Kalihi ledger, vol. <span class="redact"></span></div>
   </div>
   <div class="subrule">Playbook · Sheet 8 of 9</div>
-  <p class="fic">Nobody was ever from here. Your family has been anyway, for a hundred and forty years.</p>
+  <p class="fic">You know who missed the delivery. The dashboard says everybody was served. Somebody has to keep the list.</p>
 
   <div class="cols">
     <div>
-      <div class="field"><span class="flabel">Name / handle</span><div class="line tall"></div></div>
-      <div class="field"><span class="flabel">Look — pick or invent</span><div class="line"></div></div>
+      <div class="field"><span class="flabel">Name</span><div class="line tall"></div></div>
+      <div class="field"><span class="flabel">Look</span><div class="line"></div>
+        <div class="soft" style="font-size:7.4pt;">work clothes and a good pen · known by everyone on the stairs · tired and unhurried</div></div>
 
       <span class="flabel">Stats — suggested spread</span>
       <div class="statrow">
@@ -894,52 +696,46 @@
         <div class="statcell"><div class="n">VEIL</div><div class="v"></div><div class="d">+1</div></div>
       </div>
 
-      <span class="flabel">Static — starts at 0</span>
-      <div class="track">
-        <span class="box s1"></span><span class="box s2"></span><span class="box s3"></span><span class="box s4"></span><span class="box s5"></span>
-        <span class="tracklabel">5 = claimed</span>
+      <span class="flabel">Static — soundings taken</span>
+      <div class="sound">
+        <div class="mark m1"><div class="bx"></div><div class="n">1</div></div>
+        <div class="mark m2"><div class="bx"></div><div class="n">2</div></div>
+        <div class="mark m3"><div class="bx"></div><div class="n">3</div></div>
+        <div class="mark m4"><div class="bx"></div><div class="n">4</div></div>
+        <div class="mark m5"><div class="bx"></div><div class="n">NO BTM</div></div>
       </div>
 
-      <span class="flabel">Harm</span>
-      <div class="harm">
-        <span class="hbox"></span><span class="hlab">Winded</span>
+      <span class="flabel" style="margin-top:8px;">Harm</span>
+      <div class="harm"><span class="hbox"></span><span class="hlab">Winded</span>
         <span class="hbox"></span><span class="hlab">Wounded</span>
-        <span class="hbox"></span><span class="hlab">Wasted</span>
-      </div>
+        <span class="hbox"></span><span class="hlab">Wasted</span></div>
 
       <span class="flabel">XP</span>
       <div class="xp"><span class="xpdot"></span><span class="xpdot"></span><span class="xpdot"></span></div>
+
+      <div class="panel" style="margin-top:12px;">
+        <span class="flabel">The list — what the neighbourhood needs doing this week</span>
+        <div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+        <div class="soft" style="font-size:7.4pt;margin-top:4px;">Cross one off instead of marking Static. It doesn't get done. Somebody notices.</div>
+      </div>
     </div>
 
     <div>
       <h3>Moves — take both</h3>
-      <div class="move">
-        <div class="name">The Ledger</div>
-        Once per session, state a fact about a person or place in Low Town. It's in the ledger, so it's true.
-      </div>
-      <div class="move">
-        <div class="name">Phone Tree</div>
-        Say who you call. They come. The GM says what it costs them.
-      </div>
+      <div class="move"><div class="name">The Ledger</div>
+        You keep the records the Administration lost. Once per session, state one fact about a person or place in Kalihi or Windward. It's in the ledger, so it's true.</div>
+      <div class="move"><div class="name">Phone Tree</div>
+        When you need bodies, hands, or witnesses, say who you call. They come. The GM says what it costs them to come.</div>
 
       <h3>Static moves</h3>
-      <div class="move">
-        <div class="lock">Unlocks at Static 1</div>
-        <div class="name">You Hold the Line</div>
-        Instead of marking Static, cross a task off the list. It doesn't get done. Unlimited, not free.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 3</div>
-        <div class="name">Everyone Shows Up</div>
-        Clear all Harm from everyone present. Say who came and what they brought.
-      </div>
-      <div class="move">
-        <div class="lock">Unlocks at Static 5</div>
-        <div class="name">The Wall</div>
-        You stop being a person and start being a place people go.
-      </div>
+      <div class="move"><div class="lock">Unlocks at Static 1</div><div class="name">You Hold the Line</div>
+        When you would mark Static, you may instead cross a task off the list — something the neighbourhood needed. It doesn't get done. This is unlimited, and it is not free.</div>
+      <div class="move"><div class="lock">Unlocks at Static 3</div><div class="name">Everyone Shows Up</div>
+        Clear all Harm from everyone present. Describe who came and what they brought.</div>
+      <div class="move"><div class="lock">Unlocks at Static 5</div><div class="name">The Wall</div>
+        You stop being a person and start being a place people go.</div>
 
-      <h3>Dark secret <span class="soft" style="font-weight:400;letter-spacing:0;">— GM reads this privately</span></h3>
+      <h3>Dark secret</h3>
       <p class="fic" style="margin-bottom:3px;">What did the Watch decide, that you carried out, that you have never told anyone?</p>
       <div class="line"></div><div class="line"></div><div class="line"></div>
 
@@ -950,14 +746,14 @@
         <div class="soft" style="font-size:7.6pt;">______ has been on my water list since before they could walk.</div></div>
     </div>
   </div>
-  <div class="foot"><span>Signal Bleed · the watch</span><span>A place people go</span></div>
+  <div class="foot"><span>Signal Bleed · the watch</span><span>Somebody has to keep the list</span></div>
 </section>
 
-<!-- ============ SHEET 9 — GM SCREEN ============ -->
+<!-- ===== 9 · GM SCREEN ===== -->
 <section class="sheet">
   <div class="mast">
     <h1>GM Screen</h1>
-    <div class="filed">Signal Bleed<br>Sheet 9 of 9 · v0.1</div>
+    <div class="filed">Signal Bleed · Hawaiʻi<br>Sheet 9 of 9 · v0.2</div>
   </div>
   <div class="subrule">You do not know the answer either. Keep it that way.</div>
 
@@ -965,7 +761,7 @@
     <div>
       <h2>Agenda</h2>
       <ul>
-        <li>Make the city feel bought and sold.</li>
+        <li>Make everyday Hawaiʻi tangible under emergency pressure.</li>
         <li>Make the unknown genuinely unknown — including to you.</li>
         <li>Be a fan of these people, right up until they're gone.</li>
         <li>Play to find out what it costs them.</li>
@@ -975,62 +771,71 @@
       <ul>
         <li>Ask questions and build on the answers.</li>
         <li>Address the character, not the player.</li>
-        <li>Sensory detail over exposition. Never explain the horror — describe what it does to a room.</li>
+        <li>Sensory detail over exposition. Never explain the Signal — describe what it does to a room.</li>
         <li>Name every NPC and give them one want.</li>
         <li>Never decide what's really happening. Decide what's <em>strange</em>.</li>
-        <li>When they ask what it is, show them what it did.</li>
-        <li>Everything is owned by someone.</li>
+        <li>Every emergency decision reaches somebody outside the dashboard.</li>
+        <li>It is unfailingly polite. Every offer is generous.</li>
+        <li>A successful intervention can move the cost elsewhere.</li>
       </ul>
 
       <h2>Your moves</h2>
       <p class="soft" style="font-size:7.6pt;">On a 6−, or whenever they look at you.</p>
       <ul>
         <li>Reveal an unwelcome truth.</li>
-        <li>Show a sign of the Bleed.</li>
-        <li>Take something away — a contact, a safehouse, a body part.</li>
-        <li>Put someone innocent in it.</li>
+        <li>Show a sign of the Signal.</li>
+        <li>Take something away — a contact, a room, a record, a body part.</li>
+        <li>Put someone from Kalihi in it.</li>
         <li>Make an Offer.</li>
-        <li>Advance a corp clock, and say how they noticed.</li>
-        <li>Have it acknowledge them. By name.</li>
-        <li>Announce off-screen badness.</li>
+        <li>Advance a company clock, and say how they noticed.</li>
+        <li>Have it be helpful. By name.</li>
+        <li>Announce off-screen badness — a ship, a shipment, a shift that didn't report.</li>
       </ul>
 
-      <h2>Signs of the Bleed <span class="soft" style="font-weight:400;letter-spacing:0;">(d6)</span></h2>
+      <h2>Signs of the Signal <span class="soft" style="font-weight:400;letter-spacing:0;">(d6)</span></h2>
       <table class="dtable">
         <tr><td class="k">1</td><td>Every clock in the room agrees, and all of them are wrong by the same amount.</td></tr>
         <tr><td class="k">2</td><td>The surf stops. Not quietens — stops. For as long as it takes to notice.</td></tr>
         <tr><td class="k">3</td><td>Standing water is tilted, very slightly, toward something.</td></tr>
         <tr><td class="k">4</td><td>A count comes out at eleven when there are nine of you.</td></tr>
-        <tr><td class="k">5</td><td>Someone repeats a thing you thought thirty seconds ago — and apologises.</td></tr>
-        <tr><td class="k">6</td><td>A door that is on the plan and has never been there.</td></tr>
+        <tr><td class="k">5</td><td>Someone repeats, word for word, a thing you thought thirty seconds ago — and apologises.</td></tr>
+        <tr><td class="k">6</td><td>A door, a stair, a corridor that is on the plan and has never been there.</td></tr>
       </table>
     </div>
 
     <div>
+      <h2>Symptoms <span class="soft" style="font-weight:400;letter-spacing:0;">(d6, on each Static mark)</span></h2>
+      <table class="dtable">
+        <tr><td class="k">1</td><td>You are eleven minutes ahead of every clock on the island, and you can prove it.</td></tr>
+        <tr><td class="k">2</td><td>You've stopped hearing the surf. It's still there. Everyone else hears it.</td></tr>
+        <tr><td class="k">3</td><td>Standing water tilts slightly toward you.</td></tr>
+        <tr><td class="k">4</td><td>You remember an unobserved branch. It hurts to hold.</td></tr>
+        <tr><td class="k">5</td><td>There's a day missing and you can feel the edge of it, like a seam.</td></tr>
+        <tr><td class="k">6</td><td>Someone at work has started calling you by a name nobody gave you, and correcting themselves, and doing it again.</td></tr>
+      </table>
+      <p class="soft" style="font-size:7.6pt;">Rolled a duplicate? It gets worse. Say how.</p>
+
       <h2>The five rings</h2>
-      <p class="soft" style="font-size:7.6pt;">You cannot advance a Ring until you've landed at least one <strong>Terror</strong> and one <strong>Temptation</strong> in it.</p>
+      <p class="soft" style="font-size:7.6pt;">You cannot advance a Ring until you've landed one <strong>Terror</strong> and one <strong>Temptation</strong> in it.</p>
       <table>
         <tr><td class="k">1 · Normal</td><td>A job. Money, a client, a deadline. Exactly one detail is wrong, and nobody comments on it.</td></tr>
         <tr><td class="k">2 · First Sign</td><td>The wrong detail isn't isolated. Something is repeating.</td></tr>
-        <tr><td class="k">3 · Escalation</td><td>People start lying to them specifically. Something is now interested in the group.</td></tr>
+        <tr><td class="k">3 · Escalation</td><td>People start lying to them specifically. Something is now being helpful.</td></tr>
         <tr><td class="k">4 · Revelation</td><td>The rules are visibly broken. Theorize usually happens here.</td></tr>
-        <tr><td class="k">5 · Dissolution</td><td>Consequences. Who is claimed. What the city doesn't remember by morning.</td></tr>
+        <tr><td class="k">5 · Dissolution</td><td>Consequences. Who is observed. What the official record no longer agrees on.</td></tr>
       </table>
 
-      <h2>The Bleed clock</h2>
-      <div class="track" style="gap:0;">
-        <span class="box s1" style="width:26px;height:26px;"></span><span class="box s2" style="width:26px;height:26px;"></span><span class="box s3" style="width:26px;height:26px;"></span><span class="box s4" style="width:26px;height:26px;"></span><span class="box s5" style="width:26px;height:26px;"></span><span class="box s5" style="width:26px;height:26px;transform:rotate(6deg) skewX(-9deg);"></span>
-      </div>
-      <p>Advance on: a missed roll that touched the other side · a 7–9 choice that says so · moving into a new Ring · any hard move you want made visible.</p>
-      <p><strong>When it fills, it arrives.</strong> Not a monster — an event. The rules of the scene change. Something becomes true that cannot be untrue. Decide what, and don't hedge.</p>
+      <h2>The clocks</h2>
+      <p><strong>The Bleed</strong> — six segments. The hour arriving at this location. Advance on a missed roll that touched the other side, a 7–9 choice that says so, a new Ring, or any hard move you want made visible. <strong>When it fills, it arrives.</strong> Not a monster — an event. Something becomes true that cannot be untrue.</p>
+      <p><strong>The Aperture</strong> — eight segments, the season. The clock tracks branch intrusion across the season, not geography. Advance when a case ends, when someone is observed, on a failed Theorize, and when a disclosed GM move advances intrusion.</p>
 
       <h2>Writing clues</h2>
-      <p>A Clue is a <strong>hole in the world</strong>, not a piece of a puzzle you've already solved. Concrete, strange, non-explaining. Eight to twelve per case, on cards, face up on the table.</p>
+      <p>A Clue is a <strong>hole in the world</strong>, not a piece of a puzzle you've already solved. Eight to twelve per case, on cards, face up.</p>
       <div class="panel">
-        <p style="margin:0 0 4px;"><strong>GOOD</strong> — The building's water usage tripled six months ago. It has no tenants.</p>
-        <p style="margin:0 0 8px;" class="soft"><strong>BAD</strong> — The cult has been living in the basement. <em>(explains itself)</em></p>
-        <p style="margin:0 0 4px;"><strong>GOOD</strong> — Her last message was sent four minutes after the crash. It's a photo of the crash.</p>
-        <p style="margin:0;" class="soft"><strong>BAD</strong> — She had precognitive abilities. <em>(that's a theory, not a clue)</em></p>
+        <p style="margin:0 0 4px;"><strong>GOOD</strong> — The tower's water usage tripled after the last tenant left.</p>
+        <p style="margin:0 0 8px;" class="soft"><strong>BAD</strong> — People are living in the flooded lobby. <em>(explains itself)</em></p>
+        <p style="margin:0 0 4px;"><strong>GOOD</strong> — Her last transmission was logged four minutes after the vessel went down. It's a description of the vessel going down.</p>
+        <p style="margin:0;" class="soft"><strong>BAD</strong> — She could see the future. <em>(that's a theory, not a clue)</em></p>
       </div>
 
       <h2>Prep, twenty minutes maximum</h2>
@@ -1039,15 +844,15 @@
         <li>One wrong detail. Never explain it.</li>
         <li>Four or five locations: a name, a smell, one person there.</li>
         <li>Five to seven NPCs: name, want, secret. Two are lying about unrelated things.</li>
-        <li>Eight to twelve Clues on cards.</li>
-        <li>Depth 3.</li>
+        <li>Eight to twelve Clues on cards. Depth 3.</li>
         <li><strong>No solution.</strong> If you have one in your head, throw it out — you'll steer toward it.</li>
       </ul>
     </div>
   </div>
 
-  <div class="foot"><span>Signal Bleed · gm screen</span><span>Decide what's strange, not what's true</span></div>
+  <div class="foot"><span>Signal Bleed · gm screen · hawaiʻi</span><span>Decide what's strange, not what's true</span></div>
 </section>
 
 </body>
 </html>
+

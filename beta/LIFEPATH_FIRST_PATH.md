@@ -5,8 +5,8 @@ Task: LP-B under SB-10. User authorized drafting the first complete path on 2026
 
 ## Source boundaries
 
-Grounding: `rules/the-hours-setting-bible.md` (Low Town, Tide Watch, Cold Harbour, water distribution, record keeping, missing time); `rules/signal-bleed-v0_1.md` (2d6 bands, playbook-based character creation, no predetermined mystery solution).
-The base rules retain older cyberpunk terminology; this prototype uses The Hours setting vocabulary. It does not settle wider rules/setting drift.
+Grounding: `rules/hawaii-setting-bible.md` (real Oʻahu anchors, September Compression, Emergency Republic, Branch Event One, Observer Trials); `rules/signal-bleed-v0_1.md` (2d6 bands, playbook-based character creation, no predetermined mystery solution).
+This is a proposed later-start lifepath spanning September 2026 through the Observer Trials. It does not fix the campaign-present year. A September 2026 opening uses only Origin, with later phases deferred or replaced by pre-divergence personal history.
 New material: Mara Vale, ledger incidents, all branch effects, and this lifepath procedure are proposals. Mara is a new adult neighbour, later a colleague; no existing named NPC is rewritten. Do not identify her as secretly supernatural or predetermine who caused the anomalies.
 
 ## Play procedure
@@ -14,7 +14,7 @@ New material: Mara Vale, ledger incidents, all branch effects, and this lifepath
 Four phases: Origin, Career, Incident, Fallout. Each has:
 - Choose one of two directions before rolling.
 - Roll unmodified 2d6 once, recording both dice.
-- Read the result variant and direction-specific framing.
+- Read the result variant and direction-specific framing. Date-filter all events; never expose Observer Trials as established history in a September 2026 start.
 - Choose response A or B after seeing all known effects.
 - Confirm and append the history entry. Show a short receipt.
 
@@ -31,11 +31,11 @@ Record distinct relationship facets rather than a single “good/bad” relation
 Records, credentials, contacts and obligations are narrative permissions/hooks, not automatic successes or extra numeric resources.
 Draft implementation values below are semantic specifications, not executable arbitrary code.
 
-## 1 — Origin: After the storm
+## 1 — Origin: September Compression
 
-Timing: an unspecified storm during your earlier life, before Career. Do not tie childhood to the recent tank-farm failure.
+Timing: September 2026, during the fictional logistics convergence. Origin means the beginning of this connection, not mandatory childhood. Character age and earlier life remain player-defined.
 
-Public frame: Low Town is distributing drinking water after a storm. Mara has one list; the actual queue is longer. She asks you to help.
+Public frame: A fictional volunteer group in Kalihi is distributing supplies while fuel and delivery records disagree. Mara has one list; the actual queue is longer. She asks you to help.
 
 Choose direction:
 - O-D1: Help the people at the door. You see who is missing from the list.
@@ -47,18 +47,18 @@ Roll:
 |---|---|---|
 | 2–6 | Deliveries stop before everyone is served. | You commit to another water run; record one origin obligation. |
 | 7–9 | Another volunteer brings enough, but needs help next week. | Record one owed volunteer shift. |
-| 10–12 | The next delivery arrives in time. | No additional obligation. |
+| 10–12 | The next delivery arrives in time; its dispatch record is dated tomorrow. | No additional obligation. |
 
 Response:
 - A — **Make room on the list.** Work with Mara to record an emergency addition and get an unlisted household served. She trusts your discretion; the household knows you helped. You must later explain why you authorized the exception. Set `origin=exception`, `mara.discretionTrust=true`, `originExplanation=open`.
 - B — **Put your name beside the discrepancy.** Keep the original entry and file a signed correction so the missing household is officially visible. Mara trusts your accuracy; the correction can be traced to you. Set `origin=correction`, `mara.accuracyTrust=true`, `originAttribution=public`.
 
-Both choices help the household. Neither erases a Tide Watch record or advances the Aperture.
+Both choices help the household. Neither erases a community record or automatically advances the Aperture.
 Receipt: “Mara remembers how you helped. [Exception to explain / Signed correction on record]. [Roll rider].”
 
-## 2 — Career: The second copy
+## 2 — Career: Emergency Republic, late 2026
 
-Time advances. Mara now coordinates some deliveries through Cold Harbour and recommends you for temporary work.
+After the fictional October Emergency Logistics Order, Mara coordinates deliveries through a fictional contractor at Honolulu Harbor and recommends you for temporary work. Both copies concern the same relief shipment; no specific real contractor is implicated.
 
 Choose direction:
 - C-D1: Take dispatch work. You encounter the ledger at the loading desk; record dispatch familiarity.
@@ -79,20 +79,20 @@ Roll:
 | 10–12 | You obtain the duplicate during your ordinary duties. | No additional obligation. |
 
 Response:
-- A — **Keep the name private.** Secure a copy with the identifying line masked; leave the original intact with its custodian. Mara stays willing to speak privately. Your own copy cannot identify the household; later identification requires a willing witness/custodian. Set `career=masked`, `ledgerCopy=redacted`, `mara.privateChannel=open`.
+- A — **Keep the name private.** Secure a copy with the identifying line masked; leave the original intact with its custodian. Mara stays willing to speak privately. Your own copy cannot identify the household; later identification requires a willing witness/custodian or lawful access to the intact original. Set `career=masked`, `ledgerCopy=redacted`, `mara.privateChannel=open`.
 - B — **Keep an attributable copy.** Retain the complete copy in your private files. You can identify and compare the entry later, but Mara stops passing you confidential names. She remains a person you know, not an automatic enemy. Set `career=complete`, `ledgerCopy=complete`, `mara.privateChannel=closed`.
 
 No forgery, deletion of the original, or guarantee of immunity is implied.
 Receipt: “You kept [a redacted / a complete] copy. Mara [will speak privately / no longer shares confidential names]. [Roll rider].”
 
-## 3 — Incident: Eleven minutes
+## 3 — Incident: Branch Event One, spring 2027
 
 Choose direction:
 - I-D1: Follow the delivery. The anomaly appears on a loading-desk clock and duplicate receipt.
 - I-D2: Follow the record. The anomaly appears in the archive log and its timestamp.
 Persist the actual location for later scenes.
 
-Both versions: you and Mara are together when eleven minutes disappear from two independent records. You remember speaking throughout. Neither record shows the conversation.
+Both versions: in the aftermath of the fictional Harbor/Airport warning and interventions, you and Mara reconcile the relief shipment. Eleven minutes disappear from two independent records. You remember speaking throughout. One copy records a dispatch route nobody took. Neither establishes why the cosmic anomaly happened.
 
 Callback:
 - Career A: Mara tells you privately that she recognizes the household, without naming it. Her presence keeps identification possible.
@@ -107,12 +107,14 @@ Roll:
 
 Response:
 - A — **Leave together.** Escort Mara out before the desk/office closes. You secure a future meeting with her, but the original is sealed in routine custody before you can obtain it. Keep your earlier copy. Set `incident=witness`, `mara.meeting=agreed`, `originalAccess=restricted`.
-- B — **Stay for the original.** Remain through sign-out and receive the original under a return obligation. Mara leaves safely on her own and declines to be your corroborating witness. Keep the historical relationship facets, but set `incident=document`, `originalAccess=temporary`, `returnOriginal=open`, `mara.testimony=declined`.
+- B — **Stay for the original.** Remain through sign-out and receive the original under a return obligation. Mara leaves safely on her own and declines to be your corroborating witness. Obtaining the intact original restores identity access even if your earlier copy was redacted. Keep the historical relationship facets, but set `incident=document`, `originalAccess=temporary`, `returnOriginal=open`, `mara.testimony=declined`.
 
 B does not imply Mara is injured or abandoned to danger. A does not destroy evidence.
 Receipt: “[A witness meeting / The original on loan], with [restricted original access / no promised corroboration]. [Roll rider].”
 
-## 4 — Fallout: The request
+## 4 — Fallout: Observer Trials, late 2028–2029
+
+A fictional observer-cell researcher requests a comparison of the old records. The request does not force you to join the program or disclose private identities.
 
 Choose direction:
 - F-D1: Protect the people tied to the ledger. You seek a discreet meeting.
@@ -121,7 +123,7 @@ Direction is the character's stated priority, not a promise to remove all costs.
 
 Build the callback from actual prior state:
 - If Incident A, Mara attends the agreed meeting. If Incident B, a custodian delivers a written request; Mara has made no promise to testify.
-- If Career A, identification remains masked unless the witness freely supplies it; do not magically reconstruct it.
+- If Career A + Incident A, identification remains masked unless a witness freely supplies it. If Incident B, the intact original supplies the identity while on loan; record what the character legitimately learned, even after return.
 - If Career B, the complete identity stays available to the character, not automatically to the presenter.
 - If Origin A, the requester asks you to account for the old emergency exception. If Origin B, they bring your signed correction. Neither becomes proof of wrongdoing.
 
@@ -133,8 +135,8 @@ Roll:
 | 10–12 | You can set the first meeting yourself. | Player chooses its ordinary time/place; no extra debt. |
 
 Response:
-- A — **Keep it between the people involved.** Commit to a private follow-up. The evidence remains private; progress requires voluntary access to people or records you do not hold. Set `fallout=private`, `hook=arrange-private-comparison`.
-- B — **Put your account on record.** Submit your observations and a redacted comparison; protect other people's names. You gain a traceable reference for pursuing the inquiry, but your involvement is visible and may be questioned. Set `fallout=filed`, `hook=answer-for-filed-account`.
+- A — **Keep it between the people involved.** Decline a program copy and commit to a private follow-up. The evidence remains private; progress requires voluntary access to people or records you do not hold. Set `fallout=private`, `hook=arrange-private-comparison`.
+- B — **Put your account on record.** Submit your observations and a redacted comparison to the fictional review; protect other people's names. You gain a traceable reference for pursuing the inquiry, but your involvement is visible and may be questioned. Set `fallout=filed`, `hook=answer-for-filed-account`.
 
 Origin explanation and borrowed-original obligations remain open until actually addressed in play; this choice does not clear them automatically.
 Final receipt summarizes the contact, documents, outstanding obligations and hook. It does not establish the anomaly's cause.
@@ -161,7 +163,7 @@ Result: a character with records experience, a complicated relationship with Mar
 
 This is one authored situation per phase with three roll variants and two directions/two responses, not a complete diverse event pool. Dice change pressure, evidence and obligations; the final system needs more eligible events to avoid repeating this plot for every character.
 
-Check all band/response combinations for continuity: redacted identities remain unknown; original access matches custody; declined testimony never becomes guaranteed; obligations persist; no choice gates playbooks. Confirm each direction changes the framed action, while each response changes consequential state.
+Check all band/response combinations for continuity: redacted identities remain unknown unless a witness or the intact original supplied them; original access matches custody; declined testimony never becomes guaranteed; obligations persist; no choice gates playbooks. Confirm each direction changes the framed action, while each response changes consequential state.
 
 Playtest questions:
 1. Could the player name a real reason for either response?
@@ -172,3 +174,4 @@ Playtest questions:
 6. Could the character still become the desired playbook without rewriting the past?
 
 Next: user walkthrough of one phase at a time; revise the pairs and roll influence from their feedback. Mark LP-B drafted, not validated or approved. Do not promote this into canonical /rules or production content until reviewed.
+

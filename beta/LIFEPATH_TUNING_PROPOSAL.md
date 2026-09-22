@@ -104,3 +104,8 @@ Use automated branch/schema checks plus a small observed table playtest. Large c
 6. LP-F: expand approved content pack and run branch checks + observed playtest.
 
 LP-A and proposed LP-B can proceed while M1 is built. Production rules/content in LP-D onward require an accepted specification. Prototype fixtures must never be mislabeled as approved campaign canon.
+
+
+## Current setting
+
+Use [Hawaiʻi — Emergency Republic](../rules/hawaii-setting-bible.md) for all places, chronology and program references. The former archipelago is superseded. The first four-phase fixture spans September 2026–2029; it does not fix the campaign-present date.

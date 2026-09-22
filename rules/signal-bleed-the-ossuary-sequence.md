@@ -1,6 +1,8 @@
 # THE OSSUARY SEQUENCE
 ### A three-case season for SIGNAL BLEED
-*Runs in 3 long sessions, or 6 short ones. Depth 3 → 4 → 5.*
+*Hawaiʻi adaptation. Runs in 3 long sessions, or 6 short ones. Depth 3 → 4 → 5.*
+
+Setting authority: [Hawaiʻi — Emergency Republic](hawaii-setting-bible.md). Choose a scenario date before play. All contractors, clinics, premises and anomalous records are fictional. A record dated before the September 2026 divergence is an anomaly to investigate, not proof of an already-operating classified program.
 
 ---
 
@@ -25,7 +27,7 @@ Keep one page. After each Theorize, write down:
 ### The Unfinished Clue rule
 Any Clue the group discarded during a Theorize goes into a pile. At any point in a later case, you may bring one back — **unchanged** — and it now means something else. Hand it to them without comment. Let them realise.
 
-The Badge's Static 3 move, **Reopen**, lets a player do this deliberately. When it fires, it should feel like the season turning over.
+The Inspector's Static 3 move, **Reopen the Finding**, lets a player do this deliberately. When it fires, it should feel like the season turning over.
 
 ### The Aperture — the season clock
 Draw an **eight-segment clock** and keep it on the table for all three cases. This is separate from the per-case Bleed clock.
@@ -89,7 +91,7 @@ The full case is in the core document. In campaign play, change three things:
 **Depth 4 · Aperture 1–3 · run after Case 1's theory is canon**
 
 ### The job
-**Halcyon Vitality** — a wellness subsidiary of somebody bigger — runs a subsidized clinic in a decommissioned transit interchange. It sells **dreamless sleep**: eight guaranteed hours, no REM, no images, subsidized to nearly free for shift workers.
+**Halcyon Vitality** — a wellness subsidiary of somebody bigger — runs a subsidized clinic in a fictional converted commercial building in Honolulu. It sells **dreamless sleep**: eight guaranteed hours, no REM, no images, subsidized to nearly free for shift workers.
 
 A journalist named **Sofie Anand** hired the group before she stopped answering. Her retainer is still clearing. The brief on her drive says: *find out who's actually paying for this, and get me the intake list.*
 
@@ -99,10 +101,10 @@ The clinic's public waiting list has **1,411 names** on it. It has had 1,411 nam
 *(If Case 1's theory made a different number significant, use that number instead. Always use their number.)*
 
 ### Locations
-- **The Concourse** — the old ticket hall, now the intake floor. Warm, quiet, smells faintly of clean laundry and ozone. Staff speak at a volume calibrated to be soothing and is in fact slightly too low to hear.
-- **Ward C** — 140 beds in what was the eastbound platform. Everyone in here is asleep. The lighting is on a 24-minute cycle for no stated reason.
-- **The Interchange, sealed levels** — below Ward C. Nominally flooded. The pumps run continuously and discharge nothing.
-- **Sofie Anand's flat** — she left in a hurry, but she made the bed.
+- **The Concourse** — the converted reception floor. Warm, quiet, smells faintly of clean laundry and ozone. Staff speak at a volume calibrated to be soothing and is in fact slightly too low to hear.
+- **Ward C** — 140 beds in a converted floor of the fictional clinic. Everyone in here is asleep. The lighting is on a 24-minute cycle for no stated reason.
+- **The clinic, sealed service levels** — below Ward C. Nominally flooded. The pumps run continuously and discharge nothing.
+- **Sofie Anand's fictional Honolulu flat** — she left in a hurry, but she made the bed.
 - **A Halcyon "outcomes" office** in a commercial tower on the other side of the city, where the paperwork actually lives.
 
 ### People
@@ -124,15 +126,15 @@ Write these on cards. **Ten fixed, and two slots you fill from the Canon Ledger.
 7. There are 1,411 names on the waiting list. There have always been 1,411 names on the waiting list. Eleven are added each night; eleven are admitted each night.
 8. Idris's shift log for last Tuesday is written twice, in his hand, describing two different Tuesdays.
 9. The Sleeper's Advocate has replied to 2,300 patient queries. Every reply is under nine words. Every reply is correct.
-10. A maintenance requisition, six years old, for eleven metres of welding wire. Signed by someone at Ossuary Cold Storage, Cold Harbour.
-11. **[SLOT — make one fact from the group's Case 1 theory physically present here.]** If they decided it moves through implants, find one, wet and warm, in a drawer. If they decided it counts people, find the count written on a wall.
+10. A maintenance requisition, six years old, for eleven metres of welding wire. Signed by someone at Ossuary Cold Storage, Honolulu Harbor.
+11. **[SLOT — make one fact from the group's Case 1 theory physically present here.]** If they decided it moves through devices, find one, wet and warm, in a drawer. If they decided it counts people, find the count written on a wall.
 12. **[SLOT — the thing they were wrong about in Case 1.]** Don't correct them. Show them the shape of it again, bigger.
 
 ### Running it
 - **Ring 1 is a walk-through.** Halcyon gives them a tour. It is genuinely nice. Someone should want to sign up.
 - **Ring 3 is where Vess reappears,** calm, and makes an Offer directly. Let a player take it. Let the table watch them take it.
 - **Ring 4:** they will want to wake Sofie. Let them try. Whatever happens next is a Terror, and it should be quiet.
-- **Depth 4** means they need six-plus Clues woven in for a comfortable Theorize. Make them earn it. Make them Commune.
+- **Depth 4** means they need six-plus Clues woven in for a comfortable Theorize. Make them earn it. Make them Take a Sounding.
 - **Grandmother is mentioned once**, in passing, by someone who assumes the group already knows who she is.
 
 ---
@@ -152,7 +154,7 @@ Every one of them received it at 3:41 a.m., and every one of them had already re
 
 ### Locations
 - **The address on the work order** — a substation, unmanned, forty years old, immaculately maintained.
-- **The old subway**, sealed, where the trains still move. *(If a player established this in setup, use it. If they established something else about the city, use that instead — the finale should walk through the players' own city.)*
+- **A fictional communications workshop on Sand Island.** Use an ordinary invented interior in the real location, not an invented underground transit system. Incorporate a place the players established, if compatible with the scenario geography.
 - **A place from the group's Case 1 or Case 2 theory that they believe is important.** Make it real. Put it on the map.
 - **Somewhere one of the PCs considers safe.** Not safe anymore.
 - **The room where whoever was claimed is now kept.** If nobody was claimed, this is where Sofie Anand is.
@@ -219,3 +221,4 @@ Then go around the table and ask each player one question: **"What does your cha
 | **Before session 3** | Reread every theory aloud to yourself. Do not reconcile them. Contradictions are the texture. |
 
 The only prep discipline that matters: **when you catch yourself deciding what the Bleed really is, stop and write a stranger clue instead.**
+
