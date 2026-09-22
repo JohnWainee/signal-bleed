@@ -39,7 +39,7 @@ see [Handoff protocol](#handoff-protocol) below.
 - `npm i && node smoke-test.js` — headless jsdom pass: joins as GM, exercises
   the Portal clocks tab, marks the Bleed, round-trips an export. This is the
   alpha functional smoke check. Other checks are listed below.
-- `node --test beta/tests/session.test.mjs` — in-memory beta reference tests.
+- `node --experimental-strip-types --test beta/tests/model.test.mjs` — typed in-memory beta contract tests.
 - `npm run setting:validate` — current setting/content consistency.
 - `npm run beta:dev`, `npm run beta:typecheck`, `npm run beta:build`, `npm run beta:package` — SB-02 beta commands. Run `npm --prefix beta ci` first; see `beta/SCAFFOLD.md` for verification and remaining browser/device limits.
 - Alpha has no dev server. Alpha pages are self-contained HTML — open the file
@@ -97,7 +97,7 @@ see [Handoff protocol](#handoff-protocol) below.
 
 The user-approved September 21–22 beta direction permits Vite/TypeScript under `beta/`, with integrator-owned package/lock/build configuration. Preserve the existing no-build alpha until the reviewed release/migration step. This scoped exception does not authorize production build-setting changes, protected-file edits, merge, or deployment.
 
-Read `beta/CONTRACTS.md` for M1 interfaces, privacy, membership and concurrency; `beta/AGENT_TASKS.md` assigns ownership and acceptance gates. The current JavaScript session module is a prototype to migrate in SB-03, not a Firebase schema or authorization boundary. Use fixture-only `/beta/gm/`, `/beta/play/`, `/beta/present/` during scaffold work; preserve `/gm/` until explicit release routing. All existing review and protected-file requirements still apply.
+Read `beta/CONTRACTS.md` for M1 interfaces, privacy, membership and concurrency; `beta/AGENT_TASKS.md` assigns ownership and acceptance gates. The typed mock in `beta/src/session/` is fixture-only, not a Firebase schema or authorization boundary. Use `/beta/gm/`, `/beta/play/`, `/beta/present/` during scaffold work; preserve `/gm/` until explicit release routing. All existing review and protected-file requirements still apply.
 
 ## Development workflow — two-model collaboration
 

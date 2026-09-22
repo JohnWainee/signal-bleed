@@ -1,6 +1,6 @@
 # Signal Bleed beta — session foundation
 
-Status: initial implementation, not a playable or deployed beta.
+Status: SB-03 typed mock implementation under review, not a playable or deployed beta.
 
 ## Direction recovered from the September 21–22 design session
 
@@ -14,13 +14,15 @@ These newer user decisions supersede the alpha no-build direction for the planne
 
 ## What this increment contains
 
-`session/session.mjs` defines scene selection, targeted A/B prompts, responses, optimistic revisions, and surface-specific projections. It has no Firebase connection, UI, persistence, character model, or game-content implementation. Tests run with:
+`src/session/model.ts` defines the typed contract and an in-memory mock adapter with per-entity revisions, admitted roles, targeted prompts, receipts, and surface-specific events. It has no Firebase connection or backend security enforcement. Tests run with:
 
 ```sh
-node --test beta/tests/session.test.mjs
+node --experimental-strip-types --test beta/tests/model.test.mjs
 ```
 
-The in-memory state is a test/reference model, not a proposed whole-room database write. Client checks and projections do not secure Firebase. Actor identity must come from authentication; the backend must enforce roles and read access.
+The in-memory state is a fixture model, not a proposed whole-room database write. Client checks and projections do not secure Firebase. The mock adapter binds an identity at connection; SB-04 must replace this with authenticated Firebase identity and enforce roles and read access at the backend.
+
+Mock scene transitions leave old prompts readable as expired history (`sceneEpoch` differs from the current scene); they cannot be answered or closed. Revocation ends an active watch. After an explicit re-admission, the client creates a new watch. The mock's close/answer tests exercise serialized outcomes; SB-04 must prove races and atomic receipts against the backend emulator.
 
 ## Next vertical slice
 
@@ -53,7 +55,7 @@ Use [Hawaiʻi — Emergency Republic](../rules/hawaii-setting-bible.md) for all 
 
 ## M1 implementation contract
 
-`CONTRACTS.md` v1 supersedes the preliminary namespace/revision sketch above. SB-00 baseline checks and SB-01 contract review are recorded in `reviews/SB-00-01.md`. Next task is SB-02: fixture-only Vite/TypeScript scaffold at `/beta/gm/`, `/beta/play/`, `/beta/present/`, preserving alpha routes. Then SB-03 migrates the reference module to the typed contract before parallel backend/surface implementation.
+`CONTRACTS.md` v1 supersedes the preliminary namespace/revision sketch above. SB-00 baseline checks and SB-01 contract review are recorded in `reviews/SB-00-01.md`. SB-02 provides fixture-only Vite/TypeScript routes while preserving alpha. SB-03 replaces the reference module with the typed mock contract; backend and surfaces follow after review.
 
 ## SB-02 scaffold draft
 

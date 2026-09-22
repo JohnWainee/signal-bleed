@@ -48,6 +48,12 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (Codex app) — merged reviewed SB-02 PR #7 at `6868ab47ee50890c91e29149613170be36773109` after verifying live Workers Static Assets hosting and all PR checks. Production `signal-bleed.com` now returns 200 for `/gm/` and `/table/`, 404 for beta route/source and `/HANDOFF.md`/`/AGENTS.md`; the beta remains excluded from the production Worker. Opened SB-03 as [draft PR #8](https://github.com/JohnWainee/signal-bleed/pull/8), retargeted to `main`. Fable's read-only re-review of `07f768f` found no blocker and verified the prior fixes. Small follow-up aligned disconnected role precedence and cross-player denial; eleven tests, packaging and all five PR checks pass at `898efed`. SB-03 is accepted; SB-04/05/06 are ready for isolated work. No Firebase or release cutover changed.
+**Branch:** `feat/beta-sb-03-session-model` — released
+
+**Agent:** Codex (Codex app) — started SB-03 from accepted SB-02 head `5c654ed` on `feat/beta-sb-03-session-model`. Replaced the old global-revision JavaScript prototype with a typed fixture-only SessionAdapter/mock, synthetic multi-actor fixtures, per-entity revisions, scoped receipts, private events and eleven contract tests. Typecheck, package build, alpha smoke/cases/HTML/setting checks and all eleven tests passed. Fable's independent read-only review found no blocker; its missing private markers and authorization-order findings were fixed, and test gaps were narrowed. Final diff/PR checks still need review before acceptance. No Firebase rules, auth, protected files, merge or deployment changed. Draft PR target is the SB-02 branch until PR #7 is integrated.
+**Branch:** `feat/beta-sb-03-session-model` — released
+
 **Agent:** Codex (Codex app) — verified the live Cloudflare project as Workers Static Assets, GitHub connected, production branch `main`, root `/`, `npx wrangler deploy`, and custom domain `signal-bleed.com`. The active production version is the PR #6 main merge; PR #7 branch builds did not deploy to production. Live `/gm/` and `/table/` return 200; `/beta/gm/` and `/beta/src/app/main.ts` return 404. Current main still exposes `/HANDOFF.md` (200); PR #7's locally tested `.assetsignore` closes that path on Worker deployment. Accepted SB-02's hosting gate and marked SB-03 ready. No production deployment performed in this session.
 **Branch:** `feat/beta-sb-02-scaffold` — released
 
