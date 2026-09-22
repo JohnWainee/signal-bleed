@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "smoke": "node smoke-test.js",
     "cases:validate": "node scripts/validate-cases.mjs",
-    "html:sanity": "node scripts/html-sanity.mjs"
+    "html:sanity": "node scripts/html-sanity.mjs",
+    "setting:validate": "node scripts/validate-setting.mjs"
   },
   "keywords": [],
   "author": "",

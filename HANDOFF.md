@@ -3,6 +3,8 @@
 **State:** repo complete and committed on `main` (1 commit). Code is done and smoke-tested.
 Nothing here needs authoring — only pushing, wiring, and one config paste.
 
+**Current beta context (2026-09-22):** The active setting is Hawaiʻi — Emergency Republic. See `rules/hawaii-setting-bible.md` and `beta/HAWAII_MIGRATION.md`. The alpha checklist below and older session entries are historical; their former setting descriptions are superseded.
+
 ## Your tasks, in order
 
 1. **Push to GitHub.** Create a repo (suggest `signal-bleed`, private) and push `main`.
@@ -43,6 +45,21 @@ per-field sync refactor.
 Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
+
+**Agent:** Codex (ChatGPT Work Mode) — completed SB-00 baseline evidence and SB-01 M1 contract design. CI run 35677113746 at ba03bc542cb9098b077df9cfb9d08a93039051a2 passed smoke, cases-validate, html-sanity and handoff-freshness; four local beta tests pass. Independent hawaii_review found no prototype-scope blocker; contract feedback fixed room-create retry identity, schema versions and initial record revisions. Added beta/CONTRACTS.md, review evidence and scoped Vite/TypeScript exception to AGENTS. Next: SB-02 fixture scaffold, then SB-03 typed model; backend epoch/receipt feasibility remains SB-04. No runtime/protected files changed, no merge/deploy. Browser/emulator/device verification remains outstanding.
+**Branch:** `feat/beta-session-foundation` — released
+
+**Agent:** Codex (ChatGPT Work Mode) — migrated active Signal Bleed content to Hawaiʻi / Emergency Republic after recovering the previous-session choices. Added `rules/hawaii-setting-bible.md`, updated app/GM/print/core/case/season/beta content and compatibility pages, and dated the proposed lifepath to the 2026–2029 events. Independent review's identity-custody issue fixed. `setting:validate`, case validation, four beta tests and eight-page local link audit pass. npm dependency access blocked (403), Chromium unavailable: existing jsdom/browser checks not claimed. See `beta/HAWAII_MIGRATION.md` for scope, evidence, map/data-migration limits and follow-up. No protected configuration, merge or deploy changed.
+**Branch:** `feat/beta-session-foundation` — released
+
+**Agent:** Codex (ChatGPT Work Mode) — drafted `beta/LIFEPATH_FIRST_PATH.md` (LP-B: The Name That Stayed), grounded in The Hours setting bible and core mystery principles. Includes four phases, direction choices, explicit 2d6 variants, A/B effects, recurring NPC/document callbacks, visibility rules, and one illustrative complete outcome. All new NPC/content/lifepath procedures are labeled proposals; no canonical rules or runtime changed. LP-B is drafted, not playtested or approved; next step is the user walkthrough and choice tuning. Exact core/setting terminology drift remains outside this draft.
+**Branch:** `feat/beta-session-foundation` — released
+
+**Agent:** Codex (ChatGPT Work Mode) — added `beta/AGENT_TASKS.md` with 14 scoped tasks, dependency order, three implementation lanes, integration ownership, review gates and an assignment prompt. Added `beta/LIFEPATH_TUNING_PROPOSAL.md` after recovering the prior four-phase design (Origin, Career, Incident, Fallout): choose direction, roll, choose consequence, record change. Distinguishes confirmed player agency/free playbook choice from proposed dice/content tuning. No runtime or protected files changed; docs reviewed against current branch conventions. First dispatch: SB-00 independent baseline review and SB-10 source/content reconciliation. No agents dispatched, issues created, merge or deployment performed.
+**Branch:** `feat/beta-session-foundation` — released
+
+**Agent:** Codex (ChatGPT Work Mode) — started the beta session foundation from main at `624e8cb5b82917478024e227938687c221eb0125`, following the newer September 21–22 design-session direction: GM-led scenes, read-only presenter, private player A/B prompts, and eventual Vite/TypeScript migration on existing Cloudflare/Firebase hosting. Added a transport-independent session module, four passing Node tests, and `beta/README.md` with the migration sequence and limitations. No Firebase adapter, UI, lifepath content, alpha tag, production configuration, or protected files changed. Direct terminal cloning was blocked; files committed through GitHub. Alpha checks not run locally. Independent review and connected four-client verification remain outstanding before merge. The recent design decisions were retrieved through conversation context; pin status itself was not available.
+**Branch:** `feat/beta-session-foundation` — released
 
 **Agent:** Claude (Sonnet 5, Claude Code) — built the d100 random event/puzzle
 generator, a sponsor-approved GM-only Portal tab in `table/index.html`. Added

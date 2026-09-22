@@ -1,12 +1,14 @@
 # SIGNAL BLEED
-### A rules-light game of chrome, neon, and the thing on the other side of the wire.
-*Playtest draft v0.1 — the Neon Theorize engine*
+### A rules-light game of Hawaiʻi, emergency systems, and the thing on the other side of the wire.
+*Core engine v0.1 · Hawaiʻi setting adaptation*
+
+Setting authority: [Hawaiʻi — Emergency Republic](hawaii-setting-bible.md). The alternate timeline begins September 2026. All case contractors and anomalous incidents are fictional. Lifepath remains a separately reviewed beta addition.
 
 ---
 
 ## WHAT THIS IS
 
-Three to five of you play burnouts, freelancers and true believers in a city that runs on other people's data. You take a job. The job is wrong. Something is bleeding through the network — something that was here before the network, and will be here after — and the only way to understand it is to look directly at it.
+Three to five of you play burnouts, freelancers and true believers in Hawaiʻi under mounting emergency pressure. You take a job. The job is wrong. Something is bleeding through the network — something that was here before the network, and will be here after — and the only way to understand it is to look directly at it.
 
 Looking at it changes you. That's the game.
 
@@ -69,12 +71,12 @@ When you would mark Static, you may instead **burn a Bond** with another player 
 You start with **two Bonds**. You cannot burn a Bond you have already burned.
 
 ### Symptoms (d6, or pick)
-1. Your reflection lags a half-second behind you.
-2. You have stopped needing sleep. You have not stopped dreaming.
-3. Machines wake when you walk past them. Screens turn toward you.
-4. You know a word nobody taught you. It hurts to think it.
-5. Something is missing from your memory and you can feel the shape of the hole.
-6. People who knew you well look at you a beat too long, and don't say why.
+1. You are eleven minutes ahead of every clock on the island, and you can prove it.
+2. You've stopped hearing the surf. It's still there. Everyone else hears it.
+3. Standing water tilts slightly toward you.
+4. You remember an unobserved branch. It hurts to hold.
+5. There's a day missing and you can feel the edge of it, like a seam.
+6. Someone has started calling you by a name nobody gave you, and correcting themselves, and doing it again.
 
 *Roll a duplicate? It gets worse. Say how.*
 
@@ -86,7 +88,7 @@ Three boxes: **Winded → Wounded → Wasted.**
 
 Mark one when you take violence. At **Wasted**, you're dying — you're out of the scene unless someone does something drastic.
 
-**The chrome holds you together:** any time you would mark Harm, you may **mark Static instead**. Describe what your body does that a body shouldn't.
+**The Signal holds you together:** any time you would mark Harm, you may **mark Static instead**. Describe what your body does that a body shouldn't.
 
 You clear Winded and Wounded with a scene of rest, aid, or a clinic. You never clear Static.
 
@@ -108,7 +110,7 @@ When you study a place, a system, or a person for what's underneath, roll.
 
 > *What here is a lie?*
 > *What's about to go wrong?*
-> *Where is it hiding?*
+> *What time is it really?*
 > *Who has already been here?*
 > *What here doesn't belong to this world?*
 
@@ -126,13 +128,13 @@ When you interface with a system that shouldn't exist — a dead node, corrupted
 - **7–9** — you get it, but choose one: *mark Static* · *something on the other side knows your name now* · *the GM advances the Bleed clock*.
 - **6-** — mark Static. The GM tells you what came back through with you.
 
-### COMMUNE (VEIL + STATIC)
+### TAKE A SOUNDING (VEIL + STATIC)
 When you open yourself deliberately — hold the object, speak to the dead node, let it look at you — roll +VEIL +STATIC.
 - **10+** — take a Clue and ask one question from READ THE WIRE.
 - **7–9** — take a Clue. Mark Static.
 - **6-** — mark Static, and it answers a question you didn't ask.
 
-*You cannot COMMUNE twice in the same scene.*
+*You cannot TAKE A SOUNDING twice in the same scene.*
 
 ### THEORIZE
 The climax move. Roll **2d6 + Clues you weave in − the case's Depth.** See below.
@@ -154,8 +156,8 @@ The GM does **not** know what's really going on. They have places, people, and c
 **Clues** are physical cards on the table, face up, shared by the whole group. They are concrete, strange, and never self-explaining:
 
 > *A maintenance log with eleven minutes missing, every night, for six years.*
-> *Her cochlear implant is still transmitting. She's been dead ten days.*
-> *The same handwriting on a datapad from 2049 and a wall in the sub-levels.*
+> *Her earpiece is still transmitting. She's been dead ten days.*
+> *The same handwriting on a tablet dated before the September Compression and a wall in the sub-levels.*
 
 When the group is ready — usually near the end of the session, when the pressure is unbearable — they **Theorize.**
 
@@ -224,129 +226,156 @@ Every case moves through five Rings. **The GM cannot move to the next Ring until
 
 ## PLAYBOOKS
 
-Each player picks one. No two players may share a playbook.
+Choose freely; lifepath results never restrict eligibility. The existing group convention is one of each playbook. Each gives its listed stats, moves, Static Moves, Dark Secret and Bond prompts.
 
-Each playbook gives you: a **suggested stat spread**, **two moves** (take both), **Static Moves** (unlock at Static 1, 3, and 5), a **Dark Secret** prompt, and **Bond** prompts.
+### THE SPLICER
 
----
+*You opened an idle line. Its traffic described a shift that had not begun.*
 
-### THE DECK-RUNNER
-*You went deeper than the job required and something down there was arranged. Not built. Arranged.*
+**Stats:** EDGE +1, WIRE +2, FACE +0, VEIL +1. **Starting Static:** 0.
 
-**Stats:** WIRE +2, VEIL +1, EDGE +1, FACE 0
-
-**Moves (take both):**
-- **DEEP DIVE** — When you go somewhere in the network nobody is supposed to reach, take a Clue automatically before you roll JACK IN.
-- **COLD HANDS** — When you're working and something horrifying happens, you may ignore it entirely for one exchange. Then it's worse.
+**Moves:**
+- **Deep Splice** — Open a line nobody's supposed to open — take a clue before you roll Jack In.
+- **Cold Hands** — Ignore something horrifying for one exchange. Then it's worse.
 
 **Static Moves:**
-- *(1)* **PATTERN RECOGNITION** — Once per session, ask the GM: *"Where have I seen this before?"* They must answer truthfully, even if the answer is impossible.
-- *(3)* **BACKDOOR** — You have already been inside any system you can name. Say when you put the door in. Mark Static.
-- *(5)* **RESIDENT** — You do not need a deck anymore.
+- **1 · Traffic Memory** — Once a session ask “Where have I heard this before?” They answer truthfully, even if impossible.
+- **3 · The Tap** — You've already been on any line you can name. Say when you put it in. Mark Static.
+- **5 · Termination** — You don't need a deck. You are a landing point.
 
-**Dark Secret:** *What did you take out of the deep net that you never reported? Who is looking for it?*
+**Dark Secret:** What came up the wire during the outage that you never logged, and who has started asking about it?
 
-**Bonds:** *___ has seen my hands shake and said nothing.* · *I have read ___'s private files. They don't know.*
+**Bonds:**
+- ______ has seen my hands shake and said nothing.
+- I have read ______'s traffic. They don't know.
 
----
+### THE REGISTRAR
 
-### THE FIXER
-*You know where the bodies are buried because you filed the paperwork.*
+*You approved a delivery that had not been requested yet. The paperwork remembers you.*
 
-**Stats:** FACE +2, WIRE +1, EDGE +1, VEIL 0
+**Stats:** EDGE +1, WIRE +1, FACE +2, VEIL +0. **Starting Static:** 0.
 
-**Moves (take both):**
-- **I KNOW A GUY** — Once per session, declare that you know someone here and what they owe you. It's true. The GM decides what you owe them.
-- **PAPER TRAIL** — When you dig through records, corporate or criminal, roll +FACE instead of +WIRE for READ THE WIRE.
-
-**Static Moves:**
-- *(1)* **THE OTHER LEDGER** — You can see what a person is most afraid of losing. You cannot turn this off.
-- *(3)* **LEVERAGE** — Take +1 ongoing to WORK SOMEONE against anyone whose secret you've learned this session. The knowledge sits in you badly.
-- *(5)* **BROKER** — You may negotiate directly with it. It listens.
-
-**Dark Secret:** *Which corp still has a file open on you, and what's in it?*
-
-**Bonds:** *I got ___ out of something and never told them what it cost.* · *___ is the only person I've never lied to. Yet.*
-
----
-
-### THE MEDIUM
-*The dead don't speak. But something using their voice does, and it's getting better at the impression.*
-
-**Stats:** VEIL +2, FACE +1, EDGE +1, WIRE 0 — **Start with Static 1.**
-
-**Moves (take both):**
-- **THE DEAD LINE** — You can COMMUNE with anything that held a person's data: an implant, a phone, a chair they sat in for twenty years.
-- **SECOND SIGHT** — When you first enter a place, the GM tells you one thing about it that isn't visible.
+**Moves:**
+- **A Plate on the Door** — Once a session: you know someone here and what they owe you. The GM says what you owe them.
+- **Paper Trail** — Digging through records? Roll +FACE for Read the Wire.
+- **Say It Yourself** — At Static 3 or higher: when you catch yourself having been helpful in a way you can't account for, name it out loud at the table and mark XP. If you don't, and the GM notices first, mark Static instead.
+- **Playing What You Lost** — When your character is claimed at Static 5: you lose them, but keep the voice. Roll up someone new. When the GM decides your claimed character appears, you play them — the help you offer through them has to be real: concrete, correct, generous, no riddles.
 
 **Static Moves:**
-- *(1)* **CARRY** — When someone else would mark Static, you may take it instead. Describe what you pull out of them.
-- *(3)* **ASK IT** — Once per session, ask the other side one direct question. It answers. It always answers.
-- *(5)* **CHANNEL** — You are the door now.
+- **1 · The Other Ledger** — You see what a person is most afraid of losing. You can't turn it off.
+- **3 · Leverage** — +1 ongoing to Work Someone against anyone whose secret you learned this session.
+- **5 · Agent of Record** — You may negotiate directly with it. It files.
 
-**Dark Secret:** *Who speaks to you most often, and what did you do to them?*
+**Dark Secret:** Which emergency allocation did you authorize, and who was left waiting?
 
-**Bonds:** *___ doesn't believe me and I need them not to.* · *I have heard ___'s voice on the other side, and they are still alive.*
+**Bonds:**
+- I got ______ off a manifest and never told them what it cost.
+- ______ is the only person I've never lied to. Yet.
 
----
+### THE OPERATOR
 
-### THE CHROME PRIEST
-*Your implants are not upgrades. They're relics. You did not buy them; you were given them.*
+*Channel 11 has a supervisor nobody has met. Her replies arrive before your questions.*
 
-**Stats:** EDGE +2, VEIL +1, WIRE +1, FACE 0
+**Stats:** EDGE +1, WIRE +0, FACE +1, VEIL +2. **Starting Static:** 1.
 
-**Moves (take both):**
-- **CONSECRATED** — You may always trade Harm for Static, and when you do, take +1 forward.
-- **RITE** — When you perform a ritual over a machine — cleaning, blessing, breaking — treat it as COMMUNE, and you may do it twice in a scene.
-
-**Static Moves:**
-- *(1)* **THE FLESH IS WEAK** — Ignore one Harm box permanently. Something inside you takes over the job.
-- *(3)* **LAYING ON OF HANDS** — Clear all Harm from another person. You mark Static. They dream about you afterward.
-- *(5)* **ICON** — You are no longer a person. You are a site.
-
-**Dark Secret:** *Who installed the first one, and what did they make you promise?*
-
-**Bonds:** *___ has seen what's under the plating.* · *I am keeping ___ alive with something I shouldn't have.*
-
----
-
-### THE BADGE
-*You closed the case. The case did not close.*
-
-**Stats:** EDGE +1, FACE +1, VEIL +1, WIRE +1 *(you're a generalist — or swap to +2/+1/+1/0)*
-
-**Moves (take both):**
-- **THE FILE** — You worked a case like this before. Once per session, state one thing you learned then. It's true now.
-- **PRESSURE** — When you interrogate someone who is more afraid of you than of what they're hiding, take +1 to WORK SOMEONE. Judging that correctly is the hard part.
+**Moves:**
+- **The Open Channel** — Take a Sounding on anything that carried a voice — a handset, a black box, a chair.
+- **Second Watch** — Entering a place, the GM tells you one thing that isn't visible.
 
 **Static Moves:**
-- *(1)* **IT FOLLOWS** — You always know when you're being watched. Now you also know by what.
-- *(3)* **REOPEN** — Name a Clue the group discarded. It's back, and it means something else.
-- *(5)* **CLOSED** — You finally understand the first case. You may not tell anyone.
+- **1 · Take It** — When someone else would mark Static, take it instead. Say what you pull out of them.
+- **3 · Call and Answer** — Once a session put one question on the channel. It always answers.
+- **5 · Station** — You are the channel now.
 
-**Dark Secret:** *What did you bury to make the first case go away, and who paid for it?*
+**Dark Secret:** Whose voice comes through most often, and what did you fail to do for them?
 
-**Bonds:** *I have a file on ___.* · *___ knows what I did and hasn't used it.*
+**Bonds:**
+- ______ doesn't believe me and I need them not to.
+- I have heard ______'s voice on the channel, and they are still alive.
 
----
+### THE DIVER
 
-### THE HOLLOW *(optional sixth)*
-*You died. The insurance covered a restore. Something came back in the gap.*
+*You survived a pressure the body was never meant to hold. Your dive log says you never went down.*
 
-**Stats:** VEIL +2, EDGE +1, WIRE +1, FACE 0 — **Start with Static 2.**
+**Stats:** EDGE +2, WIRE +1, FACE +0, VEIL +1. **Starting Static:** 0.
 
-**Moves (take both):**
-- **BACKED UP** — The first time you'd be Wasted in a session, you aren't. You wake up somewhere else, wrong. Mark Static.
-- **THE GAP** — You remember things that haven't happened. Once per session, describe one, and the GM works it in.
+**Moves:**
+- **Rated for Depth** — Always trade Harm for Static — and take +1 forward when you do.
+- **Procedure** — Run the full procedure over gear: treat as Take a Sounding, twice a scene.
 
 **Static Moves:**
-- *(1)* **NOT ALL OF ME** — You may leave part of yourself somewhere. It keeps watching. You keep receiving.
-- *(3)* **RECALL** — Ask the GM what you were doing during the time you were dead. They answer.
-- *(5)* **RESTORED** — The right one comes back this time.
+- **1 · The Body Wasn't Made for This** — Ignore one Harm box permanently.
+- **3 · Buddy Breathing** — Clear all Harm from another person. Mark Static. They dream about you.
+- **5 · Saturation** — You don't come up anymore.
 
-**Dark Secret:** *Who paid for the restore, and what did they ask you to do about it?*
+**Dark Secret:** Who was on the other end of your line, on the dive you don't talk about?
 
-**Bonds:** *___ was there when I came back.* · *___ treats me like I'm the same person. I let them.*
+**Bonds:**
+- ______ has seen what the pressure did.
+- I am keeping ______ breathing with something I shouldn't have.
+
+### THE INSPECTOR
+
+*You determined a cause. You signed it. The wreck has not accepted your finding.*
+
+**Stats:** EDGE +1, WIRE +1, FACE +1, VEIL +1. **Starting Static:** 0.
+
+**Moves:**
+- **The Casualty File** — Once a session: state one thing you learned on a wreck like this. It's true now.
+- **Pressure** — +1 to Work Someone who fears you more than what they're hiding.
+
+**Static Moves:**
+- **1 · Under Observation** — You always know when you're watched. Now you know by what.
+- **3 · Reopen the Finding** — Name a drowned clue. It's back, meaning something else.
+- **5 · Cause Determined** — You understand the first wreck. You may not tell anyone.
+
+**Dark Secret:** What did you leave out of the report, and who countersigned it?
+
+**Bonds:**
+- I have a file on ______.
+- ______ knows what I did and hasn't used it.
+
+### THE SALVAGE
+
+*Overboard on the eleventh. Paid out on the nineteenth. Up the wharf on the twenty-second.*
+
+**Stats:** EDGE +1, WIRE +1, FACE +0, VEIL +2. **Starting Static:** 2.
+
+**Moves:**
+- **Declared a Total Loss** — First time you'd be Wasted, you aren't. You come to somewhere else, wrong. Mark Static.
+- **The Interval** — Once a session describe something you remember that hasn't happened. The GM works it in.
+
+**Static Moves:**
+- **1 · Not All of Me Came Up** — Leave part of yourself somewhere. It keeps watching. You keep receiving.
+- **3 · The Log of Those Days** — Ask the GM what you were doing while you were missing. They answer.
+- **5 · Recovered** — The right one surfaces this time.
+
+**Dark Secret:** Who filed the claim on you, and what did they ask you to do about it?
+
+**Bonds:**
+- ______ was on the wharf when I came back.
+- ______ treats me like I'm the same person. I let them.
+
+### THE WATCH
+
+*You know who missed the delivery. The dashboard says everybody was served.*
+
+**Stats:** EDGE +1, WIRE +0, FACE +2, VEIL +1. **Starting Static:** 0.
+
+**Moves:**
+- **The Ledger** — Once a session state a fact about a person or place in Kalihi. It's in the ledger, so it's true.
+- **Phone Tree** — Say who you call. They come. The GM says what it costs them.
+
+**Static Moves:**
+- **1 · You Hold the Line** — Instead of marking Static, cross a task off the list. It doesn't get done. Unlimited, not free.
+- **3 · Everyone Shows Up** — Clear all Harm from everyone present. Say who came and what they brought.
+- **5 · The Wall** — You stop being a person and start being a place people go.
+
+**Dark Secret:** What did the Watch decide, that you carried out, that you have never told anyone?
+
+**Bonds:**
+- ______ isn't from here and I vouched for them.
+- ______ has been on my water list since before they could walk.
 
 ---
 
@@ -359,15 +388,11 @@ Go around: **Lines** (things that will not appear at all) and **Veils** (things 
 
 This game is about corruption, body horror, and losing yourself. Do the ten minutes.
 
-### 2. The City (10 min)
-Go around the table. Each player states **one thing that is true about this city.** Write them down. They're canon. Then the GM adds one.
+### 2. Hawaiʻi and the scenario date (10 min)
+Choose the starting date and which approved events have already occurred. Each player adds an ordinary fictional person, room or routine connected to a real place. Do not invent a different island geography or a prewritten cosmic explanation.
 
-> *It hasn't rained in four years, but the storm drains still run.*
-> *Everyone under thirty has a debt clock in their field of vision.*
-> *The old subway is sealed. The trains still move.*
-
-### 3. The Corps (5 min)
-Each player names **one megacorp** and **one thing it does that people pretend is normal.** These are the powers in your city. The GM draws a 4-segment clock for each and hangs onto them.
+### 3. Institutions (5 min)
+Name a fictional employer, response team or contractor and what it wants. Keep real institutions and the fictional emergency program distinguishable. Record who has seen a warning before acting on it.
 
 ### 4. Characters (25 min)
 Pick playbooks. Assign stats. Take both moves. Write your Dark Secret — **the GM reads it privately and turns it into a future Clue.** Answer both Bond prompts, naming other PCs.
@@ -434,14 +459,14 @@ A Clue is a **hole in the world**, not a piece of a puzzle you've already solved
 
 ## THE FIRST CASE — "ELEVEN MINUTES"
 
-*A ready-to-run one-shot. Depth 3.*
+*A ready-to-run one-shot. Depth 3. Choose a scenario date from September 2026 onward. All businesses and interiors are fictional; older anomalous records are disputed evidence, not proof of a settled pre-2026 program.*
 
-**The job:** A mid-tier data-haven called **Ossuary Cold Storage, Cold Harbour** wants its night-shift technician found. Name: **Miren Adeyemi**. Missing nine days. The client is a corp compliance officer named **Vess** who is nervous in a way that isn't about Miren. Pays 40k, half up front, no questions.
+**The job:** A mid-tier data-haven called **Ossuary Cold Storage, Honolulu Harbor** wants its night-shift technician found. Name: **Miren Adeyemi**. Missing nine days. The client is a corp compliance officer named **Vess** who is nervous in a way that isn't about Miren. Pays 40k, half up front, no questions.
 
 **The wrong detail:** Vess keeps referring to Miren in the present tense, then correcting himself to the past tense, then correcting back.
 
 **Locations**
-- Ossuary Cold Storage, Cold Harbour, sublevel 4 — cold, humming, smells like copper
+- Ossuary Cold Storage, Honolulu Harbor, sublevel 4 — cold, humming, smells like copper
 - Miren's flat — immaculate, nothing personal, one chair facing a blank wall
 - The Kettle — a noodle bar where the night shift drinks
 - Maintenance shaft 11 — sealed, welded from the inside
@@ -456,7 +481,7 @@ A Clue is a **hole in the world**, not a piece of a puzzle you've already solved
 
 **Clues (write these on cards)**
 1. The maintenance log has eleven minutes missing. Every night. For six years.
-2. Miren's cochlear implant is still transmitting. Intermittently. From inside the building.
+2. Miren's earpiece is still transmitting. Intermittently. From inside the building.
 3. Shaft 11 was welded shut from the inside. The welds are new. The tools are still in there.
 4. Eleven employees have left Ossuary in six years. All resigned by text. All texts sent at 3:41 a.m.
 5. Miren's flat has one chair facing a blank wall. The wall is load-bearing and two meters thick.
@@ -489,3 +514,4 @@ Run "Eleven Minutes." Afterward, ask the table:
 5. **Did the horror escalate,** or did it plateau? *(If it plateaued: advance the Bleed clock harder, and use it when it fills.)*
 
 Tune one thing at a time. Run it again.
+
