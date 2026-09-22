@@ -1,5 +1,7 @@
 # Deploying Signal Bleed
 
+> Historical alpha setup guide. The current GitHub checks include a Cloudflare Workers build, while this guide describes a Pages Git integration. The live production path has not been verified in this SB-02 checkout. Do not use these instructions for a beta cutover or assume a repository-root publish is safe; confirm the actual host and follow the reviewed SB-08 release runbook first.
+
 ## 1. Cloudflare Pages (hosting)
 
 1. Push this repo to GitHub.

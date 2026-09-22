@@ -7,6 +7,7 @@
 /node_modules/
 /scripts/
 /.git/
+/.git
 /.github/
 /.claude/
 /.agents/
@@ -19,3 +20,7 @@
 /package.json
 /package-lock.json
 /wrangler.jsonc
+/DEPLOY.md
+/smoke-test.js
+/firebase.rules.json
+/.DS_Store

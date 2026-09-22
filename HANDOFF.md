@@ -5,6 +5,8 @@ Nothing here needs authoring — only pushing, wiring, and one config paste.
 
 **Current beta context (2026-09-22):** The active setting is Hawaiʻi — Emergency Republic. See `rules/hawaii-setting-bible.md` and `beta/HAWAII_MIGRATION.md`. The alpha checklist below and older session entries are historical; their former setting descriptions are superseded.
 
+**Deployment caution:** `DEPLOY.md` and the old checklist below describe Cloudflare Pages, but current PR checks show a Cloudflare Workers build. The live production route is not confirmed. Do not merge the beta scaffold into a repository-root Pages publish; see `beta/SCAFFOLD.md` and verify host topology before accepting SB-02.
+
 ## Your tasks, in order
 
 1. **Push to GitHub.** Create a repo (suggest `signal-bleed`, private) and push `main`.

@@ -63,14 +63,14 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 |---|---|---|---|---|
 | SB-00 | Review foundation and verify working baseline | Integrator/reviewer | — | DONE; baseline evidence recorded |
 | SB-01 | Reconcile beta instructions and freeze contracts | A + integrator | SB-00 | DONE; contract v1 reviewed |
-| SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | REVIEW; install/build/browser gates passed, independent final review pending |
+| SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | REVIEW-HOST; tests/review passed for Workers, verify actual deployment path before acceptance/merge |
 | SB-03 | Typed session model and mock adapter | A | SB-02 | WAIT |
 | SB-04 | Firebase authorization and realtime adapter | A | SB-03 | WAIT |
 | SB-05 | GM control surface and presenter | B | SB-03 | WAIT |
 | SB-06 | Player prompts and persistent personal surface | C | SB-03 | WAIT |
 | SB-07 | Wire surfaces and prove four-client M1 | Integrator/reviewer | SB-04–06 | WAIT |
 | SB-08 | Preview packaging and release rehearsal | Integrator | SB-07 | WAIT |
-| SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | IN PROGRESS; bounded Qwen read-only inventory, no accepted deliverable yet |
+| SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | READY; Qwen attempt produced no accepted inventory |
 | SB-10 | Recover lifepath specification and content manifest | Content analyst | — | READY; implementation blocked on source |
 | SB-11 | Lifepath engine and character persistence | A/C sequentially | SB-07, SB-10 | WAIT |
 | SB-12 | GM-led lifepath presentation and playtest | B + reviewer | SB-11 | WAIT |
@@ -221,13 +221,13 @@ PR #6 merged at `373565b188496500f92f57abb8e2f45bcf96b7ce`; current integration 
 | Branch / base | `feat/beta-sb-02-scaffold`; `373565b188496500f92f57abb8e2f45bcf96b7ce` |
 | Dependencies / owned files | SB-01; `beta/package-lock.json`, beta build/packaging documentation, this board and `HANDOFF.md`. Integrator retains sole ownership of shared dependency/routing/configuration files. |
 | Acceptance | Root and beta clean installs, typecheck, build/package, direct/reloaded beta routes, preview alpha routes and asset audit, alpha smoke/case/HTML/setting checks, four reference tests. See `SCAFFOLD.md` for results. |
-| Status / result | REVIEW; automated and desktop-browser gates passed. Independent final review and PR #7 evidence update pending. No merge/deploy. |
+| Status / result | REVIEW-HOST; automated and desktop-browser gates passed. Fable review found and re-reviewed Workers asset-containment fix; actual Workers-versus-Pages deployment path remains unverified. No merge/deploy. |
 
 Factory discovery is read-only, not a dispatch: Claude Code 2.1.278 is authenticated and lists Fable 5.1/Sonnet 5 in its local catalog; Ollama is reachable with local Qwen models, but no Signal Bleed Qwen task has run. The DeepSeek pi provider reports `credentials_not_configured`; SB-10 is **not dispatched**. The existing factory Beads queue/worktrees concern another tenant, not this repository. Do not claim those workers for Signal Bleed or share this game's content into that queue. SB-09 and SB-10 packets must name an exact new branch/worktree and base SHA before dispatch. At most three implementation workers may be active, including Codex.
 
 ### Review dispatch — SB-02 Fable 5.1
 
-- Task: independent final review of SB-02; owner/model: Fable 5.1 through authenticated Claude Code 2.1.278; status: **static report received, fix re-review pending**. Fable found one medium root-asset exposure risk, now addressed with `.assetsignore`; its plan-mode review did not execute tests. It also found stale setup docs, now updated.
+- Task: independent final review of SB-02; owner/model: Fable 5.1 through authenticated Claude Code 2.1.278; status: **read-only re-review complete**. Fable found one medium root-asset exposure risk, now contained for Workers by `.assetsignore`, and judged the fix non-blocking. Its plan-mode reviews did not execute tests. Stale setup docs were updated. Remaining host-topology question is recorded below.
 - Exact target/base: `b299ad6dbcaf7a46fc9bf620ce7b83acd46efe0b`; dedicated `review/beta-sb-02-fable` worktree at `/private/tmp/signal-bleed-sb02-fable-review`. Compare with main `373565b188496500f92f57abb8e2f45bcf96b7ce`.
 - Sources: root `HANDOFF.md`, `AGENTS.md`, this board, `CONTRACTS.md`, `SCAFFOLD.md`, Hawaiʻi setting bible. Own review notes only; no implementation/shared/protected files. Check lockfile, routes, packaging, alpha preservation, exact tests and limits; report severity/file/line, actual commands/results, failures and unresolved questions. No merge/deploy or Firebase claims.
 - If review changes are authored, draft PR target is `feat/beta-sb-02-scaffold` and reviewer updates `HANDOFF.md`; for a read-only report, Codex records review result in `HANDOFF.md` and PR #7. No report is accepted as test evidence until Codex inspects it.
