@@ -10,7 +10,9 @@ const ref = (actor, path) => actor.database().ref(path);
 const read = (actor, path) => ref(actor, path).once('value');
 
 before(async () => {
-  const rules = await readFile(new URL('../rules.proposed.json', import.meta.url), 'utf8');
+  const rules = await readFile(new URL('../../../firebase.rules.json', import.meta.url), 'utf8');
+  const proposal = await readFile(new URL('../rules.proposed.json', import.meta.url), 'utf8');
+  assert.deepEqual(JSON.parse(rules), JSON.parse(proposal), 'protected rules must match the reviewed proposal');
   env = await initializeTestEnvironment({ projectId: 'demo-signal-bleed-beta', database: { host: '127.0.0.1', port: 9001, rules } });
   await env.clearDatabase();
   await env.withSecurityRulesDisabled(async context => {

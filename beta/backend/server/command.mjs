@@ -72,6 +72,11 @@ function apply(room, uid, command) {
       if (!current) return { result: fail('NOT_FOUND') };
       if (current.status !== 'pending' || current.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
       const next = { ...current, revision: current.revision + 1, status: command.decision === 'admit' ? 'admitted' : 'denied' };
+      if (next.status === 'admitted') {
+        const roleLimit = next.role === 'player' ? 2 : 1;
+        const activeSameRole = Object.values(room.members).filter(member => member?.status === 'admitted' && member.role === next.role).length;
+        if (activeSameRole >= roleLimit) return { result: fail('CONFLICT') };
+      }
       room.admissions[command.uid] = next;
       if (next.status === 'admitted') {
         room.members[command.uid] = { schemaVersion: 1, revision: next.revision, role: next.role, status: 'admitted', name: next.name };

@@ -9,6 +9,7 @@ const dirs = ['rules', 'beta', 'cases', 'gm', 'table', 'print', 'hours', 'hawaii
 const paths = ['README.md', 'index.html'];
 function collect(dir) {
   for (const e of readdirSync(join(root, dir), { withFileTypes: true })) {
+    if (e.isDirectory() && e.name === 'node_modules') continue;
     const p = join(dir, e.name);
     if (e.isDirectory()) collect(p);
     else if (/\.(md|html|json)$/.test(p)) paths.push(p);

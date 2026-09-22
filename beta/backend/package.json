@@ -4,11 +4,11 @@
   "version": "0.1.0",
   "main": "index.mjs",
   "type": "module",
-  "engines": { "node": ">=22.12.0" },
+  "engines": { "node": "22" },
   "scripts": {
     "test:rules": "node --test test/rules.test.mjs",
     "test:command": "node --test test/command.test.mjs",
-    "emulator:test": "firebase emulators:exec --only database --project demo-signal-bleed-beta --config firebase.json 'npm run test:rules && npm run test:command'"
+    "emulator:test": "firebase emulators:exec --only auth,database,functions --project demo-signal-bleed-beta --config firebase.json 'npm run test:rules && npm run test:command && npm --prefix .. run test:adapter'"
   },
   "dependencies": {
     "firebase-admin": "14.4.0",

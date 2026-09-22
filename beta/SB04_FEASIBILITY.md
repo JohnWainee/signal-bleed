@@ -1,12 +1,12 @@
 # SB-04 backend feasibility and protected-rules proposal
 
-Status: local trusted-command prototype and rules proposal verified in the Firebase emulator. No beta backend or rules are deployed.
+Status: reviewed rules addition, trusted callable, and Firebase SessionAdapter pass local emulators. No beta backend or rules are deployed.
 
 ## Verified baseline
 
 - Production UI is served by Cloudflare Workers Static Assets from `main`; beta files are excluded by `.assetsignore`.
 - The Firebase project `signal-bleed` is on the Spark plan (console inspection, 2026-09-21 HST). Its Realtime Database is `signal-bleed-default-rtdb` in `us-central1`.
-- The console's deployed RTDB rules match the repository's `firebase.rules.json`: they grant broad authenticated access in the existing `rooms` alpha namespace and define no beta namespace. Preserve that alpha subtree exactly until an independently reviewed alpha migration.
+- At baseline, the console's deployed RTDB rules matched the repository's former `firebase.rules.json`: they grant broad authenticated access in the existing `rooms` alpha namespace and define no beta namespace. The protected repository file now contains the additive beta proposal, but the console rules have not been republished. Preserve the alpha subtree exactly until an independently reviewed alpha migration.
 - The user approved a Blaze-based Functions direction for SB-04 and asked to reuse the billing account already used for Eat the Reich. Signal Bleed remains its own Firebase project. It has **not** been upgraded; no billing, function deployment, or rules publication has occurred.
 
 ## Why a trusted command endpoint is needed
@@ -17,9 +17,9 @@ One function entrypoint may dispatch room creation, admission request/decision, 
 
 ## Read subscriptions and rules
 
-`beta/backend/rules.proposed.json` is an **unpublished proposal**. It copies the current alpha `rooms` rules without change and adds `betaRooms/v1` read grants only at the needed leaf paths. Room-root reads and all client writes remain denied. Applicant reads only their admission; GM reads admissions, membership and decisions; presenter reads only the published scene; a player reads the scene, own admission/member record, own decisions, own sheet/notes and own receipts. Revocation immediately fails subsequent reads, except the person's own admission status used to show revocation. No browser subscribes to `betaRooms/v1/{roomId}` or any private parent. Admin SDK access bypasses rules, so the callable must enforce every authorization and shape invariant itself.
+`beta/backend/rules.proposed.json` is an **unpublished proposal**. It copies the current alpha `rooms` rules without change and adds `betaRooms/v1` read grants only at the needed leaf paths. Room-root reads and all client writes remain denied. Applicant reads only their admission; GM reads admissions, membership and decisions; presenter reads only the published scene; a player reads the scene, own admission/member record, own decisions, own sheet/notes and own receipts. Revocation immediately fails subsequent reads, except the person's own admission status used to show revocation. The Firebase adapter subscribes only to role-specific leaves. Admin SDK access bypasses rules, so the callable enforces authorization and shape invariants itself.
 
-The proposed addition to the protected `firebase.rules.json` is exactly the `betaRooms` subtree in that proposal. `AGENTS.md` requires explicit confirmation before editing that file. The proposal is ready for review; the protected file remains unchanged. Publishing rules is a separate release action and must wait for four-client evidence.
+After explicit user approval, the protected `firebase.rules.json` gained exactly the `betaRooms` subtree in that proposal. The alpha subtree is unchanged, and an emulator test checks the protected file against the proposal. Publishing rules is a separate release action and must wait for four-client evidence.
 
 ## Test and deployment gates
 
@@ -28,4 +28,11 @@ The proposed addition to the protected `firebase.rules.json` is exactly the `bet
 3. Keep function tests separate from production Firebase credentials. Do not log private payloads or cache them in the service worker. Limit callable payload size and function scale; record billing and deployment settings before production release.
 4. The production Firebase project must be upgraded to Blaze before Functions deployment; [Firebase's Functions setup](https://firebase.google.com/docs/functions/get-started) permits local emulation on Spark but requires Blaze for deployment. The billing change and production deploy remain undone.
 
-The RTDB emulator needs Java. Homebrew OpenJDK 26 is available at `/opt/homebrew/opt/openjdk/bin/java`; the system `/usr/bin/java` shim does not resolve it. Run `PATH=/opt/homebrew/opt/openjdk/bin:$PATH npm run emulator:test` from `beta/backend`. The current branch passed five rules tests and two transaction tests. The callable module loads, but a deployed callable and the browser adapter have not been exercised. The production dependency audit currently reports two moderate transitive findings through `gaxios`/`uuid`; resolve or assess those before deployment.
+The RTDB emulator needs Java. Homebrew OpenJDK 26 is available at `/opt/homebrew/opt/openjdk/bin/java`; the system `/usr/bin/java` shim does not resolve it. Run `PATH=/opt/homebrew/opt/openjdk/bin:$PATH npm run emulator:test` from `beta/backend`. The branch passes five rules tests, three command transaction tests, and two Firebase Auth/Database/Functions adapter tests. Alpha smoke/cases/HTML/setting checks, the eleven mock model tests, and beta preview packaging also pass. A deployed callable, production App Check, and the four-client browser run have not been exercised.
+
+## Security pass after functionality
+
+- The callable derives UID from verified Firebase Auth, rejects malformed commands and unknown fields, limits payloads to 32 KB, uses bounded text and IDs, caps active roles at two players and one presenter, and records accepted receipts in the same room transaction. A production project guard refuses a non-`signal-bleed` project; local demo emulators use their own namespace. Maximum function instances is ten.
+- Production callable requests require Firebase App Check. The emulator bypasses that gate for local tests. The future beta client bootstrap must initialize App Check and register the app in the Firebase console before deployment; otherwise legitimate clients will be denied. Do not weaken the callable gate to make an unconfigured client work.
+- RTDB rules permit the GM only roster/decisions/public scene and own receipt, each player only their own admission/decisions/personal/receipt plus scene, and presenter only admission and scene. Direct beta client writes and room-root reads are denied. The existing alpha `rooms` rules remain broad and unchanged to avoid disrupting the live alpha; an alpha security migration needs separate review.
+- `npm audit --omit=dev` currently reports two moderate transitive findings through `gaxios`/`uuid`. `npm audit fix` cannot resolve the full tree without a breaking Firebase CLI downgrade. Assess a compatible patched dependency tree before production deployment. No private command payload is logged by this handler.
