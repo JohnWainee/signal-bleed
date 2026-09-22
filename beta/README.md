@@ -50,3 +50,7 @@ See [AGENT_TASKS.md](AGENT_TASKS.md) for task ownership, dependencies, acceptanc
 ## Current setting
 
 Use [Hawaiʻi — Emergency Republic](../rules/hawaii-setting-bible.md) for all places, chronology and program references. The former archipelago is superseded. The first four-phase fixture spans September 2026–2029; it does not fix the campaign-present date.
+
+## M1 implementation contract
+
+`CONTRACTS.md` v1 supersedes the preliminary namespace/revision sketch above. SB-00 baseline checks and SB-01 contract review are recorded in `reviews/SB-00-01.md`. Next task is SB-02: fixture-only Vite/TypeScript scaffold at `/beta/gm/`, `/beta/play/`, `/beta/present/`, preserving alpha routes. Then SB-03 migrates the reference module to the typed contract before parallel backend/surface implementation.

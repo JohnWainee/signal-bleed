@@ -46,6 +46,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (ChatGPT Work Mode) — completed SB-00 baseline evidence and SB-01 M1 contract design. CI run 35677113746 at ba03bc542cb9098b077df9cfb9d08a93039051a2 passed smoke, cases-validate, html-sanity and handoff-freshness; four local beta tests pass. Independent hawaii_review found no prototype-scope blocker; contract feedback fixed room-create retry identity, schema versions and initial record revisions. Added beta/CONTRACTS.md, review evidence and scoped Vite/TypeScript exception to AGENTS. Next: SB-02 fixture scaffold, then SB-03 typed model; backend epoch/receipt feasibility remains SB-04. No runtime/protected files changed, no merge/deploy. Browser/emulator/device verification remains outstanding.
+**Branch:** `feat/beta-session-foundation` — released
+
 **Agent:** Codex (ChatGPT Work Mode) — migrated active Signal Bleed content to Hawaiʻi / Emergency Republic after recovering the previous-session choices. Added `rules/hawaii-setting-bible.md`, updated app/GM/print/core/case/season/beta content and compatibility pages, and dated the proposed lifepath to the 2026–2029 events. Independent review's identity-custody issue fixed. `setting:validate`, case validation, four beta tests and eight-page local link audit pass. npm dependency access blocked (403), Chromium unavailable: existing jsdom/browser checks not claimed. See `beta/HAWAII_MIGRATION.md` for scope, evidence, map/data-migration limits and follow-up. No protected configuration, merge or deploy changed.
 **Branch:** `feat/beta-session-foundation` — released
 

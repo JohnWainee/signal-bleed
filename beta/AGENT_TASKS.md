@@ -1,6 +1,6 @@
 # Signal Bleed beta — agent task board
 
-Updated: 2026-09-22. Planning baseline: draft PR #6, branch `feat/beta-session-foundation`, commit `0b317bf9aec850f4c955f208412b978768147eb3`.
+Updated: 2026-09-22. Planning baseline: draft PR #6, branch `feat/beta-session-foundation`, baseline reviewed at `ba03bc542cb9098b077df9cfb9d08a93039051a2`.
 Re-fetch branch state before starting; this document does not freeze future repository changes.
 
 ## Setting authority
@@ -42,7 +42,7 @@ Use at most three concurrent implementation agents after the contract is settled
 
 These are responsibilities, not four agents that must run continuously. Use a separate review session for each non-trivial change; the integrator cannot be sole reviewer of their own code. A content-audit task can run beside setup because it changes documentation only. One human or coordinating session dispatches and serializes integration.
 
-**Recommended first dispatch:** SB-00 to a reviewer/integrator and SB-10 to a content analyst. Then SB-01, SB-02, and SB-03 in order. Once those contracts and fixtures land, run SB-04, SB-05, and SB-06 in parallel.
+**Next dispatch:** SB-02 scaffold, then SB-03 typed model. SB-00 baseline evidence and SB-01 contracts are recorded in `beta/reviews/SB-00-01.md` and `beta/CONTRACTS.md`. SB-10 content reconciliation can run independently. Once those contracts and fixtures land, run SB-04, SB-05, and SB-06 in parallel.
 
 ## Branch and ownership protocol
 
@@ -61,16 +61,16 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 
 | ID | Task | Lane | Depends on | Status |
 |---|---|---|---|---|
-| SB-00 | Review foundation and verify working baseline | Integrator/reviewer | — | READY |
-| SB-01 | Reconcile beta instructions and freeze contracts | A + integrator | SB-00 | WAIT |
-| SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | WAIT |
+| SB-00 | Review foundation and verify working baseline | Integrator/reviewer | — | DONE; baseline evidence recorded |
+| SB-01 | Reconcile beta instructions and freeze contracts | A + integrator | SB-00 | DONE; contract v1 reviewed |
+| SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | READY |
 | SB-03 | Typed session model and mock adapter | A | SB-02 | WAIT |
 | SB-04 | Firebase authorization and realtime adapter | A | SB-03 | WAIT |
 | SB-05 | GM control surface and presenter | B | SB-03 | WAIT |
 | SB-06 | Player prompts and persistent personal surface | C | SB-03 | WAIT |
 | SB-07 | Wire surfaces and prove four-client M1 | Integrator/reviewer | SB-04–06 | WAIT |
 | SB-08 | Preview packaging and release rehearsal | Integrator | SB-07 | WAIT |
-| SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | WAIT |
+| SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | READY |
 | SB-10 | Recover lifepath specification and content manifest | Content analyst | — | READY; implementation blocked on source |
 | SB-11 | Lifepath engine and character persistence | A/C sequentially | SB-07, SB-10 | WAIT |
 | SB-12 | GM-led lifepath presentation and playtest | B + reviewer | SB-11 | WAIT |
@@ -204,3 +204,7 @@ The coordinator records: task ID; owner/session; task branch; base SHA; status; 
 
 Keep tasks to one coherent, reviewable behavior. If a task grows beyond that, split it along the stated deliverables while retaining the acceptance gate. Estimates should be made by the implementing agent after repository inspection; no calendar promises are implied here.
 
+
+### Dispatch record — 2026-09-22
+
+Coordinator Codex completed SB-00 evidence and SB-01 design on integration branch `feat/beta-session-foundation`, base `ba03bc542cb9098b077df9cfb9d08a93039051a2`. Independent reviewer: hawaii_review (read-only). See `reviews/SB-00-01.md` for exact scope and remaining browser/backend limits. No implementation agents own SB-02–06 yet. Next owner: integrator for SB-02, using `CONTRACTS.md` v1. This task acceptance does not approve merging the entire PR or deployment.

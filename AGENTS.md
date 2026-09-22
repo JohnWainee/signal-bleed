@@ -1,7 +1,7 @@
 # SIGNAL BLEED — Project Conventions
 
 An investigative-horror tabletop RPG and its digital play surface, the
-**Chart Table**: a no-build static site plus a Firebase Realtime Database
+**Chart Table**: a no-build alpha plus a planned Vite/TypeScript beta and Firebase Realtime Database
 multiplayer companion. See `README.md` for the live structure and
 `HANDOFF.md` for current deploy status.
 
@@ -38,20 +38,22 @@ see [Handoff protocol](#handoff-protocol) below.
 
 - `npm i && node smoke-test.js` — headless jsdom pass: joins as GM, exercises
   the Portal clocks tab, marks the Bleed, round-trips an export. This is the
-  only automated check in the repo; there is no build, lint, or unit-test
-  step.
-- There is no dev server. Pages are self-contained HTML — open the file
+  alpha functional smoke check. Other checks are listed below.
+- `node --test beta/tests/session.test.mjs` — in-memory beta reference tests.
+- `npm run setting:validate` — current setting/content consistency.
+- Beta build/typecheck commands will be added by SB-02; none exist yet.
+- Alpha has no dev server. Alpha pages are self-contained HTML — open the file
   directly, or serve the repo root with any static file server, to view
   changes.
 
 ## Architecture (non-negotiable)
 
-- **No build step.** Every page (`/index.html`, `/table/index.html`,
+- **No build step for alpha.** Every existing alpha page (`/index.html`, `/table/index.html`,
   `/gm/index.html`, `/hours/index.html`, `/print/*.html`) is a
   self-contained HTML file — markup, styles, and script together. Do not
   introduce a bundler, framework, package-based component system, or
   transpile step. If a change needs a build step to work, it's the wrong
-  change for this repo.
+  change for alpha. The beta exception below is explicitly authorized.
 - **Security lives in `firebase.rules.json`, not the client.** Client-side
   checks (e.g. "am I the GM") are UX conveniences only; never treat them as
   the security boundary. Any access-control change belongs in
@@ -90,6 +92,12 @@ see [Handoff protocol](#handoff-protocol) below.
   `clues`, `artifacts`, `puzzles`, `rings`, `notes`). New or edited case
   files must keep parsing and keep those fields — CI's `cases-validate` job
   checks this on every push/PR.
+
+## Beta tooling exception and contract authority
+
+The user-approved September 21–22 beta direction permits Vite/TypeScript under `beta/`, with integrator-owned package/lock/build configuration. Preserve the existing no-build alpha until the reviewed release/migration step. This scoped exception does not authorize production build-setting changes, protected-file edits, merge, or deployment.
+
+Read `beta/CONTRACTS.md` for M1 interfaces, privacy, membership and concurrency; `beta/AGENT_TASKS.md` assigns ownership and acceptance gates. The current JavaScript session module is a prototype to migrate in SB-03, not a Firebase schema or authorization boundary. Use fixture-only `/beta/gm/`, `/beta/play/`, `/beta/present/` during scaffold work; preserve `/gm/` until explicit release routing. All existing review and protected-file requirements still apply.
 
 ## Development workflow — two-model collaboration
 
@@ -144,8 +152,7 @@ mechanism.
 
 `.github/workflows/ci.yml` runs on every push to `main` and every PR:
 
-- **smoke** — `npm i && node smoke-test.js` (the only functional check;
-  there's no build or unit-test suite in this repo).
+- **smoke** — `npm i && node smoke-test.js` (alpha functional check; beta reference tests currently run separately).
 - **cases-validate** — every `/cases/*.json` parses and carries the fields
   documented in `rules/signal-bleed-case-format.md`.
 - **html-sanity** — a cheap check that the shipped HTML pages parse and that
