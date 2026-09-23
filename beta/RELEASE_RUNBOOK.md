@@ -10,12 +10,20 @@ From a clean checkout of the reviewed SHA:
 npm ci
 npm --prefix beta ci
 npm --prefix beta/backend ci
+VITE_SB_LIVE_BACKEND=1 VITE_SB_EMULATORS=1 npm --prefix beta run package:rehearsal
+```
+
+Serve the emulator rehearsal artifact locally and directly open/reload `/beta/gm/`, `/beta/play/`, and `/beta/present/`. Run the four-client suite against this emulator-only build before creating any production-connected artifact. The build refuses emulator mode away from `localhost`/`127.0.0.1`.
+
+Only after that rehearsal passes, create the production-connected artifact without opening it locally:
+
+```sh
 VITE_SB_APPCHECK_SITE_KEY=<public-recaptcha-enterprise-site-key> npm --prefix beta run package:canary
 ```
 
-`package:canary` forces `VITE_SB_LIVE_BACKEND=1`, typechecks and builds the three Vite routes, copies only the explicit alpha allowlist plus built beta assets into `preview-beta/`, and verifies required routes, hashed assets, the callable adapter, and the absence of repository tooling. The site key is public browser configuration; service-account keys, OAuth secrets, and admin credentials never belong in the artifact.
+`package:rehearsal` forces both the live adapter and local emulator endpoints. `package:canary` forces the live adapter without emulator mode, typechecks and builds the three Vite routes, copies only the explicit alpha allowlist plus built beta assets into `preview-beta/`, and verifies required routes, hashed assets, the callable adapter, the beta service-worker escape, and the absence of repository tooling. The site key is public browser configuration; service-account keys, OAuth secrets, and admin credentials never belong in the artifact.
 
-Serve `preview-beta/` locally and directly open/reload `/beta/gm/`, `/beta/play/`, and `/beta/present/`. Repeat the four-client emulator suite against that artifact before any remote action.
+Do not serve or interactively open the production-connected `package:canary` artifact during local rehearsal: it deliberately targets the real `signal-bleed` Firebase project. Its first interactive use belongs only in the separately authorized, protected canary deployment step. The beta bootstrap unregisters an existing root-scoped alpha service worker before Firebase starts and reloads once if the current page was controlled, preventing that worker from caching beta session transport; the browser suite verifies this boundary. The protected root `sw.js` remains unchanged.
 
 ## Pre-deploy capture
 

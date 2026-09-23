@@ -20,6 +20,10 @@ const javascript = (await Promise.all(scripts.map(name => readFile(new URL(`asse
 if (process.env.VITE_SB_LIVE_BACKEND === '1') {
   assert.match(javascript, /betaRoomCommand/, 'live canary bundle does not contain the Firebase command adapter');
   assert.match(javascript, /betaRoomStatus/, 'live canary bundle does not contain the room status callable');
+  assert.match(javascript, /service-worker-reload/, 'live bundle does not remove the root alpha service worker before Firebase starts');
+  if (process.env.VITE_SB_EMULATORS !== '1') {
+    assert.doesNotMatch(javascript, /demo-signal-bleed-beta|127\.0\.0\.1:9199|127\.0\.0\.1:9001|127\.0\.0\.1:5101/, 'production canary bundle contains emulator configuration');
+  }
 }
 
 for (const role of ['gm', 'play', 'present']) {

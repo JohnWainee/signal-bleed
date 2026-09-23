@@ -14,5 +14,5 @@ await cp(new URL('dist-beta/', root), output, { recursive: true });
 // Absolute redirect preserves every relative dependency of the existing reference.
 await mkdir(new URL('reference/gm/', output), { recursive: true });
 await writeFile(new URL('reference/gm/index.html', output), '<!doctype html><html lang="en"><meta charset="utf-8"><title>GM reference</title><meta http-equiv="refresh" content="0;url=/gm/"><a href="/gm/">Open GM reference</a></html>');
-const mode = process.env.VITE_SB_LIVE_BACKEND === '1' ? 'Live-backend canary' : 'Fixture';
+const mode = process.env.VITE_SB_EMULATORS === '1' ? 'Emulator rehearsal' : process.env.VITE_SB_LIVE_BACKEND === '1' ? 'Live-backend canary' : 'Fixture';
 console.log(`${mode} preview packaged at ${fileURLToPath(output)}. No deployment performed.`);

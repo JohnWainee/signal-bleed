@@ -13,6 +13,7 @@
     "test:e2e": "node tests/four-client-privacy.mjs",
     "build": "npm run typecheck && vite build --config vite.config.mjs",
     "package:preview": "npm run build && node package-preview.mjs && node verify-preview.mjs",
+    "package:rehearsal": "node package-rehearsal.mjs",
     "package:canary": "node package-canary.mjs",
     "verify:preview": "node verify-preview.mjs"
   },

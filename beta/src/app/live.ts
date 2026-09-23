@@ -26,17 +26,33 @@ const section = (id: string, className = '') => {
 };
 const inputField = (labelText: string, value = '', maxLength?: number) => {
   const label = el('label'); const text = el('span', labelText); const input = el('input');
-  input.value = value; if (maxLength) input.maxLength = maxLength; label.append(text, input); return { label, input };
+  input.value = value; input.dataset.focusKey = labelText; if (maxLength) input.maxLength = maxLength; label.append(text, input); return { label, input };
 };
 const textField = (labelText: string, value = '', maxLength?: number) => {
   const label = el('label'); const text = el('span', labelText); const input = el('textarea');
-  input.value = value; if (maxLength) input.maxLength = maxLength; label.append(text, input); return { label, input };
+  input.value = value; input.dataset.focusKey = labelText; if (maxLength) input.maxLength = maxLength; label.append(text, input); return { label, input };
 };
 const badge = (value: string, kind = '') => { const node = el('span', value); node.className = `badge ${kind}`.trim(); return node; };
+
+const leaveRootServiceWorkerScope = async () => {
+  if (!('serviceWorker' in navigator)) return;
+  const reloadKey = 'SB:beta:service-worker-reload';
+  const rootScope = `${location.origin}/`;
+  const registrations = (await navigator.serviceWorker.getRegistrations()).filter(registration => registration.scope === rootScope);
+  if (!registrations.length) { sessionStorage.removeItem(reloadKey); return; }
+  await Promise.all(registrations.map(registration => registration.unregister()));
+  if (navigator.serviceWorker.controller && sessionStorage.getItem(reloadKey) !== '1') {
+    sessionStorage.setItem(reloadKey, '1');
+    location.reload();
+    await new Promise<never>(() => {});
+  }
+  sessionStorage.removeItem(reloadKey);
+};
 
 export async function startLive() {
   if (!root || !surface) throw new Error('Unknown beta surface');
   if (!validId(roomId)) { root.textContent = 'Open this beta route with a valid ?room= identifier.'; return; }
+  await leaveRootServiceWorkerScope();
   const { uid, database, adapter, demo } = await bootstrapFirebase();
   const path = `betaRooms/v1/${roomId}`;
   const owner = await get(ref(database, `${path}/owner`)).then(snapshot => snapshot.val() === uid).catch(() => false);
@@ -165,14 +181,17 @@ export async function startLive() {
     if (!closed) {
       const compose = section('scene-composer', 'composer'); compose.heading.textContent = 'Compose the next scene';
       const title = inputField('Scene title', sceneDraft.title, 200); const body = textField('Scene body', sceneDraft.body, 2000);
-      title.input.addEventListener('input', () => { sceneDraft.title = title.input.value; sceneDraft.previewed = false; }); body.input.addEventListener('input', () => { sceneDraft.body = body.input.value; sceneDraft.previewed = false; }); compose.node.append(title.label, body.label);
+      title.input.addEventListener('input', () => { sceneDraft.title = title.input.value; sceneDraft.previewed = false; render(); }); body.input.addEventListener('input', () => { sceneDraft.body = body.input.value; sceneDraft.previewed = false; render(); }); compose.node.append(title.label, body.label);
       compose.node.append(button('Preview scene', () => {
         sceneDraft.title = title.input.value.trim(); sceneDraft.body = body.input.value.trim();
         if (!sceneDraft.title || !sceneDraft.body) { report('Add a scene title and body before previewing.'); return; } sceneDraft.previewed = true; render();
       }));
       if (sceneDraft.previewed) {
         const preview = el('div'); preview.className = 'scene preview'; preview.append(badge('PREVIEW · NOT PUBLISHED'), el('h3', sceneDraft.title), el('p', sceneDraft.body));
-        compose.node.append(preview, button('Publish previewed scene', () => run('Scene publication', { type: 'scene.publish', commandId: commandId(), expectedEpoch: scene?.epoch ?? 0, title: sceneDraft.title, body: sceneDraft.body }), 'primary'));
+        compose.node.append(preview, button('Publish previewed scene', () => {
+          if (!sceneDraft.previewed) { report('Preview the current scene text before publishing.'); return; }
+          run('Scene publication', { type: 'scene.publish', commandId: commandId(), expectedEpoch: scene?.epoch ?? 0, title: sceneDraft.title, body: sceneDraft.body });
+        }, 'primary'));
       }
       main.append(compose.node);
     }
@@ -188,7 +207,7 @@ export async function startLive() {
       const players = rosterEntries.filter(([, value]) => value.status === 'admitted' && value.role === 'player'); const prompt = section('private-prompt', 'composer'); prompt.heading.textContent = 'Send a private choice';
       if (!players.length) prompt.node.append(el('p', 'Admit a player before composing a private prompt.'));
       else {
-        const recipientLabel = el('label'); recipientLabel.append(el('span', 'Prompt recipient')); const recipient = el('select'); const empty = el('option', 'Choose an admitted player'); empty.value = ''; recipient.append(empty);
+        const recipientLabel = el('label'); recipientLabel.append(el('span', 'Prompt recipient')); const recipient = el('select'); recipient.dataset.focusKey = 'Prompt recipient'; const empty = el('option', 'Choose an admitted player'); empty.value = ''; recipient.append(empty);
         for (const [playerUid, player] of players) { const option = el('option', player.name); option.value = playerUid; recipient.append(option); } recipient.value = players.some(([id]) => id === promptDraft.recipientUid) ? promptDraft.recipientUid : ''; recipient.addEventListener('change', () => { promptDraft.recipientUid = recipient.value; }); recipientLabel.append(recipient);
         const question = textField('Question', promptDraft.question, 2000); const a = inputField('Choice A', promptDraft.a, 200); const b = inputField('Choice B', promptDraft.b, 200);
         question.input.addEventListener('input', () => { promptDraft.question = question.input.value; }); a.input.addEventListener('input', () => { promptDraft.a = a.input.value; }); b.input.addEventListener('input', () => { promptDraft.b = b.input.value; }); prompt.node.append(recipientLabel, question.label, a.label, b.label);
@@ -227,16 +246,27 @@ export async function startLive() {
   };
   const renderPresenter = (main: HTMLElement) => { main.append(renderScene(true)); };
   const render = () => {
-    if (!root) return; root.replaceChildren(); status.textContent = message; root.append(renderHeader()); if (accessLost) return;
+    if (!root) return;
+    const active = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement || document.activeElement instanceof HTMLSelectElement ? document.activeElement : null;
+    const focusKey = active?.dataset.focusKey;
+    const selection = active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement ? [active.selectionStart, active.selectionEnd] as const : null;
+    root.replaceChildren(); status.textContent = message; root.append(renderHeader());
+    const restoreFocus = () => {
+      if (!focusKey) return;
+      const replacement = [...root.querySelectorAll<HTMLElement>('[data-focus-key]')].find(node => node.dataset.focusKey === focusKey);
+      replacement?.focus();
+      if (selection && (replacement instanceof HTMLInputElement || replacement instanceof HTMLTextAreaElement)) replacement.setSelectionRange(selection[0], selection[1]);
+    };
+    if (accessLost) { restoreFocus(); return; }
     const pendingPanel = renderPending(); if (pendingPanel) { root.append(pendingPanel); return; }
     if (surface !== 'gm' && admission?.status !== 'admitted') {
       const main = el('main'); const join = section('join-room'); join.heading.textContent = surface === 'play' ? 'Join as a player' : 'Join as the presenter'; join.node.append(el('p', `Admission: ${admission?.status ?? 'not requested'}`));
       if (!admission || admission.status === 'denied' || admission.status === 'revoked') {
         const name = inputField('Display name', '', 200); join.node.append(name.label, button('Request admission', () => { const value = name.input.value.trim(); if (!value) { report('Enter a display name before requesting admission.'); return; } run('Admission request', { type: 'admission.request', commandId: commandId(), role: surface === 'play' ? 'player' : 'presenter', name: value }); }, 'primary'));
       }
-      main.append(join.node); root.append(main); return;
+      main.append(join.node); root.append(main); restoreFocus(); return;
     }
-    const main = el('main'); if (surface === 'gm') renderGm(main); else if (surface === 'play') renderPlayer(main); else renderPresenter(main); root.append(main);
+    const main = el('main'); if (surface === 'gm') renderGm(main); else if (surface === 'play') renderPlayer(main); else renderPresenter(main); root.append(main); restoreFocus();
   };
   if (owner || admission?.status === 'admitted' || admission?.status === 'pending') subscribe(); else connection = 'live';
   if (owner) void refreshStatus(); render();
