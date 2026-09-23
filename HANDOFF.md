@@ -48,6 +48,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (Codex app) — prepared the SB-08 canary release boundary without deploying it. Added deterministic fixture/canary packaging, artifact verification, App Check-key validation, live-adapter bundle checks, and `beta/RELEASE_RUNBOOK.md` with pre-deploy capture, fail-closed ordering, one-slot enrollment, stop conditions and rollback. Both fixture and live-backend packages pass; serving the canary artifact locally returned 200 for alpha plus all three `/beta/*` routes and 404 for HANDOFF/AGENTS, beta source and Firebase rules. PR #10 remains draft and green; independent exact-SHA review, physical device/screen-reader checks, protected deployment confirmation, production version capture, slot enrollment and App Check traffic remain open. No production state changed.
+**Branch:** `feat/beta-sb-05-07-m1-surfaces` — released for independent review and canary approval
+
 **Agent:** Codex (Codex app, cold pre-review pass) — audited M1 commit `87f5764` for security, correctness, portability and recovery behavior. Fixed two findings: revoked identities can now explicitly request re-admission after reload without immediately re-entering the access-loss subscription, and the pinned Playwright test no longer assumes macOS Chrome when `SB_CHROME_PATH` is absent. Added a revoked-reload regression and re-ran beta typecheck/build plus the expanded four-context browser/privacy suite successfully. Recorded the audit in `beta/reviews/SB-05-07-pre-review.md`. This same-runtime pass is not independent approval; PR #10 remains draft pending a different exact-SHA reviewer and physical-device/screen-reader checks. No production state changed.
 **Branch:** `feat/beta-sb-05-07-m1-surfaces` — released for independent review
 

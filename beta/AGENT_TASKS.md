@@ -69,7 +69,7 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 | SB-05 | GM control surface and presenter | B | SB-03 | DONE LOCALLY; responsive reviewed surface and E2E behavior pass; independent merge review pending |
 | SB-06 | Player prompts and persistent personal surface | C | SB-03 | DONE LOCALLY; private prompt/personal surface and E2E behavior pass; independent merge review pending |
 | SB-07 | Wire surfaces and prove four-client M1 | Integrator/reviewer | SB-04–06 | REVIEW; four-context M1/privacy/viewport suite passes; physical-device and independent review gates remain |
-| SB-08 | Preview packaging and release rehearsal | Integrator | SB-07 | WAIT |
+| SB-08 | Preview packaging and release rehearsal | Integrator | SB-07 | REVIEW; verified canary artifact and rollback runbook prepared; production capture/deploy and physical-device rehearsal pending |
 | SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | READY; Qwen attempt produced no accepted inventory |
 | SB-10 | Recover lifepath specification and content manifest | Content analyst | — | READY; implementation blocked on source |
 | SB-11 | Lifepath engine and character persistence | A/C sequentially | SB-07, SB-10 | WAIT |
