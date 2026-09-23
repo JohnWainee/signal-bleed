@@ -31,9 +31,9 @@ The horror uses existing mechanics rather than a new subsystem:
 
 Thresholds and sync windows justify Bleed advances; the arrival associated with a filled clock may land at reconciliation. The other levers refresh Signs, Symptoms, and d100 content for 2050 without changing the move engine.
 
-The crew investigates discrepancy claims for **[SUCCESSOR FIRM — NAME PENDING SPONSOR DECISION]**, a fictional successor to Halloran & Vey licensed in the fiction to cross thresholds and settle disputes between ledgers. They also have roots in a neighborhood verification network descended from the Watch tradition. The existing client/job/pay/deadline/wrong-detail case shape remains valid.
+The crew investigates discrepancy claims for **Interisland Claims & Adjustments**, a fictional successor to Halloran & Vey licensed in the fiction to cross thresholds and settle disputes between ledgers. They also have roots in a neighborhood verification network descended from the Watch tradition. The existing client/job/pay/deadline/wrong-detail case shape remains valid.
 
-The helpful channel voice currently called “Grandmother” remains **[CHANNEL VOICE — NAME PENDING SPONSOR DECISION]** in new 2050 material until the sponsor chooses a name. Existing case/rules text is compatibility content and must not be bulk-renamed before that choice is reviewed in context.
+In new 2050 material, the helpful channel voice is formally addressed as **Control**. People who have developed a familiar relationship with the voice may call her **Aunty**. “Aunty” is a relational name earned through repeated kindness and practical help, not the system's title or a generic supernatural label. Existing “Grandmother” case/rules text remains compatibility content and must not be bulk-renamed before those scenes are reviewed in context. The naming decision does not establish whether Grandmother and Control are ontologically one continuous voice.
 
 ## Path manifests and scenario dates
 
@@ -218,21 +218,16 @@ Do not implement these mechanics until the basic lifepath has completed an obser
 
 SB-09D targeted delivery/inbox and SB-09E editable minimal personal data should land before the complete SB-12 experience. They may proceed while the default content pack is authored.
 
-## Naming decisions held for sponsor discussion
+## Naming decisions
 
-These are deliberately unresolved and must not be filled by an implementation agent:
-
-1. Name of the fictional Halloran & Vey successor firm.
-2. New name/title for the helpful channel voice currently called Grandmother.
-
-The naming review should favor locally credible usage, avoid treating a sacred or genealogical title as horror decoration, distinguish Hawaiian-language meaning from Hawaiʻi local English, and verify any Hawaiian word with authoritative language sources and cultural context.
+The sponsor selected **Interisland Claims & Adjustments** for the Halloran & Vey successor. The helpful 2050 channel voice is **Control** in formal or operational speech and **Aunty** in familiar speech. Authors must preserve that register difference: an unfamiliar caller does not begin with “Aunty,” and the voice does not introduce herself that way.
 
 ## Remaining open authoring questions
 
 - What institutions and checkpoints exist on 2050 Oʻahu at case-writing depth?
 - Do Otty and Mrs. Ansel survive as elders, records, or neither?
 - What event skeleton defines the brittle 2030s–early 2040s?
-- Is the channel voice continuous across 2026 and 2050? Keep unstated until chosen.
+- Is Grandmother continuous with Control across 2026 and 2050? Keep unstated until chosen.
 - Full JIITG expansion, exact Sounding event, later factions, and cosmic ontology remain open.
 
-None of these blocks SB-11A/B when placeholder references and source-status fields are used. They do block canonical prose that claims a specific answer.
+None of these blocks SB-11A/B when source-status fields are used. They do block canonical prose that claims a specific answer.

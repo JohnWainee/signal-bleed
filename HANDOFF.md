@@ -48,6 +48,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (Codex app) — recorded the sponsor's naming decisions for the 2050 frame: Halloran & Vey's successor is **Interisland Claims & Adjustments**; the helpful channel voice is formally **Control** and familiarly **Aunty**. The documents distinguish an earned relational name from an operational title and leave the 2026 Grandmother/2050 Control continuity unresolved. Legacy case prose was not bulk-renamed. No runtime, protected file, deployment, or production data changed.
+**Branch:** `docs/beta-bib-1-2050-addendum` — canon-review update; stacked PR #12
+
 **Agent:** Codex (Codex app) — drafted the separate BIB-1 canonical addendum for the sponsor-accepted approximately 2045 Fragmentation and approximately 2050 default era. Added the informational-break definition, six threshold/sync/provisionality levers, new-generation default lifepath mapping, complete-path date gating, and the Adjuster/Watch-rooted session frame while keeping exact borders, institutions and cosmic explanations open. Existing Halloran & Vey and “Grandmother” text remains compatibility content; their 2050 successor names are explicitly pending sponsor discussion and were not bulk-renamed. Setting validation and HTML sanity pass. No runtime, protected file, deployment, or production data changed.
 **Branch:** `docs/beta-bib-1-2050-addendum` — released for canon review; stacked on SB-10 spec `fcb974f`
 

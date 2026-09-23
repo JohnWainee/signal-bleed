@@ -67,9 +67,9 @@ People have agency beyond their function in a crisis: family, work, disagreement
 
 Established institutional roles: emergency coordination and security; the fictional JIITG program; a Hawaiʻi observer cell; logistics and communications workers; community and household networks. Do not invent later named factions as previously approved canon.
 
-Adapted fictional supporting cast: Halloran & Vey is an investigative/loss-adjustment firm in earlier material; Otty keeps its records; Mrs. Ansel handles its fictional contract access. Default-era crews work discrepancy claims for a fictional successor whose name remains pending sponsor decision and also belong to a neighborhood verification network descended from the Watch tradition. Transpelagic and Halcyon Vitality are fictional contractors used in existing cases, not claims about real companies. Their personnel and premises are invented.
+Adapted fictional supporting cast: Halloran & Vey is an investigative/loss-adjustment firm in earlier material; Otty keeps its records; Mrs. Ansel handles its fictional contract access. Default-era crews work discrepancy claims for its fictional successor, **Interisland Claims & Adjustments**, and also belong to a neighborhood verification network descended from the Watch tradition. Transpelagic and Halcyon Vitality are fictional contractors used in existing cases, not claims about real companies. Their personnel and premises are invented.
 
-“Grandmother” remains the compatibility label for an unexplained helpful channel voice in existing material, not a specified cultural or religious figure. Its new default-era name/title remains pending sponsor decision. Do not bulk-rename either the firm or the voice until those choices are reviewed in their actual prose contexts.
+“Grandmother” remains the compatibility label for an unexplained helpful channel voice in existing material, not a specified cultural or religious figure. In new default-era material, callers formally address the helpful channel voice as **Control**; people who have developed a familiar relationship with her may call her **Aunty**. “Aunty” reflects repeated kindness and practical help rather than a formal title. Do not imply that every caller uses it, that the voice claims it for herself, or that the naming decision proves Grandmother and Control are one continuous entity. Review legacy scenes in context before renaming them.
 
 ## How the horror works at the table
 
@@ -94,7 +94,7 @@ Store scenario date, phase date, source/visibility of each branch record, recurr
 
 ## What is still open
 
-Exact calendar dates within the approximate 2045/2050 frame; Fragmentation-era borders, zones and surviving institutions; the successor-firm and channel-voice names; the 2030s–2040s event skeleton; full JIITG name; later factions; exact Sounding event; detailed lifepath content and numeric balance. These are specific unknowns, not reasons to restore the superseded setting.
+Exact calendar dates within the approximate 2045/2050 frame; Fragmentation-era borders, zones and surviving institutions; whether Grandmother and Control are one continuous voice; the 2030s–2040s event skeleton; full JIITG name; later factions; exact Sounding event; detailed lifepath content and numeric balance. These are specific unknowns, not reasons to restore the superseded setting.
 
 ## Real-world anchors and sources
 
