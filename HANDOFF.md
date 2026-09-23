@@ -48,6 +48,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (Codex app) — incorporated the approved Control/Aunty direction into canon and the beta mechanics contract. Control is the formal designation; Aunty is an earned relational address. Added her brittle-decades/Fragmentation footprint, voice and story guidance, the rule that immediate help materially works while consequences may be displaced, and playtest-gated separation between the Operator's once-per-session two-way Hail and Static move Call and Answer. Fresh-reader review caught and closed unlimited-call, move-overlap and infeasible-answer loopholes. No new favor/debt subsystem, cosmic explanation, legacy bulk rename, runtime, protected file, deployment or production data change.
+**Branch:** `docs/beta-bib-1-2050-addendum` — canon-review update; stacked PR #12
+
 **Agent:** Codex (Codex app) — recorded the sponsor's naming decisions for the 2050 frame: Halloran & Vey's successor is **Interisland Claims & Adjustments**; the helpful channel voice is formally **Control** and familiarly **Aunty**. The documents distinguish an earned relational name from an operational title and leave the 2026 Grandmother/2050 Control continuity unresolved. Legacy case prose was not bulk-renamed. No runtime, protected file, deployment, or production data changed.
 **Branch:** `docs/beta-bib-1-2050-addendum` — canon-review update; stacked PR #12
 

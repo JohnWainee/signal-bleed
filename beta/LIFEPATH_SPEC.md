@@ -8,7 +8,7 @@
 
 The Wayfinder decisions fix the default play era at approximately 2050, after an approximately 2045 Fragmentation. September 2026 remains the beginning of the alternate-history timeline and a legal earlier scenario date. The new-generation path is the default for 2050 play. LP-B, **The Name That Stayed**, remains an optional elder/earlier-era path rather than the default.
 
-This supersedes beta text that says the campaign-present year and Fragmentation date are wholly open. The corresponding canonical bible addendum still requires its own reviewed `/rules` change. Approximate dates are intentional; they do not authorize exact borders, factions, constitutional outcomes, or an explanation of the cosmic layer.
+This supersedes beta text that says the campaign-present year and Fragmentation date are wholly open. The canonical bible records the corresponding setting direction through its normal review path. Approximate dates are intentional; they do not authorize exact borders, factions, constitutional outcomes, or an explanation of the cosmic layer.
 
 No GM-hidden fact may redefine a PC's own established past. GM-only material may cover an NPC's motive, an unresolved outside cause, or a future callback, but cannot secretly revoke a disclosed consequence or playbook choice. This supersedes older prototype language about hidden personal-history hooks.
 
@@ -205,6 +205,20 @@ The 2050 reskin changes taglines and Dark Secret prompts, not existing stats, mo
 
 Do not implement these mechanics until the basic lifepath has completed an observed playtest and each proposal receives a balance review.
 
+### Control contact (playtest-gated)
+
+Control is available to the GM as a fictional delivery channel for concrete clues, access, warnings and offers of practical help. This does not require a new favor, debt or relationship subsystem. Her help works in the immediate situation and must materially inform a decision or make an otherwise unavailable option possible; the GM may reveal displaced consequences but cannot retroactively turn the answer into a lie, a trivial technicality or a useless trick.
+
+The Operator's proposed **The Hail** owns deliberate two-way contact:
+
+1. Once per session, the Operator may establish two-way contact with Control or another established channel voice. The call is answered unless prior fiction makes that voice unreachable; if it is unreachable, the use is not spent and the GM states the fictional barrier.
+2. The voice acknowledges the Operator and may converse as the fiction permits. The Hail does not compel an answer to a particular question. Any help the voice offers must be concrete and usable rather than a riddle.
+3. An answered use adds exactly one incoming-call tally, regardless of the conversation's length. An Operator can hold only one; The Hail is unavailable while it remains. The tally clears when spent or at the end of that Operator's next played session.
+4. The GM may spend a tally to place an incoming call at a consequential moment when an operative channel exists and the Operator can physically answer. Otherwise the tally remains unspent.
+5. The Operator must accept the connection and hear the opening; they never have to expose themselves, act on the call or obey.
+
+The existing Static move **Call and Answer** remains distinct: once per session it compels a truthful answer to one direct question. The Hail guarantees contact, not an answer to a question; Call and Answer guarantees the answer. Balance review must test tally pacing, whether “must answer” preserves meaningful choice, and whether the two moves remain distinct in play.
+
 ## Implementation sequence
 
 1. **SB-11A:** pure schema/types, validator, malformed/oversized fixtures, and content-pack completeness checks.
@@ -220,7 +234,7 @@ SB-09D targeted delivery/inbox and SB-09E editable minimal personal data should 
 
 ## Naming decisions
 
-The sponsor selected **Interisland Claims & Adjustments** for the Halloran & Vey successor. The helpful 2050 channel voice is **Control** in formal or operational speech and **Aunty** in familiar speech. Authors must preserve that register difference: an unfamiliar caller does not begin with “Aunty,” and the voice does not introduce herself that way.
+The sponsor selected **Interisland Claims & Adjustments** for the Halloran & Vey successor. The helpful 2050 channel voice is **Control** in formal or operational speech and **Aunty** in familiar speech. Authors must preserve that register difference: an unfamiliar caller does not begin with “Aunty,” and the voice does not introduce herself that way. Aunty is an earned relationship signaled through play, not a mechanical tier or automatic reward.
 
 ## Remaining open authoring questions
 

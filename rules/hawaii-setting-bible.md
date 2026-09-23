@@ -71,6 +71,21 @@ Adapted fictional supporting cast: Halloran & Vey is an investigative/loss-adjus
 
 “Grandmother” remains the compatibility label for an unexplained helpful channel voice in existing material, not a specified cultural or religious figure. In new default-era material, callers formally address the helpful channel voice as **Control**; people who have developed a familiar relationship with her may call her **Aunty**. “Aunty” reflects repeated kindness and practical help rather than a formal title. Do not imply that every caller uses it, that the voice claims it for herself, or that the naming decision proves Grandmother and Control are one continuous entity. Review legacy scenes in context before renaming them.
 
+## Control and Aunty
+
+Control was heard across emergency, maintenance and routing channels during the brittle decades. During the Fragmentation, her directions got people through checkpoints, restored ordinary infrastructure, located missing supplies and reconciled people whom official systems had lost. Some operators and neighborhoods came to call her Aunty. Surviving records do not agree on who used the name first, and a few place it earlier than Control's documented operation. Treat those early references as deliberate record discrepancies; do not supply a canonical correction.
+
+The difference in address carries story information:
+
+- **Control** is the operational designation used by institutions, unfamiliar callers and formal records.
+- **Aunty** expresses an established relationship. She never introduces herself by that name or asks anyone to use it.
+- A speaker who uses Aunty has received or witnessed her help, remembers a history others do not, or is claiming a familiarity worth investigating.
+- A character's first sincere shift from Control to Aunty should be treated as a relationship beat, not a vocabulary correction.
+
+Play her as calm, concise, kind and practical. Do not use riddles, threats, theatrical distortion or exaggerated local speech. She remembers names, obligations and small personal needs. Her unsettling qualities are impossible timing, knowledge and authority, not a sinister performance.
+
+Control does not knowingly lie, and help attributed to her must work in the immediate situation described. Useful help materially informs a decision or makes an otherwise unavailable option possible; a trivial technical truth is not enough. Her answer may be partial, belong to a branch that is changing, or produce consequences elsewhere; do not retroactively make the offered help false or useless. A working intervention can reveal a displaced cost without converting every success into punishment. Whether she predicts outcomes, selects among them, causes them, cares in a human sense, or is one stable speaker rather than several voices sharing a designation remains unresolved. Feminine pronouns describe how the recurring voice is presented, not a settled ontology.
+
 ## How the horror works at the table
 
 - Show a record, a person, a time and a discrepancy. Avoid explaining the cosmic layer.
@@ -78,6 +93,7 @@ Adapted fictional supporting cast: Halloran & Vey is an investigative/loss-adjus
 - Once a fact is established through play, do not silently erase it to make the GM's preferred future occur.
 - An intervention can work locally while shifting costs elsewhere. Show evidence of the displacement; do not make every success meaningless.
 - Helpful voices and practical assistance may remain genuinely helpful. The old blanket rule that every forecast/help is globally correct no longer applies.
+- When Control helps, let the help work; reveal what else the working changed.
 - Keep the **Theorize** engine: the table determines case truths through play. That does not rewrite the approved setting chronology or force an answer to what The Sounding is.
 
 ## Rules continuity
