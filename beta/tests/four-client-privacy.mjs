@@ -1,12 +1,15 @@
 // Run only against the isolated demo emulators and local Vite server.
 // Set SB_PLAYWRIGHT_MODULE to an absolute Playwright index.mjs if not installed locally.
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
 
 const modulePath = process.env.SB_PLAYWRIGHT_MODULE || 'playwright';
 const { chromium } = await import(modulePath);
 const base = 'http://127.0.0.1:5173';
 const room = `Privacy${Date.now()}`;
-const browser = await chromium.launch({ headless: true, executablePath: process.env.SB_CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' });
+const macChrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const executablePath = process.env.SB_CHROME_PATH || (existsSync(macChrome) ? macChrome : undefined);
+const browser = await chromium.launch({ headless: true, ...(executablePath ? { executablePath } : {}) });
 const clients = {};
 try {
   const viewports = { gm: { width: 1024, height: 768 }, p1: { width: 390, height: 844 }, p2: { width: 360, height: 800 }, presenter: { width: 1920, height: 1080 } };
@@ -116,6 +119,9 @@ try {
   await gm.locator('article.roster-row').filter({ hasText: 'P1' }).getByRole('button', { name: 'Revoke' }).click();
   await p1.getByText('Private views cleared.').waitFor();
   assert.doesNotMatch(await p1.locator('#app').innerText(), /ONLY_PLAYER_ONE/);
+  await p1.reload();
+  await p1.getByText('Admission: revoked').waitFor();
+  await p1.getByRole('button', { name: 'Request admission' }).waitFor();
   gm.once('dialog', dialog => dialog.accept());
   await gm.getByRole('button', { name: 'Close room (read-only)' }).click();
   await gm.getByText('Room closed. Existing records are read-only.').waitFor();

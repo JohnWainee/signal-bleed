@@ -231,14 +231,14 @@ export async function startLive() {
     const pendingPanel = renderPending(); if (pendingPanel) { root.append(pendingPanel); return; }
     if (surface !== 'gm' && admission?.status !== 'admitted') {
       const main = el('main'); const join = section('join-room'); join.heading.textContent = surface === 'play' ? 'Join as a player' : 'Join as the presenter'; join.node.append(el('p', `Admission: ${admission?.status ?? 'not requested'}`));
-      if (!admission || admission.status === 'denied') {
+      if (!admission || admission.status === 'denied' || admission.status === 'revoked') {
         const name = inputField('Display name', '', 200); join.node.append(name.label, button('Request admission', () => { const value = name.input.value.trim(); if (!value) { report('Enter a display name before requesting admission.'); return; } run('Admission request', { type: 'admission.request', commandId: commandId(), role: surface === 'play' ? 'player' : 'presenter', name: value }); }, 'primary'));
       }
       main.append(join.node); root.append(main); return;
     }
     const main = el('main'); if (surface === 'gm') renderGm(main); else if (surface === 'play') renderPlayer(main); else renderPresenter(main); root.append(main);
   };
-  if (owner || admission) subscribe(); else connection = 'live';
+  if (owner || admission?.status === 'admitted' || admission?.status === 'pending') subscribe(); else connection = 'live';
   if (owner) void refreshStatus(); render();
   window.addEventListener('pagehide', () => { stop?.(); adapter.dispose(); }, { once: true });
 }
