@@ -10,10 +10,12 @@
     "dev": "vite --config vite.config.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test:adapter": "node --experimental-strip-types --test tests/firebase-adapter.test.mjs",
+    "test:e2e": "node tests/four-client-privacy.mjs",
     "build": "npm run typecheck && vite build --config vite.config.mjs",
     "package:preview": "npm run build && node package-preview.mjs"
   },
   "devDependencies": {
+    "playwright": "^1.63.0",
     "typescript": "6.0.2",
     "vite": "8.3.0"
   },

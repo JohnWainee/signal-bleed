@@ -9,8 +9,9 @@ const room = `Privacy${Date.now()}`;
 const browser = await chromium.launch({ headless: true, executablePath: process.env.SB_CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' });
 const clients = {};
 try {
+  const viewports = { gm: { width: 1024, height: 768 }, p1: { width: 390, height: 844 }, p2: { width: 360, height: 800 }, presenter: { width: 1920, height: 1080 } };
   for (const role of ['gm', 'p1', 'p2', 'presenter']) {
-    const context = await browser.newContext();
+    const context = await browser.newContext({ viewport: viewports[role], reducedMotion: role === 'presenter' ? 'reduce' : 'no-preference' });
     const page = await context.newPage();
     const cdp = await context.newCDPSession(page);
     await cdp.send('Network.enable');
@@ -32,7 +33,7 @@ try {
     await page.goto(`${base}/beta/${path}/?room=${room}`);
     await page.getByText('Local emulator beta', { exact: false }).waitFor();
   };
-  const uid = async page => (await page.locator('#app > p').first().textContent()).match(/identity ([A-Za-z0-9_-]+)/)?.[1];
+  const uid = page => page.locator('.room-line').getAttribute('data-identity');
   await open(gm, 'gm');
   await gm.getByRole('button', { name: 'Create this room' }).click();
   await gm.getByRole('heading', { name: 'Admissions' }).waitFor();
@@ -41,7 +42,7 @@ try {
     await page.getByLabel('Display name').fill(name);
     await page.getByRole('button', { name: 'Request admission' }).click();
     await page.getByText('Admission: pending').waitFor();
-    await gm.locator('p').filter({ hasText: `${name} ·` }).getByRole('button', { name: 'Admit' }).click();
+    await gm.locator('article.roster-row').filter({ hasText: name }).getByRole('button', { name: 'Admit' }).click();
     await page.getByText('Admission: pending').waitFor({ state: 'hidden' });
   }
   const p1Uid = await uid(p1);
@@ -58,20 +59,34 @@ try {
   await gm.evaluate(([key, command]) => sessionStorage.setItem(key, JSON.stringify({ label: 'Scene publication', command })), [pendingKey, sceneCommand]);
   await gm.reload();
   await gm.getByRole('button', { name: 'Retry exact pending command' }).click();
-  await gm.getByText('Saved.').waitFor();
+  await gm.getByText('Saved and confirmed.').waitFor();
   for (const page of [gm, p1, p2, presenter]) await page.getByRole('heading', { name: 'PUBLIC_SCENE' }).waitFor();
+  assert.doesNotMatch(await presenter.locator('#app').innerText(), /identity [A-Za-z0-9_-]+/, 'presenter DOM exposed a participant identifier');
+  await gm.getByLabel('Scene title').fill('PUBLIC_SCENE_NEXT');
+  await gm.getByLabel('Scene body').fill('PUBLIC_BODY_NEXT');
+  await gm.getByRole('button', { name: 'Preview scene' }).click();
+  await gm.getByText('PREVIEW · NOT PUBLISHED').waitFor();
+  assert.doesNotMatch(await presenter.locator('#app').innerText(), /PUBLIC_SCENE_NEXT/, 'presenter received an unpublished preview');
+  await gm.getByRole('button', { name: 'Publish previewed scene' }).click();
+  for (const page of [gm, p1, p2, presenter]) await page.getByRole('heading', { name: 'PUBLIC_SCENE_NEXT' }).waitFor();
   const send = async (recipient, marker) => {
-    await gm.getByLabel('Player UID').fill(recipient);
+    await gm.getByLabel('Prompt recipient').selectOption(recipient);
     await gm.getByLabel('Question').fill(marker);
     await gm.getByLabel('Choice A').fill('Choice A');
     await gm.getByLabel('Choice B').fill('Choice B');
     await gm.getByRole('button', { name: 'Send private prompt' }).click();
-    await gm.getByText(`${recipient}: ${marker}`, { exact: false }).waitFor();
+    await gm.locator('article.response-row').filter({ hasText: marker }).waitFor();
   };
   await send(p1Uid, 'ONLY_PLAYER_ONE');
   await send(p2Uid, 'ONLY_PLAYER_TWO');
   await p1.getByText('ONLY_PLAYER_ONE').waitFor();
   await p2.getByText('ONLY_PLAYER_TWO').waitFor();
+  for (const [role, page] of [['gm', gm], ['p1', p1], ['p2', p2], ['presenter', presenter]]) {
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), true, `${role} viewport has horizontal overflow`);
+  }
+  for (const control of [p1.getByRole('button', { name: 'A · Choice A' }), gm.getByRole('button', { name: 'Send private prompt' })]) {
+    const box = await control.boundingBox(); assert.ok(box && box.height >= 44 && box.width >= 44, 'interactive target is smaller than 44 × 44 CSS pixels');
+  }
   assert.doesNotMatch(await p1.locator('#app').innerText(), /ONLY_PLAYER_TWO/);
   assert.doesNotMatch(await p2.locator('#app').innerText(), /ONLY_PLAYER_ONE/);
   assert.doesNotMatch(await presenter.locator('#app').innerText(), /ONLY_PLAYER_ONE|ONLY_PLAYER_TWO/);
@@ -81,9 +96,24 @@ try {
     for (const marker of required.split('|')) assert.match(frames, new RegExp(marker), `${role} capture missed authorized marker ${marker}`);
     if (forbidden) assert.doesNotMatch(frames, new RegExp(forbidden), `${role} received another role's private marker`);
   }
-  await p1.getByRole('button', { name: 'A: Choice A' }).click();
-  await gm.getByText(`${p1Uid}: ONLY_PLAYER_ONE · A`).waitFor();
-  await gm.locator('p').filter({ hasText: `P1 · player · admitted · ${p1Uid}` }).getByRole('button', { name: 'Revoke' }).click();
+  await p2.reload();
+  await p2.getByText('ONLY_PLAYER_TWO').waitFor();
+  await Promise.all([
+    p1.getByRole('button', { name: 'A · Choice A' }).click(),
+    p2.getByRole('button', { name: 'B · Choice B' }).click(),
+  ]);
+  await gm.locator('article.response-row').filter({ hasText: 'ONLY_PLAYER_ONE' }).getByText('Answered A').waitFor();
+  await gm.locator('article.response-row').filter({ hasText: 'ONLY_PLAYER_TWO' }).getByText('Answered B').waitFor();
+  await send(p2Uid, 'STALE_PLAYER_TWO');
+  await p2.getByText('STALE_PLAYER_TWO').waitFor();
+  await gm.getByLabel('Scene title').fill('PUBLIC_SCENE_FINAL');
+  await gm.getByLabel('Scene body').fill('PUBLIC_BODY_FINAL');
+  await gm.getByRole('button', { name: 'Preview scene' }).click();
+  await gm.getByRole('button', { name: 'Publish previewed scene' }).click();
+  await p2.getByRole('heading', { name: 'PUBLIC_SCENE_FINAL' }).waitFor();
+  await p2.locator('article.decision').filter({ hasText: 'STALE_PLAYER_TWO' }).getByText('Expired').waitFor();
+  assert.equal(await p2.locator('article.decision').filter({ hasText: 'STALE_PLAYER_TWO' }).getByRole('button').count(), 0);
+  await gm.locator('article.roster-row').filter({ hasText: 'P1' }).getByRole('button', { name: 'Revoke' }).click();
   await p1.getByText('Private views cleared.').waitFor();
   assert.doesNotMatch(await p1.locator('#app').innerText(), /ONLY_PLAYER_ONE/);
   gm.once('dialog', dialog => dialog.accept());
@@ -91,15 +121,15 @@ try {
   await gm.getByText('Room closed. Existing records are read-only.').waitFor();
   await gm.reload();
   await gm.getByText('Room closed. Existing scene and private views remain readable; new commands are disabled.').waitFor();
-  assert.equal(await gm.getByRole('button', { name: 'Publish scene' }).count(), 0);
+  assert.equal(await gm.getByRole('button', { name: 'Publish previewed scene' }).count(), 0);
   assert.equal(await gm.getByRole('button', { name: 'Close room (read-only)' }).count(), 0);
   // Closed rooms stay read-only, not hidden: the roster remains visible without admit/revoke controls.
   await gm.getByRole('heading', { name: 'Admissions' }).waitFor();
-  await gm.getByText(`P2 · player · admitted · ${p2Uid}`).waitFor();
-  assert.equal(await gm.locator('p').filter({ hasText: `P2 · player · admitted · ${p2Uid}` }).getByRole('button').count(), 0);
+  await gm.locator('article.roster-row').filter({ hasText: `P2` }).getByText(`Identity ${p2Uid}`).waitFor();
+  assert.equal(await gm.locator('article.roster-row').filter({ hasText: `P2` }).getByRole('button').count(), 0);
   // The room.close receipt reaches every admitted member through their own admission record, without a reload or a failed submit attempt first.
   await p2.getByText('Room closed. Existing records are read-only.').waitFor();
-  assert.equal(await p2.getByRole('button', { name: 'A: Choice A' }).count(), 0);
+  assert.equal(await p2.getByRole('button', { name: 'A · Choice A' }).count(), 0);
   console.log(`PASS four-client UI and RTDB inbound privacy: ${room}; all four identities simultaneously admitted before prompt delivery`);
 } finally {
   await browser.close();

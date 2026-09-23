@@ -66,9 +66,9 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 | SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | DONE; live Cloudflare topology verified as Workers Static Assets, with beta kept out of production |
 | SB-03 | Typed session model and mock adapter | A | SB-02 | DONE; independent review, eleven contract tests, package and PR checks pass |
 | SB-04 | Firebase authorization and realtime adapter | A | SB-03 | ACCEPTED FOR MERGE; exact-SHA review and local gates pass; production canary gates remain |
-| SB-05 | GM control surface and presenter | B | SB-03 | READY |
-| SB-06 | Player prompts and persistent personal surface | C | SB-03 | READY |
-| SB-07 | Wire surfaces and prove four-client M1 | Integrator/reviewer | SB-04–06 | WAIT |
+| SB-05 | GM control surface and presenter | B | SB-03 | DONE LOCALLY; responsive reviewed surface and E2E behavior pass; independent merge review pending |
+| SB-06 | Player prompts and persistent personal surface | C | SB-03 | DONE LOCALLY; private prompt/personal surface and E2E behavior pass; independent merge review pending |
+| SB-07 | Wire surfaces and prove four-client M1 | Integrator/reviewer | SB-04–06 | REVIEW; four-context M1/privacy/viewport suite passes; physical-device and independent review gates remain |
 | SB-08 | Preview packaging and release rehearsal | Integrator | SB-07 | WAIT |
 | SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | READY; Qwen attempt produced no accepted inventory |
 | SB-10 | Recover lifepath specification and content manifest | Content analyst | — | READY; implementation blocked on source |
