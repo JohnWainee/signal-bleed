@@ -29,8 +29,11 @@ test('room, admission, scene, concurrent answers and receipts commit atomically'
   success(await send('gm1', { type: 'clue.create', commandId: 'clueCreate1', expectedRevision: 0, clueId: 'clue1', text: 'GM_STAGED_ONLY' }));
   assert.equal((await getRoom()).gm.board.clues[0].text, 'GM_STAGED_ONLY');
   assert.equal((await getRoom()).shared.board.clues, undefined);
+  assert.equal((await getRoom()).shared.board.revision, 0, 'hidden staging must not change public revision metadata');
   success(await send('gm1', { type: 'clue.update', commandId: 'clueReveal1', expectedRevision: 1, clueId: 'clue1', text: 'Public one', state: 'active' }));
+  assert.equal((await getRoom()).shared.board.revision, 1);
   success(await send('gm1', { type: 'clue.create', commandId: 'clueCreate2', expectedRevision: 2, clueId: 'clue2', text: 'Second' }));
+  assert.equal((await getRoom()).shared.board.revision, 1, 'a second hidden clue must not advance the public revision');
   success(await send('gm1', { type: 'clue.update', commandId: 'clueReveal2', expectedRevision: 3, clueId: 'clue2', text: 'Public two', state: 'woven' }));
   success(await send('gm1', { type: 'clue.move', commandId: 'clueMove', expectedRevision: 4, clueId: 'clue2', direction: 'up' }));
   success(await send('gm1', { type: 'clock.bleed.set', commandId: 'bleedSet', expectedRevision: 5, value: 3 }));
