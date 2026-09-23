@@ -65,7 +65,7 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 | SB-01 | Reconcile beta instructions and freeze contracts | A + integrator | SB-00 | DONE; contract v1 reviewed |
 | SB-02 | Vite/TypeScript scaffold and build packaging | Integrator | SB-01 | DONE; live Cloudflare topology verified as Workers Static Assets, with beta kept out of production |
 | SB-03 | Typed session model and mock adapter | A | SB-02 | DONE; independent review, eleven contract tests, package and PR checks pass |
-| SB-04 | Firebase authorization and realtime adapter | A | SB-03 | READY; protected rules change requires AGENTS confirmation |
+| SB-04 | Firebase authorization and realtime adapter | A | SB-03 | ACCEPTED FOR MERGE; exact-SHA review and local gates pass; production canary gates remain |
 | SB-05 | GM control surface and presenter | B | SB-03 | READY |
 | SB-06 | Player prompts and persistent personal surface | C | SB-03 | READY |
 | SB-07 | Wire surfaces and prove four-client M1 | Integrator/reviewer | SB-04–06 | WAIT |

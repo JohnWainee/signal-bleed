@@ -1,0 +1,23 @@
+{
+  "name": "signal-bleed-beta-backend",
+  "private": true,
+  "version": "0.1.0",
+  "main": "index.mjs",
+  "type": "module",
+  "engines": { "node": "22" },
+  "scripts": {
+    "test:rules": "node --test test/rules.test.mjs",
+    "test:command": "node --test test/command.test.mjs",
+    "test:slots": "node --test test/slots.test.mjs",
+    "emulator:test": "SB_BETA_TEST_OPEN_SLOTS=1 firebase emulators:exec --only auth,database,functions --project demo-signal-bleed-beta --config firebase.json 'npm run test:slots && npm run test:rules && npm run test:command && npm --prefix .. run test:adapter'"
+  },
+  "dependencies": {
+    "firebase-admin": "14.4.0",
+    "firebase-functions": "7.4.0"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "5.0.2",
+    "firebase": "12.19.0",
+    "firebase-tools": "15.30.2"
+  }
+}

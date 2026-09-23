@@ -2,6 +2,13 @@ import '../ui/base.css';
 import { fixtureSnapshot } from '../data/scaffold-fixture.ts';
 import type { Surface, FixtureStatus } from '../data/scaffold-fixture.ts';
 
+if (import.meta.env.VITE_SB_LIVE_BACKEND === '1') {
+  void import('./live.ts').then(({ startLive }) => startLive()).catch(error => {
+    const root = document.querySelector('#app');
+    if (root) root.textContent = `Beta connection unavailable: ${error instanceof Error ? error.message : 'unknown error'}`;
+  });
+} else {
+
 const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) throw new Error('Missing app root');
 const root = app;
@@ -74,3 +81,4 @@ function render() {
   footer.append(reference); root.append(footer);
 }
 render();
+}

@@ -11,12 +11,12 @@
           ".write": "!data.exists() || root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid"
         },
         "gm": {
-          ".read":  "root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid",
+          ".read": "root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid",
           ".write": "root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid"
         },
         "players": {
           "$uid": {
-            ".read":  "auth.uid === $uid || root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid",
+            ".read": "auth.uid === $uid || root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid",
             ".write": "auth.uid === $uid || root.child('rooms').child($roomId).child('meta/gmUid').val() === auth.uid"
           }
         }

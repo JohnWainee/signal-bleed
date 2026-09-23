@@ -1,4 +1,6 @@
 node_modules/
+firebase-debug.log
+database-debug.log
 .DS_Store
 
 dist-beta/
