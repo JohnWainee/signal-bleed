@@ -10,6 +10,8 @@ declare global {
 }
 
 const demo = import.meta.env.VITE_SB_EMULATORS === '1';
+const emulatorHost = import.meta.env.VITE_SB_EMULATOR_HOST || '127.0.0.1';
+const privateEmulatorHost = /^(?:localhost|127\.0\.0\.1|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})$/.test(emulatorHost);
 const demoConfig: FirebaseOptions = {
   apiKey: 'fake-api-key', authDomain: 'demo-signal-bleed-beta.firebaseapp.com',
   databaseURL: 'https://demo-signal-bleed-beta-default-rtdb.firebaseio.com',
@@ -18,7 +20,7 @@ const demoConfig: FirebaseOptions = {
 
 export async function bootstrapFirebase() {
   if (import.meta.env.VITE_SB_LIVE_BACKEND !== '1') throw new Error('Live beta backend is not enabled in this build');
-  if (demo && !['localhost', '127.0.0.1'].includes(location.hostname)) throw new Error('Emulator mode is local-only');
+  if (demo && (!privateEmulatorHost || location.hostname !== emulatorHost)) throw new Error('Emulator mode is limited to its explicit local-network host');
   const config = demo ? demoConfig : window.SB_FIREBASE_CONFIG;
   if (!config || (demo ? config.projectId !== 'demo-signal-bleed-beta' : config.projectId !== 'signal-bleed')) {
     throw new Error('Missing or unexpected Firebase project configuration');
@@ -36,9 +38,9 @@ export async function bootstrapFirebase() {
   const database = getDatabase(app);
   const functions = getFunctions(app, 'us-central1');
   if (demo) {
-    connectAuthEmulator(auth, 'http://127.0.0.1:9199', { disableWarnings: true });
-    connectDatabaseEmulator(database, '127.0.0.1', 9001);
-    connectFunctionsEmulator(functions, '127.0.0.1', 5101);
+    connectAuthEmulator(auth, `http://${emulatorHost}:9199`, { disableWarnings: true });
+    connectDatabaseEmulator(database, emulatorHost, 9001);
+    connectFunctionsEmulator(functions, emulatorHost, 5101);
   }
   const credential = auth.currentUser ?? (await signInAnonymously(auth)).user;
   return { uid: credential.uid, database, adapter: new FirebaseSessionAdapter(auth, database, functions), demo };

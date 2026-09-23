@@ -8,7 +8,7 @@
 
 No critical or major issue was found in the implemented M1 flow. Native labels and controls, semantic headings/sections, polite status announcements, visible focus, 48 px controls, reduced-motion handling, safe `textContent` rendering, and responsive layouts are present. Automated browser coverage verifies 44 × 44 px minimum targets and no horizontal overflow at 360 × 800, 390 × 844, 1024 × 768, and 1920 × 1080.
 
-The remaining limitation is manual verification: desktop browser inspection is not a physical iPad/phone/TV test, and VoiceOver/NVDA behavior has not been recorded. Those are SB-08 canary rehearsal gates rather than claims made here.
+A local emulator-backed physical rehearsal passed on an iPad GM, phone player, and 16:9 presenter display. VoiceOver/NVDA, a keyboard-only manual flow, 200% zoom, and a second physical player were not exercised and remain open gates.
 
 ## WCAG checks
 
@@ -34,7 +34,17 @@ The remaining limitation is manual verification: desktop browser inspection is n
 
 ## SB-08 manual checks
 
-- Keyboard-only pass through create/join, preview/publish, admission, prompt, answer, retry, revoke and close flows.
-- VoiceOver on iPad/iPhone or macOS Safari; confirm live status announcements are useful and not repetitive.
-- 200% browser zoom and landscape/portrait rotation.
-- Physical 16:9 display readability at table distance.
+Record device model, OS/browser version, tester, date, and pass/fail notes for each row. A desktop viewport emulation is not a substitute for these checks.
+
+- [x] iPad GM: created and closed an emulator-only room; admitted a physical phone and presenter; previewed/published a scene; sent a targeted prompt; inspected the answer; revoked and re-admitted the presenter. Portrait/landscape controls and status states remained usable. A second physical player/concurrent physical answer was not available; the separate four-context browser test covers that behavior.
+- [x] Phone player: requested admission, received and answered a private prompt, refreshed, rotated, disconnected/reconnected networking, and retained the confirmed/read-only state without presenter leakage. The first device attempt exposed `crypto.randomUUID()` being unavailable on LAN HTTP; the `getRandomValues()` fallback fixed it and the repeated physical flow passed.
+- [x] Physical 16:9 display: joined as presenter, cleared immediately on revocation (user-supplied screenshot), rejoined as a fresh presenter, and recovered the current public scene without private prompt/answer content or clipping.
+- [ ] Keyboard-only: complete create/join, admission, preview/publish, prompt, answer, retry, revoke, and close flows without a pointer. Confirm logical focus order, visible focus, and focus restoration after live updates.
+- [ ] Screen reader: with VoiceOver on iPad/iPhone or macOS Safari (or NVDA on Windows), complete join/admission, scene update, private prompt/answer, disconnect/reconnect, revocation, and room closure. Confirm names/roles/states are announced once, status messages are useful rather than repetitive, and cleared private views are no longer navigable.
+- [ ] Zoom/reflow: repeat the active surface at 200% browser zoom and after portrait/landscape rotation; confirm no loss of content or two-dimensional scrolling.
+
+Leave a row open if the required hardware, assistive technology, or full flow was not actually exercised. Attach screenshots or short recordings only when they do not expose private room data.
+
+### Physical rehearsal record — 2026-09-22 HST
+
+The operator used available iPad, phone, and 16:9 display hardware against the isolated `demo-signal-bleed-beta` Auth/RTDB/Functions emulators on a private LAN. Exact device models and OS/browser versions were not recorded, so this evidence is limited to the device classes and behaviors above. The header visibly identified the environment as `Local emulator beta · no production connection`; no production Firebase service, App Check enforcement, slot, Worker traffic, or deployment changed.

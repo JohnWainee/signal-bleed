@@ -12,7 +12,11 @@ const route = document.body.dataset.surface;
 const surface: Surface | null = route === 'gm' || route === 'play' || route === 'present' ? route : null;
 const roomId = new URLSearchParams(location.search).get('room') ?? '';
 const validId = (value: string) => /^[A-Za-z0-9_-]{1,128}$/.test(value) && !['__proto__', 'prototype', 'constructor'].includes(value);
-const commandId = () => crypto.randomUUID().replaceAll('-', '');
+const commandId = () => {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID().replaceAll('-', '');
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+};
 const el = <K extends keyof HTMLElementTagNameMap>(tag: K, value = ''): HTMLElementTagNameMap[K] => {
   const node = document.createElement(tag); node.textContent = value; return node;
 };

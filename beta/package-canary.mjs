@@ -6,11 +6,12 @@ if (!siteKey || siteKey.length < 20) {
 }
 process.env.VITE_SB_LIVE_BACKEND = '1';
 process.env.VITE_SB_EMULATORS = '0';
+process.env.VITE_SB_EMULATOR_HOST = '';
 
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const build = spawnSync(npm, ['run', 'build'], {
   stdio: 'inherit',
-  env: { ...process.env, VITE_SB_LIVE_BACKEND: '1', VITE_SB_EMULATORS: '0' },
+  env: { ...process.env, VITE_SB_LIVE_BACKEND: '1', VITE_SB_EMULATORS: '0', VITE_SB_EMULATOR_HOST: '' },
 });
 if (build.status !== 0) process.exit(build.status ?? 1);
 
