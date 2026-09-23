@@ -5,7 +5,7 @@ Re-fetch branch state before starting; this document does not freeze future repo
 
 ## Setting authority
 
-The user replaced the former archipelago across Signal Bleed with **Hawaiʻi — Emergency Republic**. Read `rules/hawaii-setting-bible.md` before implementing content. Preserve September Compression (2026), Branch Event One (2027), Observer Trials (2028–2029), 2030 displacement and an undated later fragmentation. No invented campaign-present year. Date-gate lifepaths and fixtures. The first path is now a later-start Hawaiʻi example, still a proposal.
+The user replaced the former archipelago across Signal Bleed with **Hawaiʻi — Emergency Republic**. Read `rules/hawaii-setting-bible.md` and `beta/LIFEPATH_SPEC.md` before implementing content. Preserve September Compression (2026), Branch Event One (2027), Observer Trials (2028–2029), 2030 displacement, the approximately 2045 Fragmentation, and approximately 2050 default play era. Those later dates are accepted design direction pending a reviewed canonical bible addendum; do not invent exact borders, factions, constitutional outcomes, or cosmic explanations. Date-gate complete path manifests and fixtures. LP-B is an optional elder/earlier-era path, not the default.
 
 ## Goal and first milestone
 
@@ -71,8 +71,8 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 | SB-07 | Wire surfaces and prove four-client M1 | Integrator/reviewer | SB-04–06 | REVIEW; independent automated review, full browser/privacy scenario, and physical iPad/phone/16:9 rehearsal pass; reported VoiceOver-session crash is undiagnosed and deferred |
 | SB-08 | Preview packaging and release rehearsal | Integrator | SB-07 | REVIEW; independently reviewed rehearsal/canary boundary, rollback runbook, and physical-device rehearsal pass; protected production capture/deploy, App Check traffic, rollback evidence, and manual accessibility gates remain |
 | SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | INCREMENTAL; docs complete and SB-09B ordered clues + Bleed implemented/tested; independent review remains before acceptance |
-| SB-10 | Recover lifepath specification and content manifest | Content analyst | — | READY; implementation blocked on source |
-| SB-11 | Lifepath engine and character persistence | A/C sequentially | SB-07, SB-10 | WAIT |
+| SB-10 | Recover lifepath specification and content manifest | Content analyst | — | REVIEW; Wayfinder source recovered and `LIFEPATH_SPEC.md` drafted; naming and canon-addendum review remain |
+| SB-11 | Lifepath engine and character persistence | A/C sequentially | SB-07, SB-10 | READY AFTER SB-10 REVIEW; begin with schema/validator only |
 | SB-12 | GM-led lifepath presentation and playtest | B + reviewer | SB-11 | WAIT |
 | SB-13 | Production cutover | Integrator | SB-08, SB-09, SB-12 | WAIT |
 
@@ -166,7 +166,7 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 **Deliver:** `beta/LIFEPATH_SPEC.md` with source references and a missing-decisions list.
 **Own:** documentation only; canonical rules changes need their own scope.
 **Do:** recover the complete approved design session/handoff and compare with repository rules. Record stages, dice, tables, modifiers, rerolls, branch effects, bonds, GM reveals, resulting character fields, and persistence. Mark unknown items unknown. The confirmed constraint is roll-heavy generation with free playbook choice.
-**Accept:** each mechanic/table is traceable to approved content; no invented canon is presented as approved. If the source remains unavailable, return the exact questions or requested transcript sections. SB-11 remains blocked on those details, but M1 continues.
+**Accept:** each mechanic/table is traceable to approved content; no invented canon is presented as approved. The recovered Wayfinder handoff closes the missing-source blocker. Naming placeholders and a separately reviewed canonical bible addendum remain explicit; SB-11A may start only after this specification is reviewed.
 **Exclude:** coding speculative lifepath rules to fill the gap.
 
 ### SB-11 — Lifepath engine and character persistence
