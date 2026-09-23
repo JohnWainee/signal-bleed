@@ -5,7 +5,8 @@ import { existsSync } from 'node:fs';
 
 const modulePath = process.env.SB_PLAYWRIGHT_MODULE || 'playwright';
 const { chromium } = await import(modulePath);
-const base = 'http://127.0.0.1:5173';
+const base = process.env.SB_E2E_BASE || 'http://127.0.0.1:5173';
+const databasePort = process.env.SB_E2E_DATABASE_PORT || '9001';
 const room = `Privacy${Date.now()}`;
 const macChrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const executablePath = process.env.SB_CHROME_PATH || (existsSync(macChrome) ? macChrome : undefined);
@@ -24,7 +25,7 @@ try {
     const sockets = new Set();
     const inbound = [];
     cdp.on('Network.webSocketCreated', event => {
-      if (event.url.includes('127.0.0.1:9001')) sockets.add(event.requestId);
+      if (event.url.includes(`127.0.0.1:${databasePort}`)) sockets.add(event.requestId);
     });
     cdp.on('Network.webSocketFrameReceived', event => {
       if (sockets.has(event.requestId)) inbound.push(event.response.payloadData);
@@ -54,6 +55,21 @@ try {
   const p1Uid = await uid(p1);
   const p2Uid = await uid(p2);
   assert.ok(p1Uid && p2Uid && p1Uid !== p2Uid);
+  await gm.getByLabel('New staged clue').fill('GM_STAGED_CLUE');
+  await gm.getByRole('button', { name: 'Add to staging' }).click();
+  const stagedClue = gm.locator('li.clue').filter({ hasText: 'GM_STAGED_CLUE' });
+  await stagedClue.waitFor();
+  for (const page of [p1, p2, presenter]) assert.doesNotMatch(await page.locator('#app').innerText(), /GM_STAGED_CLUE/);
+  await stagedClue.getByRole('button', { name: 'Reveal' }).click();
+  for (const page of [p1, p2, presenter]) await page.getByText('GM_STAGED_CLUE').waitFor();
+  await stagedClue.getByRole('button', { name: 'Mark woven' }).click();
+  for (const page of [p1, p2, presenter]) await page.locator('li.clue-woven').filter({ hasText: 'GM_STAGED_CLUE' }).waitFor();
+  await gm.getByLabel('New staged clue').fill('GM_NEVER_PUBLIC');
+  await gm.getByRole('button', { name: 'Add to staging' }).click();
+  await gm.locator('li.clue-staged').filter({ hasText: 'GM_NEVER_PUBLIC' }).waitFor();
+  for (const page of [p1, p2, presenter]) assert.doesNotMatch(await page.locator('#app').innerText(), /GM_NEVER_PUBLIC/);
+  await gm.locator('.bleed-clock').getByRole('button', { name: '3', exact: true }).click();
+  for (const page of [p1, p2, presenter]) await page.locator('.bleed-clock button[aria-pressed="true"]').filter({ hasText: /^3$/ }).waitFor();
   const gmUid = await uid(gm);
   const pendingKey = `SB:beta:pending:${room}:${gmUid}`;
   const sceneCommand = { type: 'scene.publish', commandId: `RetryScene${Date.now()}`, expectedEpoch: 0, title: 'PUBLIC_SCENE', body: 'PUBLIC_BODY' };
@@ -103,7 +119,7 @@ try {
   assert.doesNotMatch(await p1.locator('#app').innerText(), /ONLY_PLAYER_TWO/);
   assert.doesNotMatch(await p2.locator('#app').innerText(), /ONLY_PLAYER_ONE/);
   assert.doesNotMatch(await presenter.locator('#app').innerText(), /ONLY_PLAYER_ONE|ONLY_PLAYER_TWO/);
-  for (const [role, required, forbidden] of [['gm', 'ONLY_PLAYER_ONE|ONLY_PLAYER_TWO', ''], ['p1', 'ONLY_PLAYER_ONE', 'ONLY_PLAYER_TWO'], ['p2', 'ONLY_PLAYER_TWO', 'ONLY_PLAYER_ONE'], ['presenter', 'PUBLIC_SCENE', 'ONLY_PLAYER_ONE|ONLY_PLAYER_TWO']]) {
+  for (const [role, required, forbidden] of [['gm', 'ONLY_PLAYER_ONE|ONLY_PLAYER_TWO|GM_STAGED_CLUE|GM_NEVER_PUBLIC', ''], ['p1', 'ONLY_PLAYER_ONE|GM_STAGED_CLUE', 'ONLY_PLAYER_TWO|GM_NEVER_PUBLIC'], ['p2', 'ONLY_PLAYER_TWO|GM_STAGED_CLUE', 'ONLY_PLAYER_ONE|GM_NEVER_PUBLIC'], ['presenter', 'PUBLIC_SCENE|GM_STAGED_CLUE', 'ONLY_PLAYER_ONE|ONLY_PLAYER_TWO|GM_NEVER_PUBLIC']]) {
     const frames = clients[role].inbound.join('\n');
     assert.ok(frames.length > 0, `${role} received no RTDB websocket frames`);
     for (const marker of required.split('|')) assert.match(frames, new RegExp(marker), `${role} capture missed authorized marker ${marker}`);

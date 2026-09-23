@@ -1,7 +1,7 @@
 import { get, ref } from 'firebase/database';
 import { bootstrapFirebase } from '../data/firebase-bootstrap.ts';
 import type { RoomCommand, RoomStatus } from '../data/firebase-session.ts';
-import type { Admission, Notes, Prompt, Scene, SessionEvent, Sheet } from '../session/model.ts';
+import type { Admission, Board, ClueState, Notes, Prompt, Scene, SessionEvent, Sheet } from '../session/model.ts';
 
 type Surface = 'gm' | 'play' | 'present';
 type ConnectionState = 'loading' | 'live' | 'disconnected';
@@ -72,6 +72,7 @@ export async function startLive() {
   }
 
   let scene: Scene | null = null;
+  let board: Board | null = { schemaVersion: 1, revision: 0, bleed: 0, clues: [] };
   let roster: Record<string, Admission> = {};
   let gmDecisions: Record<string, Record<string, Prompt>> = {};
   let decisions: Record<string, Prompt> = {};
@@ -131,12 +132,13 @@ export async function startLive() {
     stop?.();
     stop = adapter.watch(roomId, (event: SessionEvent) => {
       if (event.type === 'accessLost') {
-        accessLost = true; pending = null; clearStoredPending(); admission = null; scene = null; roster = {}; gmDecisions = {}; decisions = {}; sheet = null; notes = null;
+        accessLost = true; pending = null; clearStoredPending(); admission = null; scene = null; board = null; roster = {}; gmDecisions = {}; decisions = {}; sheet = null; notes = null;
         connection = 'disconnected'; report(`Access lost: ${event.code}. Private views cleared.`); return;
       }
       if (event.type === 'admission') admission = event.value;
       if ('data' in event) connection = event.data.status;
       if (event.type === 'scene') scene = event.data.value;
+      if (event.type === 'board' && event.data.value) board = event.data.value;
       if (event.type === 'gmRoster') { roster = event.data.value ?? {}; void refreshStatus(); }
       if (event.type === 'gmDecisions') gmDecisions = event.data.value ?? {};
       if (event.type === 'decisions') decisions = event.data.value ?? {};
@@ -160,6 +162,48 @@ export async function startLive() {
     panel.append(el('p', scene ? `SCENE / ${String(scene.epoch).padStart(2, '0')}` : 'SCENE / WAITING'));
     panel.append(el('h2', scene?.title ?? 'Waiting for the GM'), el('p', scene?.body ?? 'The shared scene will appear here when it is published.')); return panel;
   };
+  const renderBoard = (gm = false, readOnly = false) => {
+    const panel = section('shared-board', 'board'); panel.heading.textContent = 'Clues and Bleed';
+    const clock = el('div'); clock.className = 'bleed-clock'; clock.setAttribute('aria-label', `Bleed ${board?.bleed ?? 0} of 6`);
+    for (let value = 0; value <= 6; value++) {
+      const control = button(String(value), () => {
+        if (!gm || !board || value === board.bleed) return;
+        if (value < board.bleed && !window.confirm(`Reduce the Bleed from ${board.bleed} to ${value}?`)) return;
+        run('Bleed clock change', { type: 'clock.bleed.set', commandId: commandId(), expectedRevision: board.revision, value });
+      }, value === (board?.bleed ?? 0) ? 'primary' : '');
+      control.disabled = !gm || readOnly; control.setAttribute('aria-pressed', String(value === (board?.bleed ?? 0))); clock.append(control);
+    }
+    panel.node.append(clock);
+    const list = el('ol'); list.className = 'clue-list';
+    const clues = board?.clues ?? [];
+    if (!clues.length) panel.node.append(el('p', gm ? 'No clues yet. Add one to the private staging list.' : 'No clues have been revealed.'));
+    for (const [index, clue] of clues.entries()) {
+      const item = el('li'); item.className = `clue clue-${clue.state}`; const heading = el('div'); heading.className = 'clue-heading';
+      heading.append(badge(clue.state), el('span', clue.text)); item.append(heading);
+      if (gm && !readOnly) {
+        const actions = el('div'); actions.className = 'clue-actions';
+        const edit = inputField(`Clue text ${index + 1}`, clue.text, 2000); actions.append(edit.label, button('Save clue text', () => {
+          const text = edit.input.value.trim(); if (!text) { report('Clue text cannot be blank.'); return; }
+          run('Clue text change', { type: 'clue.update', commandId: commandId(), expectedRevision: board!.revision, clueId: clue.id, text, state: clue.state });
+        }));
+        const states: ClueState[] = ['staged', 'active', 'woven', 'deep'];
+        for (const state of states) if (state !== clue.state) actions.append(button(state === 'active' ? 'Reveal' : `Mark ${state}`, () => run('Clue state change', { type: 'clue.update', commandId: commandId(), expectedRevision: board!.revision, clueId: clue.id, text: clue.text, state })));
+        const up = button('Move up', () => run('Clue reorder', { type: 'clue.move', commandId: commandId(), expectedRevision: board!.revision, clueId: clue.id, direction: 'up' })); up.disabled = index === 0;
+        const down = button('Move down', () => run('Clue reorder', { type: 'clue.move', commandId: commandId(), expectedRevision: board!.revision, clueId: clue.id, direction: 'down' })); down.disabled = index === clues.length - 1;
+        actions.append(up, down); item.append(actions);
+      }
+      list.append(item);
+    }
+    if (clues.length) panel.node.append(list);
+    if (gm && !readOnly) {
+      const draft = textField('New staged clue', '', 2000);
+      panel.node.append(draft.label, button('Add to staging', () => {
+        const text = draft.input.value.trim(); if (!text || !board) { report('Write the clue before adding it.'); return; }
+        run('Clue creation', { type: 'clue.create', commandId: commandId(), expectedRevision: board.revision, clueId: commandId(), text });
+      }, 'primary'));
+    }
+    return panel.node;
+  };
   const renderPending = () => {
     if (!pending) return null;
     const panel = el('section'); panel.className = 'callout pending'; panel.append(el('h2', busy ? 'Sending command' : 'Confirmation needed'));
@@ -171,7 +215,8 @@ export async function startLive() {
       const panel = section('create-room'); panel.heading.textContent = 'Assigned room'; panel.node.append(el('p', 'Create this room only if the invitation slot was assigned to this GM identity.'));
       panel.node.append(button('Create this room', () => run('Room creation', { type: 'room.create', commandId: commandId() }), 'primary')); main.append(panel.node); return;
     }
-    main.append(renderScene());
+    const closed = roomStatus?.closed === true;
+    main.append(renderScene(), renderBoard(true, closed));
     if (roomStatus) {
       const { usage, limits } = roomStatus; const capacity = section('room-capacity', 'capacity'); capacity.heading.textContent = 'Room capacity'; const list = el('ul');
       for (const [label, value, limit] of [['Applicants', usage.admissions, limits.admissions], ['Prompts', usage.prompts, limits.prompts], ['Receipts', usage.receipts, limits.receipts]]) {
@@ -181,7 +226,6 @@ export async function startLive() {
       if (Object.entries(usage).some(([key, value]) => value >= 0.9 * limits[key as keyof typeof limits])) capacity.node.append(el('p', 'This room is nearing its closed-beta limit. Request another assigned slot before continuing.'));
       if (roomStatus.closed) capacity.node.append(el('p', 'Room closed. Existing scene and private views remain readable; new commands are disabled.')); main.append(capacity.node);
     }
-    const closed = roomStatus?.closed === true;
     if (!closed) {
       const compose = section('scene-composer', 'composer'); compose.heading.textContent = 'Compose the next scene';
       const title = inputField('Scene title', sceneDraft.title, 200); const body = textField('Scene body', sceneDraft.body, 2000);
@@ -235,7 +279,7 @@ export async function startLive() {
     }
   };
   const renderPlayer = (main: HTMLElement) => {
-    main.append(renderScene()); const promptPanel = section('your-prompts'); promptPanel.heading.textContent = 'Your private prompts'; const closed = admission?.roomClosed === true;
+    main.append(renderScene(), renderBoard()); const promptPanel = section('your-prompts'); promptPanel.heading.textContent = 'Your private prompts'; const closed = admission?.roomClosed === true;
     if (closed) promptPanel.node.append(el('p', 'Room closed. Existing records are read-only.')); const prompts = Object.values(decisions).sort((a, b) => b.id.localeCompare(a.id)); if (!prompts.length) promptPanel.node.append(el('p', 'No private choices are waiting.'));
     for (const prompt of prompts) {
       const panel = el('article'); panel.className = 'decision'; panel.append(el('h3', prompt.question));
@@ -248,7 +292,7 @@ export async function startLive() {
     const inventory = el('ul'); if (sheet?.inventory.length) for (const item of sheet.inventory) inventory.append(el('li', `${item.label} × ${item.quantity}`)); else inventory.append(el('li', 'Inventory is empty')); character.node.append(inventory); main.append(character.node);
     const privateNotes = section('private-notes'); privateNotes.heading.textContent = 'Private notes'; privateNotes.node.append(el('p', notes?.text || 'No private notes yet.')); main.append(privateNotes.node);
   };
-  const renderPresenter = (main: HTMLElement) => { main.append(renderScene(true)); };
+  const renderPresenter = (main: HTMLElement) => { main.append(renderScene(true), renderBoard()); };
   const render = () => {
     if (!root) return;
     const active = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement || document.activeElement instanceof HTMLSelectElement ? document.activeElement : null;

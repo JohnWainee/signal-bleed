@@ -55,6 +55,15 @@ button.danger { color: #2a0804; background: var(--danger); border-color: var(--d
 .roster-row > div { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .roster-row > p { color: var(--muted); font-family: ui-monospace, monospace; font-size: .82rem; overflow-wrap: anywhere; }
 .preview { margin-block: 22px; border-style: dashed; }
+.bleed-clock { display: grid; grid-template-columns: repeat(7, minmax(48px, 1fr)); gap: 8px; margin-bottom: 24px; }
+.bleed-clock button { margin: 0; }
+.clue-list { display: grid; gap: 12px; padding-left: 28px; }
+.clue { padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: #0e1b20; }
+.clue-heading { display: flex; align-items: flex-start; gap: 10px; }
+.clue-heading > span:last-child { overflow-wrap: anywhere; line-height: 1.55; }
+.clue-staged, .clue-deep { border-style: dashed; color: var(--muted); }
+.clue-woven { border-color: var(--accent); background: #15312e; }
+.clue-actions { margin-top: 12px; }
 .choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
 .choice { width: 100%; min-height: 72px; text-align: left; font-size: 1.05rem; }
 .callout { border-width: 2px; }
@@ -74,6 +83,7 @@ footer { margin-top: 40px; }
   button { display: block; width: 100%; margin-right: 0; }
   .capacity ul { grid-template-columns: 1fr; }
   .presenter-scene { min-height: 70vh; }
+  .bleed-clock { grid-template-columns: repeat(4, minmax(48px, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

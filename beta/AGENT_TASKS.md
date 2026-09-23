@@ -70,7 +70,7 @@ Statuses: READY = can start; WAIT = dependencies; BLOCKED-CONTENT = specific sou
 | SB-06 | Player prompts and persistent personal surface | C | SB-03 | DONE CORE; independent review, private prompt/reconnect E2E, and physical phone rehearsal pass; manual accessibility deferred until after core basics |
 | SB-07 | Wire surfaces and prove four-client M1 | Integrator/reviewer | SB-04–06 | REVIEW; independent automated review, full browser/privacy scenario, and physical iPad/phone/16:9 rehearsal pass; reported VoiceOver-session crash is undiagnosed and deferred |
 | SB-08 | Preview packaging and release rehearsal | Integrator | SB-07 | REVIEW; independently reviewed rehearsal/canary boundary, rollback runbook, and physical-device rehearsal pass; protected production capture/deploy, App Check traffic, rollback evidence, and manual accessibility gates remain |
-| SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | DONE DOCS; source-backed inventory, migration contract, user decisions and ordered implementation cards in `PARITY.md` |
+| SB-09 | Alpha feature parity and migration inventory | Integrator | SB-00 | INCREMENTAL; docs complete and SB-09B ordered clues + Bleed implemented/tested; independent review remains before acceptance |
 | SB-10 | Recover lifepath specification and content manifest | Content analyst | — | READY; implementation blocked on source |
 | SB-11 | Lifepath engine and character persistence | A/C sequentially | SB-07, SB-10 | WAIT |
 | SB-12 | GM-led lifepath presentation and playtest | B + reviewer | SB-11 | WAIT |

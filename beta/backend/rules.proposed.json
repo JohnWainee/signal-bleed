@@ -45,10 +45,16 @@
           "shared": {
             "scene": {
               ".read": "auth != null && (root.child('betaRooms/v1').child($roomId).child('owner').val() === auth.uid || root.child('betaRooms/v1').child($roomId).child('members').child(auth.uid).child('status').val() === 'admitted')"
+            },
+            "board": {
+              ".read": "auth != null && (root.child('betaRooms/v1').child($roomId).child('owner').val() === auth.uid || root.child('betaRooms/v1').child($roomId).child('members').child(auth.uid).child('status').val() === 'admitted')"
             }
           },
           "gm": {
             "notes": {
+              ".read": "auth != null && root.child('betaRooms/v1').child($roomId).child('owner').val() === auth.uid"
+            },
+            "board": {
               ".read": "auth != null && root.child('betaRooms/v1').child($roomId).child('owner').val() === auth.uid"
             }
           },

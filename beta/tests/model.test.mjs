@@ -15,7 +15,7 @@ test('scene, admission and private views are isolated and detached', async () =>
   const { store, gm, p1, p2, tv, x } = await fixture();
   const g = events(gm).list, one = events(p1).list, two = events(p2).list, screen = events(tv).list, outsider = events(x).list;
   assert.equal(latest(screen, 'scene').data.value.title, 'Synthetic Hawaiʻi scene');
-  assert.deepEqual(new Set(screen.map(event => event.type)), new Set(['admission', 'scene']));
+  assert.deepEqual(new Set(screen.map(event => event.type)), new Set(['admission', 'scene', 'board']));
   assert.deepEqual(new Set(outsider.map(event => event.type)), new Set(['admission']));
   assert.equal(JSON.stringify(one).includes('ONLY_P2'), false);
   assert.equal(JSON.stringify(two).includes('ONLY_P1'), false);
@@ -29,6 +29,26 @@ test('scene, admission and private views are isolated and detached', async () =>
   assert.equal(JSON.stringify(g).includes('ONLY_P1'), true);
   latest(one, 'scene').data.value.title = 'mutated';
   assert.equal(latest(events(tv).list, 'scene').data.value.title, 'Synthetic Hawaiʻi scene');
+});
+
+test('ordered clues and Bleed expose only active and woven clues outside the GM view', async () => {
+  const { gm, p1, tv } = await fixture();
+  assert.equal((await gm.send('fixture', { type: 'clue.create', commandId: 'clue_create_1', expectedRevision: 0, clueId: 'clue_1', text: 'GM_STAGED_ONLY' })).ok, true);
+  assert.equal(JSON.stringify(latest(events(gm).list, 'board')).includes('GM_STAGED_ONLY'), true);
+  assert.equal(JSON.stringify(latest(events(p1).list, 'board')).includes('GM_STAGED_ONLY'), false);
+  assert.equal(JSON.stringify(latest(events(tv).list, 'board')).includes('GM_STAGED_ONLY'), false);
+  assert.equal((await gm.send('fixture', { type: 'clue.update', commandId: 'clue_reveal_1', expectedRevision: 1, clueId: 'clue_1', text: 'Public clue one', state: 'active' })).ok, true);
+  assert.equal((await gm.send('fixture', { type: 'clue.create', commandId: 'clue_create_2', expectedRevision: 2, clueId: 'clue_2', text: 'Second staged clue' })).ok, true);
+  assert.equal((await gm.send('fixture', { type: 'clue.update', commandId: 'clue_reveal_2', expectedRevision: 3, clueId: 'clue_2', text: 'Public clue two', state: 'woven' })).ok, true);
+  assert.equal((await gm.send('fixture', { type: 'clue.move', commandId: 'clue_move', expectedRevision: 4, clueId: 'clue_2', direction: 'up' })).ok, true);
+  assert.deepEqual(latest(events(p1).list, 'board').data.value.clues.map(clue => clue.id), ['clue_2', 'clue_1']);
+  assert.deepEqual(latest(events(tv).list, 'board').data.value.clues.map(clue => clue.state), ['woven', 'active']);
+  assert.equal((await gm.send('fixture', { type: 'clock.bleed.set', commandId: 'bleed_1', expectedRevision: 5, value: 3 })).ok, true);
+  assert.equal(latest(events(tv).list, 'board').data.value.bleed, 3);
+  assert.deepEqual(await p1.send('fixture', { type: 'clock.bleed.set', commandId: 'spoof_bleed', expectedRevision: 6, value: 6 }), { ok: false, code: 'FORBIDDEN' });
+  assert.deepEqual(await gm.send('fixture', { type: 'clock.bleed.set', commandId: 'stale_bleed', expectedRevision: 5, value: 4 }), { ok: false, code: 'CONFLICT' });
+  assert.deepEqual(await gm.send('fixture', { type: 'clue.update', commandId: 'archive_clue', expectedRevision: 6, clueId: 'clue_1', text: 'Public clue one', state: 'deep' }), { ok: true, commandId: 'archive_clue', entityRevision: 7 });
+  assert.equal(JSON.stringify(latest(events(tv).list, 'board')).includes('Public clue one'), false);
 });
 
 test('independent player answers, idempotency and stale scene enforcement', async () => {

@@ -11,6 +11,13 @@ declare global {
 
 const demo = import.meta.env.VITE_SB_EMULATORS === '1';
 const emulatorHost = import.meta.env.VITE_SB_EMULATOR_HOST || '127.0.0.1';
+const emulatorPort = (name: string, fallback: number) => {
+  const value = Number(import.meta.env[name]);
+  return Number.isInteger(value) && value > 0 && value <= 65535 ? value : fallback;
+};
+const authEmulatorPort = emulatorPort('VITE_SB_AUTH_EMULATOR_PORT', 9199);
+const databaseEmulatorPort = emulatorPort('VITE_SB_DATABASE_EMULATOR_PORT', 9001);
+const functionsEmulatorPort = emulatorPort('VITE_SB_FUNCTIONS_EMULATOR_PORT', 5101);
 const privateEmulatorHost = /^(?:localhost|127\.0\.0\.1|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})$/.test(emulatorHost);
 const demoConfig: FirebaseOptions = {
   apiKey: 'fake-api-key', authDomain: 'demo-signal-bleed-beta.firebaseapp.com',
@@ -38,9 +45,9 @@ export async function bootstrapFirebase() {
   const database = getDatabase(app);
   const functions = getFunctions(app, 'us-central1');
   if (demo) {
-    connectAuthEmulator(auth, `http://${emulatorHost}:9199`, { disableWarnings: true });
-    connectDatabaseEmulator(database, emulatorHost, 9001);
-    connectFunctionsEmulator(functions, emulatorHost, 5101);
+    connectAuthEmulator(auth, `http://${emulatorHost}:${authEmulatorPort}`, { disableWarnings: true });
+    connectDatabaseEmulator(database, emulatorHost, databaseEmulatorPort);
+    connectFunctionsEmulator(functions, emulatorHost, functionsEmulatorPort);
   }
   const credential = auth.currentUser ?? (await signInAnonymously(auth)).user;
   return { uid: credential.uid, database, adapter: new FirebaseSessionAdapter(auth, database, functions), demo };
