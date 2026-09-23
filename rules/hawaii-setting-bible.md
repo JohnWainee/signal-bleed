@@ -1,7 +1,7 @@
 # SIGNAL BLEED — HAWAIʻI
 ## Emergency Republic setting bible
 
-**Canonical setting direction, recovered and reaffirmed by the user on 2026-09-22.** Real Hawaiʻi, a contemporary September 2026 starting point, cosmic horror and The Sounding. This supersedes the former fictional archipelago across the project.
+**Canonical setting direction, recovered and reaffirmed by the user on 2026-09-22.** Real Hawaiʻi, an alternate timeline beginning in September 2026, cosmic horror and The Sounding. Default play is approximately 2050, after the approximately 2045 Fragmentation; earlier scenario dates remain legal. This supersedes the former fictional archipelago across the project.
 
 The crisis, emergency orders, predictive surveillance, arrests, branch events and classified programs below are **alternate-history game fiction**, not reports of real events. Real place names ground play; fictional contractors, staff and interiors do not describe actual organizations or facilities.
 
@@ -12,6 +12,8 @@ Hawaiʻi is trying to keep ordinary life moving: a shift, a delivery, a flight, 
 Federal coordination expands into an enduring emergency system. Classified programs treat the Signal as predictive intelligence. People still need its help. The consequences of using it become somebody else's problem, somewhere the dashboard is not watching.
 
 The Signal exposes possible branches, not infallible prophecy. Observation can alter the branch. A successful intervention can move a cost rather than remove it. None of this identifies the cosmic source, its motives, or a solution to the mystery. Preserve **The Sounding** as the larger cosmic premise; its exact event, date and ontology remain open.
+
+By approximately 2050, a generation has grown up inside the Emergency Republic and lived through the Fragmentation. The political map still claims continuity, but identity, authority and records no longer reconcile reliably across systems. Default characters belong to that generation. This later frame adds consequences to the accepted 2026–2030 spine; it does not rewrite those events or make their fictional crisis claims about real Hawaiʻi.
 
 ## Accepted timeline
 
@@ -24,7 +26,22 @@ The Signal exposes possible branches, not infallible prophecy. Observation can a
 | Spring 2027 | **Branch Event One**: a warning targeting Honolulu Harbor and the airport leads to preemptive arrests and shutdowns. The predicted attack does not occur; intervention produces cascading Oʻahu failures. Records indicate an unacted branch with worse damage. | A warning can concern a possible branch. Non-occurrence does not prove the warning was fabricated or the intervention costless. Do not force one explanation for every anomaly. |
 | Late 2028–2029 | **The Observer Trials**: a Hawaiʻi cell tests how observation and knowledge shift branches. | Who received which information, and when, becomes part of the investigation. |
 | 2030 | Steering displaces consequences rather than simply preventing them. | Examine who bore the shifted cost; no exact incident/date is locked. |
-| Later | Fragmentation follows the emergency architecture. | Date, borders, factions and campaign-present year are not yet fixed. |
+| 2030s–early 2040s | The long, brittle late Emergency Republic. | Open authoring space for a generation raised inside emergency systems; do not backfill exact events as already approved canon. |
+| Approximately 2045 | **The Fragmentation**: an informational break with branch leakage. Systems can no longer reliably verify one another; some disagreements in the records are not clerical. | Political zones/checkpoints may be consequences, but do not define the break or settle which branch is real. |
+| Approximately 2050 | Default play era. | New-generation PCs grew up inside the Republic and personally lived through the Fragmentation. Earlier scenario dates and elder paths remain legal. |
+
+## The Fragmentation at the table
+
+The Fragmentation is not a solved political event or a name for one border change. Use six recurring levers:
+
+1. The break lives at thresholds: doorways, checkpoints, transit spaces and coverage edges.
+2. Systems reconcile at sync windows; between them, existence is provisional. The 3:41 a.m. motif may mark that condition.
+3. Infrastructure remains maintained for people no agreed ledger contains.
+4. A person may be provisionally recognized by one system and absent from another.
+5. The old world continues to broadcast.
+6. The GM never declares which side of a threshold or contradictory record is the one real version.
+
+Thresholds and sync windows are new fictional justifications for advancing the existing Bleed clock; when it fills, the arrival may coincide with reconciliation. The remaining levers refresh Signs of the Bleed, Symptoms and d100 material for 2050. They do not add a new subsystem or explain the cosmic source.
 
 JIITG is the recovered fictional program label for tracking **non-originating records**. Its full expansion and organization chart were not recovered; retain the acronym without inventing an approved expansion.
 
@@ -50,7 +67,9 @@ People have agency beyond their function in a crisis: family, work, disagreement
 
 Established institutional roles: emergency coordination and security; the fictional JIITG program; a Hawaiʻi observer cell; logistics and communications workers; community and household networks. Do not invent later named factions as previously approved canon.
 
-Adapted fictional supporting cast: Halloran & Vey is an investigative/loss-adjustment firm; Otty keeps its records; Mrs. Ansel handles its fictional contract access. Transpelagic and Halcyon Vitality are fictional contractors used in existing cases, not claims about real companies. Their personnel and premises are invented. “Grandmother” remains an unexplained voice, not a specified cultural or religious figure.
+Adapted fictional supporting cast: Halloran & Vey is an investigative/loss-adjustment firm in earlier material; Otty keeps its records; Mrs. Ansel handles its fictional contract access. Default-era crews work discrepancy claims for a fictional successor whose name remains pending sponsor decision and also belong to a neighborhood verification network descended from the Watch tradition. Transpelagic and Halcyon Vitality are fictional contractors used in existing cases, not claims about real companies. Their personnel and premises are invented.
+
+“Grandmother” remains the compatibility label for an unexplained helpful channel voice in existing material, not a specified cultural or religious figure. Its new default-era name/title remains pending sponsor decision. Do not bulk-rename either the firm or the voice until those choices are reviewed in their actual prose contexts.
 
 ## How the horror works at the table
 
@@ -69,13 +88,13 @@ No automatic evacuation of Hawaiʻi, island depopulation, missing numbered islan
 
 ## Lifepath integration
 
-Origin → Career → Incident → Fallout. Choose direction → roll → choose a consequence → record the change. Rolls shape history and consequences; playbook selection remains free. Previous life can predate September 2026 without implying the emergency program already existed. A path spanning Observer Trials is a later-start option, not the only opening date.
+Origin → Career → Incident → Fallout. Choose direction → roll → choose a consequence → record the change. Rolls shape history and consequences; playbook selection remains free. The default new-generation path uses childhood in the 2030s, first work in the early 2040s, the Fragmentation as Incident, and late-2040s Fallout. LP-B's 2026–2029 history remains an optional elder/earlier-era path. Previous life can predate September 2026 without implying the emergency program already existed.
 
-Store scenario date, phase date, source/visibility of each branch record, recurring people, obligations, known consequences and unresolved hooks. Later events cannot be available in an earlier-start path. Do not silently resolve constitutional outcomes or fragmentation through a random table.
+Store scenario date, phase date, source/visibility of each branch record, recurring people, obligations, known consequences and unresolved hooks. Date gating selects a complete compatible path; it does not expose later phases and then silently truncate them for an earlier start. Do not silently resolve constitutional outcomes, borders, factions or the nature of the Fragmentation through a random table.
 
 ## What is still open
 
-Exact later campaign-present year; fragmentation date and form; full JIITG name; later factions; exact Sounding event; detailed lifepath tables and numeric balance. These are specific unknowns, not reasons to restore the superseded setting.
+Exact calendar dates within the approximate 2045/2050 frame; Fragmentation-era borders, zones and surviving institutions; the successor-firm and channel-voice names; the 2030s–2040s event skeleton; full JIITG name; later factions; exact Sounding event; detailed lifepath content and numeric balance. These are specific unknowns, not reasons to restore the superseded setting.
 
 ## Real-world anchors and sources
 

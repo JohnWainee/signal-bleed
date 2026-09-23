@@ -48,6 +48,9 @@ Cross-session state for whichever runtime picks this repo up next — see
 `AGENTS.md` → [Handoff protocol](AGENTS.md#handoff-protocol) for the field
 convention. Newest entry on top.
 
+**Agent:** Codex (Codex app) — drafted the separate BIB-1 canonical addendum for the sponsor-accepted approximately 2045 Fragmentation and approximately 2050 default era. Added the informational-break definition, six threshold/sync/provisionality levers, new-generation default lifepath mapping, complete-path date gating, and the Adjuster/Watch-rooted session frame while keeping exact borders, institutions and cosmic explanations open. Existing Halloran & Vey and “Grandmother” text remains compatibility content; their 2050 successor names are explicitly pending sponsor discussion and were not bulk-renamed. Setting validation and HTML sanity pass. No runtime, protected file, deployment, or production data changed.
+**Branch:** `docs/beta-bib-1-2050-addendum` — released for canon review; stacked on SB-10 spec `fcb974f`
+
 **Agent:** Codex (Codex app) — converted the sponsor-supplied 2026-09-22 Wayfinder handoff into `beta/LIFEPATH_SPEC.md`, closing SB-10's missing-source blocker at the documentation layer. Reconciled the ~2045 Fragmentation/~2050 default era, complete path-manifest date gating, one-roll fixed event-grid v1, Assets/Static bargains, visibility, persistence, idempotent append flow, content validation, and SB-11/12 dependency order with current contracts. Explicitly superseded GM-hidden PC-past hooks and silent phase truncation. The successor-firm and channel-voice names remain sponsor-owned placeholders; signature mechanics remain playtest-gated. No canonical `/rules` file, runtime, protected file, production service, or data changed. Review of this spec and a separate setting-bible addendum are next.
 **Branch:** `docs/beta-sb-10-lifepath-spec` — released for review; stacked on SB-09B privacy follow-up `ac501bd`
 
