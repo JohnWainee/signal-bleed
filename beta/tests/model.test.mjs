@@ -33,12 +33,16 @@ test('scene, admission and private views are isolated and detached', async () =>
 
 test('ordered clues and Bleed expose only active and woven clues outside the GM view', async () => {
   const { gm, p1, tv } = await fixture();
+  const initialPublicBoard = structuredClone(latest(events(tv).list, 'board').data.value);
   assert.equal((await gm.send('fixture', { type: 'clue.create', commandId: 'clue_create_1', expectedRevision: 0, clueId: 'clue_1', text: 'GM_STAGED_ONLY' })).ok, true);
   assert.equal(JSON.stringify(latest(events(gm).list, 'board')).includes('GM_STAGED_ONLY'), true);
   assert.equal(JSON.stringify(latest(events(p1).list, 'board')).includes('GM_STAGED_ONLY'), false);
   assert.equal(JSON.stringify(latest(events(tv).list, 'board')).includes('GM_STAGED_ONLY'), false);
+  assert.deepEqual(latest(events(tv).list, 'board').data.value, initialPublicBoard, 'hidden staging must not change public revision metadata');
   assert.equal((await gm.send('fixture', { type: 'clue.update', commandId: 'clue_reveal_1', expectedRevision: 1, clueId: 'clue_1', text: 'Public clue one', state: 'active' })).ok, true);
+  assert.equal(latest(events(tv).list, 'board').data.value.revision, 1);
   assert.equal((await gm.send('fixture', { type: 'clue.create', commandId: 'clue_create_2', expectedRevision: 2, clueId: 'clue_2', text: 'Second staged clue' })).ok, true);
+  assert.equal(latest(events(tv).list, 'board').data.value.revision, 1, 'a second hidden clue must not advance the public revision');
   assert.equal((await gm.send('fixture', { type: 'clue.update', commandId: 'clue_reveal_2', expectedRevision: 3, clueId: 'clue_2', text: 'Public clue two', state: 'woven' })).ok, true);
   assert.equal((await gm.send('fixture', { type: 'clue.move', commandId: 'clue_move', expectedRevision: 4, clueId: 'clue_2', direction: 'up' })).ok, true);
   assert.deepEqual(latest(events(p1).list, 'board').data.value.clues.map(clue => clue.id), ['clue_2', 'clue_1']);

@@ -16,14 +16,17 @@ const ok = (commandId, entityRevision) => ({ ok: true, commandId, entityRevision
 const emptySheet = () => ({ schemaVersion: 1, revision: 0, name: '', playbookId: null, inventory: [] });
 const emptyNotes = () => ({ schemaVersion: 1, revision: 0, text: '' });
 const emptyBoard = () => ({ schemaVersion: 1, revision: 0, bleed: 0, clues: [] });
-const publicBoard = board => ({ ...copy(board), clues: board.clues.filter(clue => clue.state === 'active' || clue.state === 'woven') });
+const publicBoardContent = board => ({ schemaVersion: 1, bleed: board.bleed, clues: copy(board.clues.filter(clue => clue.state === 'active' || clue.state === 'woven')) });
 const syncBoard = room => {
   room.gm.board ??= emptyBoard();
   room.gm.board.schemaVersion ??= 1;
   room.gm.board.revision ??= 0;
   room.gm.board.bleed ??= 0;
   room.gm.board.clues = Array.isArray(room.gm.board.clues) ? room.gm.board.clues : [];
-  room.shared.board = publicBoard(room.gm.board);
+  const previous = room.shared.board ?? emptyBoard();
+  const next = publicBoardContent(room.gm.board);
+  const changed = canonical({ bleed: previous.bleed ?? 0, clues: Array.isArray(previous.clues) ? previous.clues : [] }) !== canonical({ bleed: next.bleed, clues: next.clues });
+  room.shared.board = { ...next, revision: (previous.revision ?? 0) + (changed ? 1 : 0) };
 };
 const playbooks = new Set(['splicer', 'registrar', 'operator', 'diver', 'inspector', 'salvage', 'watch']);
 const receiptCount = room => Object.values(room.receipts ?? {}).reduce((count, issuer) => count + Object.keys(issuer ?? {}).length, 0);
@@ -60,7 +63,7 @@ function apply(room, uid, roomId, command, slots) {
     if (command.type !== 'room.create') return { result: fail('NOT_FOUND') };
     if (!slots.permits(roomId, uid)) return { result: fail('FORBIDDEN') };
     const board = emptyBoard();
-    const created = { schemaVersion: 1, owner: uid, epoch: 0, closed: false, admissions: {}, members: {}, shared: { board: publicBoard(board) }, gm: { board }, decisions: {}, personal: {}, receipts: {}, usedPrompts: {} };
+    const created = { schemaVersion: 1, owner: uid, epoch: 0, closed: false, admissions: {}, members: {}, shared: { board: emptyBoard() }, gm: { board }, decisions: {}, personal: {}, receipts: {}, usedPrompts: {} };
     created.receipts[uid] = { [command.commandId]: { payload: canonical(command), result: ok(command.commandId, 0) } };
     if (overCapacity(created)) return { result: fail('ROOM_FULL') };
     return { room: created, result: ok(command.commandId, 0) };

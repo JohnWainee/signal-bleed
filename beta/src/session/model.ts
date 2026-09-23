@@ -46,7 +46,7 @@ export interface SessionAdapter {
 
 export const PLAYBOOK_IDS = ['splicer', 'registrar', 'operator', 'diver', 'inspector', 'salvage', 'watch'] as const;
 type Receipt = { payload: string; result: Result };
-type Room = { owner: string; epoch: number; scene: Scene | null; board: Board; gmNote: string; admissions: Record<string, Admission>; decisions: Record<string, Record<string, Prompt>>; sheets: Record<string, Sheet>; notes: Record<string, Notes>; receipts: Record<string, Record<string, Receipt>>; usedPrompts: Set<string> };
+type Room = { owner: string; epoch: number; scene: Scene | null; board: Board; publicBoard: Board; gmNote: string; admissions: Record<string, Admission>; decisions: Record<string, Record<string, Prompt>>; sheets: Record<string, Sheet>; notes: Record<string, Notes>; receipts: Record<string, Record<string, Receipt>>; usedPrompts: Set<string> };
 type Listener = { uid: string; emit: (event: SessionEvent) => void; admissionRevision?: number; admissionStatus?: Admission['status'] };
 const forbiddenKeys = new Set(['__proto__', 'prototype', 'constructor']);
 const clone = <T>(value: T): T => structuredClone(value);
@@ -62,7 +62,11 @@ const fail = (code: Failure): { ok: false; code: Failure } => ({ ok: false, code
 const emptySheet = (): Sheet => ({ schemaVersion: 1, revision: 0, name: '', playbookId: null, inventory: [] });
 const emptyNotes = (): Notes => ({ schemaVersion: 1, revision: 0, text: '' });
 const emptyBoard = (): Board => ({ schemaVersion: 1, revision: 0, bleed: 0, clues: [] });
-const publicBoard = (board: Board): Board => ({ ...clone(board), clues: board.clues.filter(clue => clue.state === 'active' || clue.state === 'woven') });
+const syncPublicBoard = (room: Room): void => {
+  const next = { bleed: room.board.bleed, clues: clone(room.board.clues.filter(clue => clue.state === 'active' || clue.state === 'woven')) };
+  const changed = canonical({ bleed: room.publicBoard.bleed, clues: room.publicBoard.clues }) !== canonical(next);
+  room.publicBoard = { schemaVersion: 1, revision: room.publicBoard.revision + (changed ? 1 : 0), ...next };
+};
 
 function validCommand(value: unknown): value is Command {
   if (!object(value) || !id(value.commandId) || typeof value.type !== 'string') return false;
@@ -120,7 +124,7 @@ export class MockSessionStore {
     }
     const delivery = <T>(value: T | null): Delivery<T> => ({ status: this.status(roomId), value: this.status(roomId) === 'loading' ? null : clone(value) });
     listener.emit({ type: 'scene', data: delivery(room.scene) });
-    listener.emit({ type: 'board', data: delivery(listener.uid === room.owner ? room.board : publicBoard(room.board)) });
+    listener.emit({ type: 'board', data: delivery(listener.uid === room.owner ? room.board : room.publicBoard) });
     if (listener.uid === room.owner) {
       listener.emit({ type: 'gmRoster', data: delivery(room.admissions) });
       listener.emit({ type: 'gmDecisions', data: delivery(room.decisions) });
@@ -166,7 +170,7 @@ class MockSessionAdapter implements SessionAdapter {
       const prior = this.receipt(existing, commandId, { type: 'room.create', roomId });
       return prior?.ok ? { ok: true, roomId } : prior ?? fail('CONFLICT');
     }
-    const room: Room = { owner: this.uid, epoch: 0, scene: null, board: emptyBoard(), gmNote: '', admissions: Object.create(null), decisions: Object.create(null), sheets: Object.create(null), notes: Object.create(null), receipts: Object.create(null), usedPrompts: new Set() };
+    const room: Room = { owner: this.uid, epoch: 0, scene: null, board: emptyBoard(), publicBoard: emptyBoard(), gmNote: '', admissions: Object.create(null), decisions: Object.create(null), sheets: Object.create(null), notes: Object.create(null), receipts: Object.create(null), usedPrompts: new Set() };
     this.store.create(roomId, room);
     this.save(room, commandId, { type: 'room.create', roomId }, ok(commandId, 0));
     return { ok: true, roomId };
@@ -233,21 +237,21 @@ class MockSessionAdapter implements SessionAdapter {
         if (room.board.clues.some(clue => clue.id === command.clueId)) return fail('CONFLICT');
         if (room.board.clues.length >= 100) return fail('ROOM_FULL');
         room.board.clues.push({ schemaVersion: 1, id: command.clueId, revision: 0, text: command.text, state: 'staged' });
-        entityRevision = ++room.board.revision; break;
+        entityRevision = ++room.board.revision; syncPublicBoard(room); break;
       case 'clue.update': {
         if (command.expectedRevision !== room.board.revision) return fail('CONFLICT');
         const clue = room.board.clues.find(value => value.id === command.clueId); if (!clue) return fail('NOT_FOUND');
-        clue.text = command.text; clue.state = command.state; clue.revision++; entityRevision = ++room.board.revision; break;
+        clue.text = command.text; clue.state = command.state; clue.revision++; entityRevision = ++room.board.revision; syncPublicBoard(room); break;
       }
       case 'clue.move': {
         if (command.expectedRevision !== room.board.revision) return fail('CONFLICT');
         const from = room.board.clues.findIndex(value => value.id === command.clueId); if (from < 0) return fail('NOT_FOUND');
         const to = command.direction === 'up' ? from - 1 : from + 1; if (to < 0 || to >= room.board.clues.length) return fail('INVALID');
-        const clue = room.board.clues.splice(from, 1)[0]!; room.board.clues.splice(to, 0, clue); clue.revision++; entityRevision = ++room.board.revision; break;
+        const clue = room.board.clues.splice(from, 1)[0]!; room.board.clues.splice(to, 0, clue); clue.revision++; entityRevision = ++room.board.revision; syncPublicBoard(room); break;
       }
       case 'clock.bleed.set':
         if (command.expectedRevision !== room.board.revision) return fail('CONFLICT');
-        room.board.bleed = command.value; entityRevision = ++room.board.revision; break;
+        room.board.bleed = command.value; entityRevision = ++room.board.revision; syncPublicBoard(room); break;
       case 'prompt.open': {
         if (own(room.admissions, command.recipientUid)?.status !== 'admitted' || own(room.admissions, command.recipientUid)?.role !== 'player') return fail('FORBIDDEN');
         if (!room.scene || command.sceneEpoch !== room.epoch) return fail('STALE_SCENE');
