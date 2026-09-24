@@ -51,7 +51,7 @@ See [AGENT_TASKS.md](AGENT_TASKS.md) for task ownership, dependencies, acceptanc
 
 ## Current setting
 
-Use [Hawaiʻi — Emergency Republic](../rules/hawaii-setting-bible.md) for all places, chronology and program references. The former archipelago is superseded. The first four-phase fixture spans September 2026–2029; it does not fix the campaign-present date.
+Use [Hawaiʻi — Emergency Republic](../rules/hawaii-setting-bible.md) for all places, chronology and program references. The former archipelago is superseded. Default play is approximately 2050 after the approximately 2045 Fragmentation. The first four-phase fixture spans September 2026–2029 and is now an optional elder/earlier-era path; use [the lifepath specification](LIFEPATH_SPEC.md) for the default new-generation contract.
 
 ## M1 implementation contract
 
