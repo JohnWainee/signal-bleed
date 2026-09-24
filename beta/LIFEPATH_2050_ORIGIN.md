@@ -13,14 +13,28 @@
 
 Each background supplies a persistent tag and callback, not a numeric bonus or playbook restriction. Every response resolves the immediate situation, grants one document/contact/access/place asset, and creates a lasting relationship, obligation, exposure, or unfinished question.
 
+Before confirmation, every obligation must name who can call it in and one concrete thing they may ask the character to do. If the table cannot name both, record a relationship complication, exposure, or unfinished question instead of a vague debt.
+
+Every structured custom response must also carry one real lasting cost: an obligation, exposure, unresolved question, or relationship complication. A beneficial relationship facet may accompany that cost but cannot replace it.
+
 Receipt templates:
 
 - **Private:** “You grew up in [background]. [Connection answer]. During [event], you [response]. You can call on [asset]. [Lasting consequence].”
 - **Public, only when revealed:** “[Character] came from [background] and still carries a connection from [event].”
 
+Structured custom-response worksheet:
+
+1. What does the character do?
+2. What real risk or cost do they accept?
+3. Who or what is involved?
+
+The GM drafts an immediate resolution, exactly one document/contact/access/place asset, exactly one lasting cost, and the private/public receipts. Compare it with A and B at the rolled band, edit it to the same capability budget, and approve all effects before confirmation.
+
 ## Backgrounds and connections
 
 ### Neighborhood Network
+
+**Framing cue:** Notice who a shared record leaves out; risk your standing with the people who rely on it when you take responsibility.
 
 - Person: Who vouched for you when a record was wrong?
 - Group: Which household or crew gave you your first responsibility?
@@ -28,11 +42,15 @@ Receipt templates:
 
 ### Harbor Corridor
 
+**Framing cue:** Notice the real schedule, custody chain, and shift change; risk someone's work or passage when you intervene.
+
 - Person: Who could read the real schedule when the posted one was wrong?
 - Group: Which shift crew or row of vendors treated you as one of theirs?
 - Place: Where did you wait when arrivals and departures stopped matching?
 
 ### Maintenance Community
+
+**Framing cue:** Notice early failure and the workaround keeping things usable; risk inheriting responsibility for the repair or access.
 
 - Person: Who taught you how to notice something failing early?
 - Group: Which repair crew let you help with small jobs?
@@ -40,17 +58,23 @@ Receipt templates:
 
 ### Threshold Commuter
 
+**Framing cue:** Notice where systems disagree about a person or crossing; risk linking identities, credentials, or routes when you help.
+
 - Person: Who helped you cross when the systems disagreed about you?
 - Group: Which regular travellers learned to watch out for one another?
 - Place: Which checkpoint, station, or waiting area became a second home?
 
 ### Between Addresses
 
+**Framing cue:** Notice where a system assumes one fixed address; risk making a household, helper, or temporary refuge newly visible.
+
 - Person: Who always found room for you?
 - Group: Who helped when it was time to move again?
 - Place: Where could messages and deliveries reliably find you?
 
 ### The Old Grid
+
+**Framing cue:** Notice where old procedure and current authority conflict; risk a traceable visit or later review when you use what still works.
 
 - Person: Who taught you the old procedures that still worked there?
 - Group: Which office, school, or residents' group maintained its own records?
@@ -160,7 +184,7 @@ Two trusted sources give incompatible instructions about an ordinary responsibil
 **Pressure:** People or resources must move now. Following either instruction makes the other impossible.
 
 - **A — Commit to one instruction.** That task is completed. Gain its sender as a contact. The other sender expects an explanation and their task remains open.
-- **B — Move everything to a temporary holding point.** Neither instruction is completed, but nothing is committed to the wrong destination. Gain the holding point as a place. Both sources demand an explanation.
+- **B — Move everything to a temporary holding point.** Neither instruction is completed, but the people or resources are safe and both tasks remain viable for a short time. Gain the holding point as a place. Both sources demand an answer before that window closes.
 
 **Entanglement:** Two groups have already begun acting on different instructions, and each expects you to coordinate.
 
@@ -175,6 +199,8 @@ Two trusted sources give incompatible instructions about an ordinary responsibil
 ## Universal safety fallback: The Last Run
 
 A package, tool, or message must reach its destination before transport closes. A player may select this at the rolled band instead of the primary event, without explanation or penalty.
+
+When safe, make the sender, destination, crew, or recipient part of the character's chosen connection. If that connection is what the player wants to avoid, introduce a neutral new contact or place instead; the player does not need to explain the substitution.
 
 **Pressure:** The final vehicle is leaving now, and the destination lies beyond its normal stop.
 
@@ -194,3 +220,12 @@ A package, tool, or message must reach its destination before transport closes. 
 ## Playtest stop
 
 Do not author the remaining phases yet. Test whether three dealt event choices feel meaningfully different, backgrounds produce visible framing changes, assets are comparably useful, obligations invite play rather than bookkeeping, custom responses stay within the preset budget, and The Last Run feels like a fair alternative rather than a lesser result.
+
+## Sponsor-approved playtest revisions
+
+1. Added one framing cue to each background so its perspective and risk reliably change how an event is presented without adding a numeric benefit or predetermining the event's truth.
+2. Revised Conflicting Message / Pressure B so the temporary holding point preserves both tasks for a short time. It now offers immediate value comparable to completing one task while retaining the complication of answering both sources.
+3. Required each obligation to identify who can call it in and one concrete thing they may ask. Vague debts become another explicit lasting hook before confirmation.
+4. Required every structured custom response to carry one real lasting cost. A beneficial relationship may accompany the cost but cannot replace it.
+5. Tied The Last Run to the chosen connection when safe, with a neutral new contact or place whenever that connection is what the player wants to avoid.
+6. Added the three-question structured custom-response worksheet directly to the Origin pack so the complete phase can be run without switching documents.
