@@ -195,7 +195,7 @@ Each authored event cell includes:
 
 The default pack needs four phases, six life entries and six event families per phase, three band variants per family, and two responses per variant. That is eighteen primary cells and thirty-six preset responses per phase. Automated validation checks complete cells, three unique dealt offers, unique IDs, valid references/effects, comparable capability, chronological consistency, a valid same-band fallback, and availability of all seven playbooks.
 
-The sponsor-approved Origin pack is authored in `beta/LIFEPATH_2050_ORIGIN.md`. Author and playtest Origin before expanding Career, Incident, or Fallout.
+The sponsor-approved Origin pack is authored and desk-playtested in `beta/LIFEPATH_2050_ORIGIN.md`. The sponsor-approved Career content draft is authored in `beta/LIFEPATH_2050_CAREER.md` and requires the same structured review and desk playtest before Incident or Fallout authoring. Do not implement either pack until separately authorized.
 
 Cross-character links are opt-in and commit only after every affected player confirms. One player's lifepath cannot rewrite another player's secrets, actions, or established history.
 
