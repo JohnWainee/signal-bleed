@@ -35,14 +35,14 @@ The crew investigates discrepancy claims for **Interisland Claims & Adjustments*
 
 In new 2050 material, the helpful channel voice is formally addressed as **Control**. People who have developed a familiar relationship with the voice may call her **Aunty**. “Aunty” is a relational name earned through repeated kindness and practical help, not the system's title or a generic supernatural label. Existing “Grandmother” case/rules text remains compatibility content and must not be bulk-renamed before those scenes are reviewed in context. The naming decision does not establish whether Grandmother and Control are ontologically one continuous voice.
 
-## Path manifests and scenario dates
+## Path manifests and scenario years
 
-Date gating selects a complete compatible path manifest; it does not silently truncate a four-phase path.
+Year gating selects a complete compatible path manifest; it does not silently truncate a four-phase path.
 
 Each path manifest declares:
 
 - stable `pathId` and `tableVersion`;
-- earliest and latest compatible `scenarioDate`;
+- earliest and latest compatible `scenarioYear`;
 - four ordered phase definitions;
 - source/canon status;
 - content-pack compatibility.
@@ -51,10 +51,10 @@ The default new-generation path is eligible for the approximately 2050 era:
 
 | Phase | Character era | Purpose |
 |---|---|---|
-| Origin | Childhood in the late Republic, 2030s | Community, formative priority, first tie or obligation |
-| Career | First work in the brittle system, early 2040s | Access, reputation, contact, debt or place |
-| Incident | The Fragmentation, approximately 2045 | The shared generational scar and personal stakes |
-| Fallout | After the break, late 2040s | Returning threads and the starting case hook |
+| Origin | Childhood in the late Republic, 2030s | Background, first connection, and formative event |
+| Career | First work in the brittle system, early 2040s | Job, assignment, access, reputation, or debt |
+| Incident | The Fragmentation, approximately 2045 | Crisis role, shared generational scar, and personal stakes |
+| Fallout | After the break, late 2040s | Aftermath path, returning threads, and the starting case hook |
 
 LP-B remains a complete earlier/elder path. A 2050 character using LP-B is ordinarily in their 50s–60s; age is characterization, not an automatic modifier or restriction. Earlier scenario dates require a complete compatible path or an explicitly authored pre-divergence path. They never expose later events by truncating the default path.
 
@@ -62,18 +62,22 @@ LP-B remains a complete earlier/elder path. A 2050 character using LP-B is ordin
 
 Each phase follows one append-only flow:
 
-1. **Choose direction.** The player chooses what the character attempts or protects. The direction persists as a tag.
-2. **Roll once.** Roll unmodified 2d6 and store both dice.
-3. **Resolve the band.** Totals 2–6 are pressure (15/36), 7–9 entanglement (15/36), and 10–12 room to manoeuvre (6/36).
-4. **Show known effects.** Present the full known consequences of A, B, and any proposed custom response before confirmation.
-5. **Choose response.** Select A, B, or a GM-adjudicated custom response whose allowlisted effects are agreed before confirmation.
-6. **Confirm receipt.** Append the immutable phase record and apply its effects once.
+1. **Choose a life entry.** Choose one of six concrete backgrounds, jobs, crisis roles, or aftermath paths. The choice persists as a tag and never assigns or restricts a playbook.
+2. **Choose a connection.** The phase offers three entry-specific person, group, or place prompts. The player chooses one and supplies its identifying detail.
+3. **Deal events.** Randomly offer three of the phase's six event premises. The player chooses one before rolling. No seed, hidden weight, or optimization currency is used.
+4. **Roll once.** Roll unmodified 2d6 and store both dice.
+5. **Resolve the band.** Totals 2–6 are pressure (15/36), 7–9 entanglement (15/36), and 10–12 room to manoeuvre (6/36). Pressure imposes an immediate constrained choice; entanglement brings another person or group into the consequence; room to manoeuvre supplies time or access without removing lasting consequences.
+6. **Show known effects.** Present the full known consequences of A, B, and any proposed custom response before confirmation.
+7. **Choose response.** Select A, B, or a GM-approved custom response whose allowlisted effects are agreed before confirmation.
+8. **Confirm receipt.** Append the immutable phase record and apply its effects once.
 
-There are no optimization rerolls. Replacing content for lines, veils, safety, or fit is free, unlimited, and never recorded as a reroll. A replacement selects another authored event with the same phase/direction/band contract and does not worsen the outcome. Once confirmed, a response is history; later correction requires an explicit audited correction command rather than mutation of the old receipt.
+There are no optimization rerolls. Replacing content for lines, veils, safety, or fit is free, unlimited, and never recorded as a reroll. A player may redraw the three offered events or use the phase's authored safety fallback at the same band and effect budget. Replacement never worsens the outcome. Once confirmed, a response is history; later correction requires an explicit audited correction command rather than mutation of the old receipt.
+
+A custom-response generator asks what the character does, what risk they accept, and who or what is involved. It drafts an immediate outcome, one phase-appropriate asset, one lasting complication, relationship, or obligation, and private/public receipts from the allowlisted effect vocabulary. The GM may edit and must approve it before confirmation. A custom response cannot exceed the preset capability budget, erase the event's pressure, alter stats or playbook eligibility, establish cosmic truth, or affect another PC without consent. V1 uses structured templates; generated prose may be layered on later but is not authoritative.
 
 ### Event selection v1
 
-The first content pack has exactly one authored event variant for each `phase × direction × band`. The single 2d6 roll therefore selects the band and its event; there is no hidden second randomizer, weight, or seeded engine. Later packs may add explicit, versioned selection rules only after playtesting demonstrates that one variant per cell is too repetitive.
+The first content pack has six authored event families per phase and one authored variant for each `event family × band`: eighteen primary cells per phase. After the life entry is chosen, the application randomly offers three event families and the player chooses one before rolling. The single 2d6 roll selects that family's band variant; there is no hidden weight, seeded engine, or optimization reroll. Each cell also references the authored phase safety fallback for the same band.
 
 Callbacks may read prior confirmed tags, facets, obligations, assets, or bargains and change framing. They cannot change the recorded dice/band, remove a confirmed cost, assign a playbook, or execute arbitrary scripts.
 
@@ -81,7 +85,7 @@ Callbacks may read prior confirmed tags, facets, obligations, assets, or bargain
 
 ### Allowed v1 effects
 
-- add a direction/history tag;
+- add a life-entry/history tag;
 - create or update a relationship facet attached to a stable NPC reference;
 - add an obligation;
 - grant one tagged asset;
@@ -93,7 +97,7 @@ Effects use a small validated data vocabulary. Unknown effect types fail closed.
 
 ### Assets
 
-Every confirmed phase grants a document, contact, access, or place asset. Once per session, a player may invoke one asset to:
+Every confirmed phase grants a document, contact, access, or place asset. Once per session, a player may invoke one lifepath asset total, regardless of how many assets they own, to:
 
 - ask a Read the Wire question without rolling;
 - count as leverage for Work Someone; or
@@ -103,7 +107,7 @@ The application stores the granted asset and its invoke options but does not enf
 
 ### Static bargains
 
-A response may offer, never impose: “start with a mark of Static; write the symptom into your history.” Acceptance and symptom text are persisted in the lifepath record. SB-11 derives `startingStatic` from accepted bargains. Applying that value to the playable character sheet requires the separately reviewed character-schema extension; until then the bargain remains visible and must not be silently discarded.
+A response may offer, never impose: “start with a mark of Static; write the symptom into your history.” A character may accept at most one Static bargain across the complete lifepath. Acceptance and symptom text are persisted. `startingStatic` equals the chosen playbook's starting Static plus the accepted bargain, for a maximum starting value of 3; no character can begin claimed. The character receives any Static Move reached at the resulting level. Applying that value to the playable character sheet requires the separately reviewed character-schema extension; until then the bargain remains visible and must not be silently discarded.
 
 ### Explicit non-effects
 
@@ -118,7 +122,7 @@ A response may offer, never impose: “start with a mark of Static; write the sy
 
 | Data | Player | GM | Presenter/table |
 |---|---:|---:|---:|
-| Direction, dice, band, response, receipt, assets, obligations, facets, bargains, hook | Yes | Yes | No, unless explicitly revealed |
+| Life entry, connection, dealt events, dice, band, response, receipt, assets, obligations, facets, bargains, hook | Yes | Yes | No, unless explicitly revealed |
 | Phase title and era | Yes | Yes | Yes |
 | One-line public receipt | Yes | Yes | Yes |
 | Dice | Yes | Yes | Only with that player's permission |
@@ -155,7 +159,9 @@ type PhaseRecord = {
   schemaVersion: 1;
   phase: 'origin' | 'career' | 'incident' | 'fallout';
   era: string;
-  directionId: string;
+  choiceId: string;
+  connection: { kind: 'person' | 'group' | 'place'; promptId: string; text: string };
+  offeredEventIds: string[];
   eventId: string;
   dice: [number, number];
   total: number;
@@ -167,9 +173,9 @@ type PhaseRecord = {
 };
 ```
 
-Room state stores `scenarioDate`, defaulting to an implementation-normalized date in approximately 2050 once the canon addendum chooses the exact default value. The path and content-pack validators compare this date with manifest eligibility before returning any event text.
+Room state stores `scenarioYear`, defaulting to an implementation-selected year in the approximately 2050 era. Path eligibility is year-based because the accepted Fragmentation/default-era dates remain approximate. The path and content-pack validators compare the year with manifest eligibility before returning any event text.
 
-The authoritative command flow persists a command receipt before acknowledging success. Retrying the exact command ID/payload returns its prior result. A changed payload with the same command ID fails. Confirming a phase atomically appends one record, updates derived state once, and advances `nextPhase`. Refresh and reconnect reconstruct progress from confirmed state. In-progress direction/roll state may resume, but it never applies effects before confirmation.
+The authoritative command flow persists a command receipt before acknowledging success. Retrying the exact command ID/payload returns its prior result. A changed payload with the same command ID fails. Confirming a phase atomically appends one record, updates derived state once, and advances `nextPhase`. Refresh and reconnect reconstruct progress from confirmed state. In-progress choice/deal/roll state may resume, but it never applies effects before confirmation.
 
 Playbook, sheet, inventory, and private notes remain separate contract entities. Lifepath completion does not assign or filter a playbook.
 
@@ -178,16 +184,18 @@ Playbook, sheet, inventory, and private notes remain separate contract entities.
 Each authored event cell includes:
 
 - stable event ID and content version;
-- phase, direction, band, era, and source/canon status;
+- phase, compatible life entries, event family, band, era, and source/canon status;
 - prompt and known situation;
 - A and B response text with allowlisted effects;
 - optional custom-response guidance;
 - private and public receipt templates;
 - referenced NPC/entity IDs and callback tags;
-- content warnings and replacement-safe fallback;
+- content warnings and a same-band reference to the authored phase safety fallback;
 - continuity assertions.
 
-The default pack needs four phases, at least two directions per phase, three band variants per direction, and two responses per variant. Automated validation checks complete cells, unique IDs, valid references/effects, comparable capability, chronological consistency, and availability of all seven playbooks.
+The default pack needs four phases, six life entries and six event families per phase, three band variants per family, and two responses per variant. That is eighteen primary cells and thirty-six preset responses per phase. Automated validation checks complete cells, three unique dealt offers, unique IDs, valid references/effects, comparable capability, chronological consistency, a valid same-band fallback, and availability of all seven playbooks.
+
+The sponsor-approved Origin pack is authored in `beta/LIFEPATH_2050_ORIGIN.md`. Author and playtest Origin before expanding Career, Incident, or Fallout.
 
 Cross-character links are opt-in and commit only after every affected player confirms. One player's lifepath cannot rewrite another player's secrets, actions, or established history.
 
@@ -222,8 +230,8 @@ The existing Static move **Call and Answer** remains distinct: once per session 
 ## Implementation sequence
 
 1. **SB-11A:** pure schema/types, validator, malformed/oversized fixtures, and content-pack completeness checks.
-2. **SB-11B:** idempotent direction → roll → confirm → append commands with immutable history and interruption/resume.
-3. **SB-11C:** room `scenarioDate`, manifest eligibility, and no-later-text tests.
+2. **SB-11B:** idempotent life-entry → connection → deal-three → choose-event → roll → confirm → append commands with immutable history and interruption/resume.
+3. **SB-11C:** room `scenarioYear`, manifest eligibility, and no-later-text tests.
 4. **SB-11D:** versioned data-only content loader using the fixed v1 event grid.
 5. **SB-11E:** player/GM/private-public projections and network-level privacy tests.
 6. **Character schema:** represent playable Static/symptoms without granting GM access to private notes.
