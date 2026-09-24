@@ -1,6 +1,6 @@
 # Default 2050 Origin playtest review
 
-**Status:** Origin-only desk playtest completed for sponsor review. No Career, Incident, Fallout, runtime, or canonical setting content was authored.
+**Status:** Origin-only desk playtest completed and sponsor-approved. No Career, Incident, Fallout, runtime, or canonical setting content was authored.
 
 ## Method
 
@@ -40,4 +40,4 @@ Six sample characters used all six backgrounds. Each received three randomly sel
 
 ## Stop gate
 
-Do not author Career, Incident, or Fallout and do not implement runtime code. Sponsor approval of the revised Origin pack is required before any next design stage.
+The sponsor approved the revised Origin pack after this review. Do not author Career, Incident, or Fallout and do not implement runtime code without separate authorization.

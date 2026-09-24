@@ -1,6 +1,6 @@
 # Default 2050 lifepath: Origin pack
 
-**Status:** sponsor-approved content draft for implementation planning and playtest. Do not implement runtime code or author Career, Incident, or Fallout until this pack is reviewed in play.
+**Status:** sponsor-approved after the Origin desk playtest and six recorded revisions. An observed table playtest remains future evidence. Do not implement runtime code or author Career, Incident, or Fallout without separate authorization.
 
 ## Origin procedure
 
