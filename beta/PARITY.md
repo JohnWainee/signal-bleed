@@ -26,8 +26,9 @@ authorised.
 nothing in `beta/src`, `beta/backend` or `beta/CONTRACTS.md` addresses it — the beta has no partial
 version of it.
 
-One `ask_user_questions` was raised on SIG-31, on the parity-bar question (see
-[Open sponsor decisions](#open-sponsor-decisions)). The rest of the inventory did not wait on it.
+One `ask_user_questions` was raised on SIG-31, on the parity-bar question. The sponsor answered
+**full parity** — all 41 `migrate` rows block SB-13. See
+[Sponsor decisions](#sponsor-decisions) for what that settles.
 
 ---
 
@@ -61,7 +62,7 @@ One `ask_user_questions` was raised on SIG-31, on the parity-bar question (see
 | Company clocks — arbitrary named four-segment clocks | `table/index.html:1145` (`pClocks`), `:1241` (`corp-add`), `:1244` (`corp-seg`), `:1248` (`corp-del`), `B.corps` at `:811` | none | migrate | GM-authored fronts. Exercised by `smoke-test.js`, so it is a verified working capability, not a sketch. | Public shared state. |
 | Five rings, with the per-ring Terror and Temptation ticks and the "advance anyway?" confirm | `table/index.html:454` (`RINGS`), `:1176` (`openCase`), `:1326`–`:1332` (`rt`, `rp`, `ringfwd`) | none | migrate | The ring ladder is the case's structure and is referenced by the case-file format (`rings.terrors` / `rings.temptations`). | Public shared state. |
 | Case name and depth (3/4/5), with depth feeding the Theorize modifier | `table/index.html:1179` (`caseIn`), `:1426` (input handler), `:1312` (`depth` cycle), `:912` (modifier readout) | none | migrate | Depth is arithmetic the app performs; a beta without it silently changes the roll. | Public shared state. |
-| End the case — drowns the chart, clears Harm, widens the Aperture, increments the case count | `table/index.html:1335` (`endcase`) | none | migrate | Destructive and irreversible in the alpha (no undo, no snapshot). Worth reimplementing deliberately rather than by accident. | **Destructive.** Clears each player's Harm through `pushP()` and rewrites every clue's state. An export taken after `endcase` cannot reconstruct the chart. SB-09C should decide whether a beta equivalent snapshots first. |
+| End the case — drowns the chart, widens the Aperture, increments the case count, and *claims* to clear Harm | `table/index.html:1335` (`endcase`); the Harm line is `if(c){c.harm=0;pushP();}` where `c=P.ch` (`:1223`) and `pushP` writes `K_PRIV(me.id)` (`:851`) | none | migrate | Destructive and irreversible in the alpha (no undo, no snapshot). Worth reimplementing deliberately rather than by accident. **The alpha also does not do what its own UI says** — see the notes; the beta should implement the intent, not copy the bug. | **Destructive.** Rewrites every clue's state to `deep` and scatters their coordinates, so an export taken after `endcase` cannot reconstruct the chart. **Harm clearing does not work as advertised:** the confirm dialog at `:1335` promises "Harm clears", but `c` is `P.ch` — the *invoking* client's own character — and `pushP()` writes only that client's own `players/{uid}` record. No other player's Harm is touched. A GM without a character (the normal case: `join-gm` at `:1225` never sets `P.ch`) clears nothing at all. Harm is per-player private state, so a correct implementation needs either each client to clear its own on a broadcast signal, or a rules change letting the GM write player records. That is a design decision for the migrate card, and it interacts with the `personal/{uid}` boundary in `beta/CONTRACTS.md`. |
 
 ## 4. Rolls, tables and the ledger
 
@@ -163,16 +164,30 @@ card: per SB-09's own exclusion ("rewriting all alpha features in one task"), ea
 scoped card before SB-13. The natural clusters are the chart (§2), the clocks and case structure
 (§3), rolls and content (§4), the Portal's private-send pipeline (§5), and the character sheet (§6).
 
-## Open sponsor decisions
+## Sponsor decisions
 
-**Raised on SIG-31 as a single `ask_user_questions`:** what is the parity bar for cutover? The
-answer changes the shape of the 32 `migrate` rows — whether they are all release blockers for
-SB-13, whether the alpha Chart Table stays live in parallel while the beta grows into it, or
-whether the beta ships as a narrower tool and the alpha is retired with an explicitly accepted
-feature loss. The rest of this inventory does not depend on the answer.
+### Resolved — the parity bar is full parity
 
-**Deferred to SB-09C, flagged here:** whether beta rooms must be able to import an alpha export at
-all. Both `NEEDS-SPONSOR` rows in §10 collapse to that one question.
+Asked on SIG-31 as a single `ask_user_questions` (human-only, single-select) and **answered by the
+sponsor on 2026-09-25: `full-parity`** — *"Full parity first — all 41 block SB-13. Beta does not go
+live until it does everything the alpha does. Largest scope; the alpha keeps running unchanged until
+then."*
+
+What that settles, so SB-13's gate is unambiguous:
+
+- **All 41 `migrate` rows are release blockers for SB-13.** Not a subset, not a negotiated core.
+  SB-13 cannot pass while any of them is unbuilt.
+- **The 10 `defer` rows and the 11 `retain` rows do not block cutover.** `defer` rows are out of the
+  cutover scope by their own rationale; `retain` rows keep working where they are.
+- **The alpha keeps running unchanged until cutover.** No feature loss is accepted on any date, and
+  `/table/` is not retired incrementally. That also means alpha bugs recorded below (notably the
+  `endcase` Harm mismatch in §3) stay live in the alpha until the beta replaces it — this inventory
+  is not a licence to fix them there.
+
+### Deferred to SB-09C
+
+Whether beta rooms must be able to import an alpha export at all. Both `NEEDS-SPONSOR` rows in §10
+collapse to that one question, and it is independent of the parity bar above.
 
 ## Findings worth acting on regardless
 
@@ -192,3 +207,7 @@ carried into the beta.
    and it overwrites the live room for everyone.
 6. **`validate-setting.mjs` regex-parses `D100` and `BOOKS` out of `table/index.html`** (§10).
    Migrating that content without updating the script breaks `npm run setting:validate`.
+7. **`endcase` does not clear anyone else's Harm** (§3). The confirm dialog promises "Harm clears",
+   but the code clears only the invoking client's own character and writes only that client's own
+   private record — and the GM normally has no character, so usually nothing is cleared at all.
+   The beta should build the intent, not port the behaviour.
