@@ -68,8 +68,12 @@ try {
   await gm.getByRole('button', { name: 'Add to staging' }).click();
   await gm.locator('li.clue-staged').filter({ hasText: 'GM_NEVER_PUBLIC' }).waitFor();
   for (const page of [p1, p2, presenter]) assert.doesNotMatch(await page.locator('#app').innerText(), /GM_NEVER_PUBLIC/);
-  await gm.locator('.bleed-clock').getByRole('button', { name: '3', exact: true }).click();
-  for (const page of [p1, p2, presenter]) await page.locator('.bleed-clock button[aria-pressed="true"]').filter({ hasText: /^3$/ }).waitFor();
+  await gm.getByRole('group', { name: 'Bleed clock' }).getByRole('button', { name: 'Set Bleed to 3 of 6' }).click();
+  for (const page of [p1, p2, presenter]) {
+    const clock = page.getByRole('group', { name: 'Bleed clock' });
+    await page.getByText('Current Bleed: 3 of 6.', { exact: true }).waitFor();
+    assert.equal(await clock.getByRole('button', { name: 'Set Bleed to 3 of 6' }).isDisabled(), true, 'non-GM Bleed control is not read-only');
+  }
   const gmUid = await uid(gm);
   const pendingKey = `SB:beta:pending:${room}:${gmUid}`;
   const sceneCommand = { type: 'scene.publish', commandId: `RetryScene${Date.now()}`, expectedEpoch: 0, title: 'PUBLIC_SCENE', body: 'PUBLIC_BODY' };
@@ -113,7 +117,13 @@ try {
   for (const [role, page] of [['gm', gm], ['p1', p1], ['p2', p2], ['presenter', presenter]]) {
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), true, `${role} viewport has horizontal overflow`);
   }
-  for (const control of [p1.getByRole('button', { name: 'A · Choice A' }), gm.getByRole('button', { name: 'Send private prompt' })]) {
+  for (const control of [
+    p1.getByRole('button', { name: 'A · Choice A' }),
+    gm.getByRole('button', { name: 'Send private prompt' }),
+    gm.getByRole('button', { name: 'Set Bleed to 3 of 6' }),
+    gm.getByRole('button', { name: 'Save clue text' }).first(),
+    gm.getByRole('button', { name: 'Add to staging' }),
+  ]) {
     const box = await control.boundingBox(); assert.ok(box && box.height >= 44 && box.width >= 44, 'interactive target is smaller than 44 × 44 CSS pixels');
   }
   assert.doesNotMatch(await p1.locator('#app').innerText(), /ONLY_PLAYER_TWO/);

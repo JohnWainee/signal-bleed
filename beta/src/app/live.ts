@@ -164,15 +164,17 @@ export async function startLive() {
   };
   const renderBoard = (gm = false, readOnly = false) => {
     const panel = section('shared-board', 'board'); panel.heading.textContent = 'Clues and Bleed';
-    const clock = el('div'); clock.className = 'bleed-clock'; clock.setAttribute('aria-label', `Bleed ${board?.bleed ?? 0} of 6`);
+    const bleed = board?.bleed ?? 0;
+    const clock = el('div'); clock.className = 'bleed-clock'; clock.setAttribute('role', 'group'); clock.setAttribute('aria-label', 'Bleed clock');
     for (let value = 0; value <= 6; value++) {
       const control = button(String(value), () => {
         if (!gm || !board || value === board.bleed) return;
         if (value < board.bleed && !window.confirm(`Reduce the Bleed from ${board.bleed} to ${value}?`)) return;
         run('Bleed clock change', { type: 'clock.bleed.set', commandId: commandId(), expectedRevision: board.revision, value });
-      }, value === (board?.bleed ?? 0) ? 'primary' : '');
-      control.disabled = !gm || readOnly; control.setAttribute('aria-pressed', String(value === (board?.bleed ?? 0))); clock.append(control);
+      }, value === bleed ? 'primary' : '');
+      control.disabled = !gm || readOnly; control.setAttribute('aria-label', `Set Bleed to ${value} of 6`); control.setAttribute('aria-pressed', String(value === bleed)); clock.append(control);
     }
+    if (!gm) panel.node.append(el('p', `Current Bleed: ${bleed} of 6.`));
     panel.node.append(clock);
     const list = el('ol'); list.className = 'clue-list';
     const clues = board?.clues ?? [];
