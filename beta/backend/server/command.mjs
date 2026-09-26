@@ -15,6 +15,16 @@ const fail = code => ({ ok: false, code });
 const ok = (commandId, entityRevision) => ({ ok: true, commandId, entityRevision });
 const emptySheet = () => ({ schemaVersion: 1, revision: 0, name: '', playbookId: null, inventory: [] });
 const emptyNotes = () => ({ schemaVersion: 1, revision: 0, text: '' });
+const emptyBoard = () => ({ schemaVersion: 1, revision: 0, bleed: 0, clues: [] });
+const publicBoard = board => ({ ...copy(board), clues: board.clues.filter(clue => clue.state === 'active' || clue.state === 'woven') });
+const syncBoard = room => {
+  room.gm.board ??= emptyBoard();
+  room.gm.board.schemaVersion ??= 1;
+  room.gm.board.revision ??= 0;
+  room.gm.board.bleed ??= 0;
+  room.gm.board.clues = Array.isArray(room.gm.board.clues) ? room.gm.board.clues : [];
+  room.shared.board = publicBoard(room.gm.board);
+};
 const playbooks = new Set(['splicer', 'registrar', 'operator', 'diver', 'inspector', 'salvage', 'watch']);
 const receiptCount = room => Object.values(room.receipts ?? {}).reduce((count, issuer) => count + Object.keys(issuer ?? {}).length, 0);
 const roomBytes = room => Buffer.byteLength(JSON.stringify(room), 'utf8');
@@ -32,6 +42,10 @@ export function validCommand(value) {
     case 'admission.decide': return exact(value, ['type', 'commandId', 'uid', 'decision', 'expectedRevision']) && id(value.uid) && ['admit', 'deny'].includes(value.decision) && revision(value.expectedRevision);
     case 'admission.revoke': return exact(value, ['type', 'commandId', 'uid', 'expectedRevision']) && id(value.uid) && revision(value.expectedRevision);
     case 'scene.publish': return exact(value, ['type', 'commandId', 'expectedEpoch', 'title', 'body']) && revision(value.expectedEpoch) && bounded(value.title, 200) && bounded(value.body, 2000);
+    case 'clue.create': return exact(value, ['type', 'commandId', 'expectedRevision', 'clueId', 'text']) && revision(value.expectedRevision) && id(value.clueId) && bounded(value.text, 2000);
+    case 'clue.update': return exact(value, ['type', 'commandId', 'expectedRevision', 'clueId', 'text', 'state']) && revision(value.expectedRevision) && id(value.clueId) && bounded(value.text, 2000) && ['staged', 'active', 'woven', 'deep'].includes(value.state);
+    case 'clue.move': return exact(value, ['type', 'commandId', 'expectedRevision', 'clueId', 'direction']) && revision(value.expectedRevision) && id(value.clueId) && ['up', 'down'].includes(value.direction);
+    case 'clock.bleed.set': return exact(value, ['type', 'commandId', 'expectedRevision', 'value']) && revision(value.expectedRevision) && Number.isInteger(value.value) && value.value >= 0 && value.value <= 6;
     case 'prompt.open': return exact(value, ['type', 'commandId', 'recipientUid', 'promptId', 'sceneEpoch', 'question', 'a', 'b']) && id(value.recipientUid) && id(value.promptId) && revision(value.sceneEpoch) && bounded(value.question, 2000) && bounded(value.a, 200) && bounded(value.b, 200);
     case 'prompt.close': return exact(value, ['type', 'commandId', 'recipientUid', 'promptId', 'expectedRevision']) && id(value.recipientUid) && id(value.promptId) && revision(value.expectedRevision);
     case 'response.submit': return exact(value, ['type', 'commandId', 'promptId', 'sceneEpoch', 'expectedRevision', 'choice']) && id(value.promptId) && revision(value.sceneEpoch) && revision(value.expectedRevision) && ['A', 'B'].includes(value.choice);
@@ -45,7 +59,8 @@ function apply(room, uid, roomId, command, slots) {
   if (!room) {
     if (command.type !== 'room.create') return { result: fail('NOT_FOUND') };
     if (!slots.permits(roomId, uid)) return { result: fail('FORBIDDEN') };
-    const created = { schemaVersion: 1, owner: uid, epoch: 0, closed: false, admissions: {}, members: {}, shared: {}, gm: {}, decisions: {}, personal: {}, receipts: {}, usedPrompts: {} };
+    const board = emptyBoard();
+    const created = { schemaVersion: 1, owner: uid, epoch: 0, closed: false, admissions: {}, members: {}, shared: { board: publicBoard(board) }, gm: { board }, decisions: {}, personal: {}, receipts: {}, usedPrompts: {} };
     created.receipts[uid] = { [command.commandId]: { payload: canonical(command), result: ok(command.commandId, 0) } };
     if (overCapacity(created)) return { result: fail('ROOM_FULL') };
     return { room: created, result: ok(command.commandId, 0) };
@@ -63,7 +78,7 @@ function apply(room, uid, roomId, command, slots) {
   const player = admitted && member.role === 'player';
   if (command.type === 'admission.request') {
     if (owner) return { result: fail('FORBIDDEN') };
-  } else if (command.type === 'admission.decide' || command.type === 'admission.revoke' || command.type === 'scene.publish' || command.type === 'prompt.open' || command.type === 'prompt.close' || command.type === 'room.close') {
+  } else if (command.type === 'admission.decide' || command.type === 'admission.revoke' || command.type === 'scene.publish' || command.type === 'prompt.open' || command.type === 'prompt.close' || command.type === 'clue.create' || command.type === 'clue.update' || command.type === 'clue.move' || command.type === 'clock.bleed.set' || command.type === 'room.close') {
     if (!owner) return { result: fail('FORBIDDEN') };
   } else if (!player) return { result: fail('FORBIDDEN') };
   const prior = own(own(room.receipts, uid), command.commandId);
@@ -71,6 +86,7 @@ function apply(room, uid, roomId, command, slots) {
   if (room.closed) return { result: fail('ROOM_CLOSED') };
 
   let entityRevision = 0;
+  syncBoard(room);
   switch (command.type) {
     case 'room.close':
       room.closed = true;
@@ -122,6 +138,32 @@ function apply(room, uid, roomId, command, slots) {
       entityRevision = ++room.epoch;
       room.shared.scene = { schemaVersion: 1, epoch: room.epoch, title: command.title, body: command.body };
       break;
+    case 'clue.create': {
+      const board = room.gm.board;
+      if (board.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
+      if (board.clues.some(clue => clue.id === command.clueId)) return { result: fail('CONFLICT') };
+      if (board.clues.length >= 100) return { result: fail('ROOM_FULL') };
+      board.clues.push({ schemaVersion: 1, id: command.clueId, revision: 0, text: command.text, state: 'staged' });
+      entityRevision = ++board.revision; syncBoard(room); break;
+    }
+    case 'clue.update': {
+      const board = room.gm.board;
+      if (board.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
+      const clue = board.clues.find(value => value.id === command.clueId); if (!clue) return { result: fail('NOT_FOUND') };
+      clue.text = command.text; clue.state = command.state; clue.revision++; entityRevision = ++board.revision; syncBoard(room); break;
+    }
+    case 'clue.move': {
+      const board = room.gm.board;
+      if (board.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
+      const from = board.clues.findIndex(value => value.id === command.clueId); if (from < 0) return { result: fail('NOT_FOUND') };
+      const to = command.direction === 'up' ? from - 1 : from + 1; if (to < 0 || to >= board.clues.length) return { result: fail('INVALID') };
+      const [clue] = board.clues.splice(from, 1); board.clues.splice(to, 0, clue); clue.revision++; entityRevision = ++board.revision; syncBoard(room); break;
+    }
+    case 'clock.bleed.set': {
+      const board = room.gm.board;
+      if (board.revision !== command.expectedRevision) return { result: fail('CONFLICT') };
+      board.bleed = command.value; entityRevision = ++board.revision; syncBoard(room); break;
+    }
     case 'prompt.open': {
       const target = own(room.members, command.recipientUid);
       if (target?.status !== 'admitted' || target.role !== 'player') return { result: fail('FORBIDDEN') };

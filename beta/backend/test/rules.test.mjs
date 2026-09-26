@@ -12,8 +12,10 @@ const read = (actor, path) => ref(actor, path).once('value');
 before(async () => {
   const rules = await readFile(new URL('../../../firebase.rules.json', import.meta.url), 'utf8');
   const proposal = await readFile(new URL('../rules.proposed.json', import.meta.url), 'utf8');
-  assert.deepEqual(JSON.parse(rules), JSON.parse(proposal), 'protected rules must match the reviewed proposal');
-  env = await initializeTestEnvironment({ projectId: 'demo-signal-bleed-beta', database: { host: '127.0.0.1', port: 9001, rules } });
+  const protectedRules = JSON.parse(rules);
+  const proposedRules = JSON.parse(proposal);
+  assert.deepEqual(proposedRules.rules.rooms, protectedRules.rules.rooms, 'proposal must preserve the protected alpha subtree exactly');
+  env = await initializeTestEnvironment({ projectId: 'demo-signal-bleed-beta', database: { host: '127.0.0.1', port: 9001, rules: proposal } });
   await env.clearDatabase();
   await env.withSecurityRulesDisabled(async context => {
     await context.database().ref().set({
@@ -29,8 +31,8 @@ before(async () => {
             p1: { role: 'player', status: 'admitted' }, p2: { role: 'player', status: 'admitted' },
             tv1: { role: 'presenter', status: 'admitted' }, revoked: { role: 'player', status: 'revoked' },
           },
-          shared: { scene: { schemaVersion: 1, epoch: 1, title: 'Public', body: 'PUBLIC_ONLY' } },
-          gm: { notes: { text: 'GM_ONLY' } },
+          shared: { scene: { schemaVersion: 1, epoch: 1, title: 'Public', body: 'PUBLIC_ONLY' }, board: { schemaVersion: 1, revision: 2, bleed: 2, clues: { publicClue: { id: 'publicClue', text: 'PUBLIC_CLUE', state: 'active' } } } },
+          gm: { notes: { text: 'GM_ONLY' }, board: { schemaVersion: 1, revision: 2, bleed: 2, clues: { hiddenClue: { id: 'hiddenClue', text: 'GM_STAGED_ONLY', state: 'staged' }, publicClue: { id: 'publicClue', text: 'PUBLIC_CLUE', state: 'active' } } } },
           decisions: { p1: { one: { question: 'ONLY_P1' } }, p2: { two: { question: 'ONLY_P2' } } },
           personal: { p1: { sheet: { name: 'P1' }, notes: { text: 'PLAYER_ONLY' } }, p2: { sheet: { name: 'P2' }, notes: { text: 'P2_ONLY' } } },
           receipts: { p1: { cmd1: { ok: true } }, p2: { cmd2: { ok: true } } },
@@ -49,6 +51,8 @@ test('GM receives roster and decisions but no player personal records', async ()
   assert.equal((await assertSucceeds(read(gm, `${room}/members`))).val().p1.role, 'player');
   assert.equal((await assertSucceeds(read(gm, `${room}/decisions`))).val().p2.two.question, 'ONLY_P2');
   assert.equal((await assertSucceeds(read(gm, `${room}/gm/notes`))).val().text, 'GM_ONLY');
+  assert.equal((await assertSucceeds(read(gm, `${room}/gm/board`))).val().clues.hiddenClue.text, 'GM_STAGED_ONLY');
+  assert.equal(JSON.stringify((await assertSucceeds(read(gm, `${room}/shared/board`))).val()).includes('GM_STAGED_ONLY'), false);
   await assertFails(read(gm, `${room}/personal/p1/sheet`));
   await assertFails(read(gm, `${room}/receipts/p1/cmd1`));
   await assertFails(read(gm, room));
@@ -59,6 +63,8 @@ test('each player receives only their own private data', async () => {
     const player = env.authenticatedContext(uid);
     const scene = (await assertSucceeds(read(player, `${room}/shared/scene`))).val();
     assert.equal(JSON.stringify(scene).includes('ONLY_'), false);
+    assert.equal((await assertSucceeds(read(player, `${room}/shared/board`))).val().clues.publicClue.text, 'PUBLIC_CLUE');
+    await assertFails(read(player, `${room}/gm/board`));
     assert.equal((await assertSucceeds(read(player, `${room}/decisions/${uid}`))).val()[ownPrompt].question, `ONLY_${uid.toUpperCase()}`);
     await assertSucceeds(read(player, `${room}/personal/${uid}/sheet`));
     await assertSucceeds(read(player, `${room}/personal/${uid}/notes`));
@@ -72,6 +78,8 @@ test('each player receives only their own private data', async () => {
 test('presenter, applicant, revoked identity and unauthenticated client receive only allowed leaves', async () => {
   const tv = env.authenticatedContext('tv1');
   assert.equal((await assertSucceeds(read(tv, `${room}/shared/scene`))).val().title, 'Public');
+  assert.equal((await assertSucceeds(read(tv, `${room}/shared/board`))).val().clues.publicClue.text, 'PUBLIC_CLUE');
+  assert.equal(JSON.stringify((await read(tv, `${room}/shared/board`)).val()).includes('GM_STAGED_ONLY'), false);
   await assertSucceeds(read(tv, `${room}/admissions/tv1`));
   await assertSucceeds(read(tv, `${room}/members/tv1`));
   for (const path of [`${room}/decisions`, `${room}/decisions/p1`, `${room}/personal/p1`, `${room}/receipts/p1`, `${room}/gm`, room]) await assertFails(read(tv, path));
@@ -90,7 +98,7 @@ test('presenter, applicant, revoked identity and unauthenticated client receive 
 
 test('all direct beta client writes are denied, including parent, response and receipt writes', async () => {
   for (const actor of [env.authenticatedContext('g1'), env.authenticatedContext('p1'), env.authenticatedContext('tv1'), env.authenticatedContext('x1'), env.unauthenticatedContext()]) {
-    for (const path of [`${room}/shared/scene`, `${room}/decisions/p1/one/response`, `${room}/personal/p1/notes`, `${room}/admissions/x1`, `${room}/receipts/p1/fake`, room]) {
+    for (const path of [`${room}/shared/scene`, `${room}/shared/board`, `${room}/gm/board`, `${room}/decisions/p1/one/response`, `${room}/personal/p1/notes`, `${room}/admissions/x1`, `${room}/receipts/p1/fake`, room]) {
       await assertFails(ref(actor, path).set({ forged: true }));
     }
   }

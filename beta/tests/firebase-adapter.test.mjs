@@ -14,6 +14,15 @@ const base = `betaRooms/v1/${room}`;
 const databaseUrl = 'https://demo-signal-bleed-beta-default-rtdb.firebaseio.com';
 const actors = [];
 let env;
+const endpoint = (name, fallbackPort) => {
+  const [host = '127.0.0.1', port = String(fallbackPort)] = (process.env[name] || `127.0.0.1:${fallbackPort}`).split(':');
+  return { host, port: Number(port) };
+};
+const authEndpoint = endpoint('FIREBASE_AUTH_EMULATOR_HOST', 9199);
+const databaseEndpoint = endpoint('FIREBASE_DATABASE_EMULATOR_HOST', 9001);
+const functionsEndpoint = process.env.FUNCTIONS_EMULATOR_HOST
+  ? (() => { const [host, port] = process.env.FUNCTIONS_EMULATOR_HOST.split(':'); return { host, port: Number(port) }; })()
+  : endpoint('FIREBASE_FUNCTIONS_EMULATOR_HOST', 5101);
 const waitFor = async (events, predicate) => {
   const started = Date.now();
   while (Date.now() - started < 5000) {
@@ -26,12 +35,12 @@ const waitFor = async (events, predicate) => {
 const actor = async name => {
   const app = initializeApp({ apiKey: 'fake-api-key', authDomain: 'demo-signal-bleed-beta.firebaseapp.com', databaseURL: databaseUrl, projectId: 'demo-signal-bleed-beta' }, name);
   const auth = getAuth(app);
-  connectAuthEmulator(auth, 'http://127.0.0.1:9199', { disableWarnings: true });
+  connectAuthEmulator(auth, `http://${authEndpoint.host}:${authEndpoint.port}`, { disableWarnings: true });
   await signInAnonymously(auth);
   const database = getDatabase(app);
-  connectDatabaseEmulator(database, '127.0.0.1', 9001);
+  connectDatabaseEmulator(database, databaseEndpoint.host, databaseEndpoint.port);
   const functions = getFunctions(app, 'us-central1');
-  connectFunctionsEmulator(functions, '127.0.0.1', 5101);
+  connectFunctionsEmulator(functions, functionsEndpoint.host, functionsEndpoint.port);
   const adapter = new FirebaseSessionAdapter(auth, database, functions);
   const entry = { app, auth, database, adapter, uid: auth.currentUser.uid };
   actors.push(entry);
@@ -41,7 +50,7 @@ const actor = async name => {
 before(async () => {
   assert.ok(process.env.FIREBASE_DATABASE_EMULATOR_HOST);
   assert.ok(process.env.FIREBASE_AUTH_EMULATOR_HOST);
-  env = await initializeTestEnvironment({ projectId: 'demo-signal-bleed-beta', database: { host: '127.0.0.1', port: 9001 } });
+  env = await initializeTestEnvironment({ projectId: 'demo-signal-bleed-beta', database: databaseEndpoint });
 });
 after(async () => {
   for (const { adapter, auth, database, app } of actors) { adapter.dispose(); goOffline(database); await signOut(auth); await deleteApp(app); }
@@ -64,8 +73,8 @@ test('adapter subscribes only to GM, player, presenter and applicant projections
         [player.uid]: { schemaVersion: 1, revision: 1, role: 'player', status: 'admitted', name: 'Player' },
         [presenter.uid]: { schemaVersion: 1, revision: 1, role: 'presenter', status: 'admitted', name: 'Presenter' },
       },
-      shared: { scene: { schemaVersion: 1, epoch: 1, title: 'Public', body: 'PUBLIC_ONLY' } },
-      gm: { notes: { text: 'GM_ONLY' } },
+      shared: { scene: { schemaVersion: 1, epoch: 1, title: 'Public', body: 'PUBLIC_ONLY' }, board: { schemaVersion: 1, revision: 1, bleed: 2, clues: [{ schemaVersion: 1, id: 'public', revision: 1, text: 'PUBLIC_CLUE', state: 'active' }] } },
+      gm: { notes: { text: 'GM_ONLY' }, board: { schemaVersion: 1, revision: 1, bleed: 2, clues: [{ schemaVersion: 1, id: 'hidden', revision: 0, text: 'GM_STAGED_ONLY', state: 'staged' }, { schemaVersion: 1, id: 'public', revision: 1, text: 'PUBLIC_CLUE', state: 'active' }] } },
       decisions: { [player.uid]: { p1: { schemaVersion: 1, id: 'p1', sceneEpoch: 1, revision: 0, question: 'ONLY_PLAYER', a: 'A', b: 'B', closed: false } } },
       personal: { [player.uid]: { sheet: { schemaVersion: 1, revision: 0, name: '', inventory: [] }, notes: { schemaVersion: 1, revision: 0, text: 'PLAYER_ONLY' } } },
     });
@@ -87,12 +96,15 @@ test('adapter subscribes only to GM, player, presenter and applicant projections
   const applicantEvents = observed.get(applicant.uid);
   await waitFor(gmEvents, event => event.type === 'gmDecisions' && event.data.status === 'live');
   await waitFor(playerEvents, event => event.type === 'notes' && event.data.status === 'live');
-  await waitFor(presenterEvents, event => event.type === 'scene' && event.data.status === 'live');
+  await waitFor(presenterEvents, event => event.type === 'board' && event.data.status === 'live');
   assert.equal(gmEvents.some(event => event.type === 'notes' || event.type === 'sheet'), false);
-  assert.equal(presenterEvents.some(event => event.type !== 'scene' && event.type !== 'admission'), false);
+  assert.equal(presenterEvents.some(event => !['scene', 'board', 'admission'].includes(event.type)), false);
   assert.equal(playerEvents.some(event => event.type === 'gmDecisions' || event.type === 'gmRoster'), false);
   assert.equal(JSON.stringify(presenterEvents).includes('ONLY_PLAYER'), false);
   assert.equal(JSON.stringify(playerEvents.find(event => event.type === 'scene')).includes('GM_ONLY'), false);
+  assert.equal(JSON.stringify(gmEvents.find(event => event.type === 'board')).includes('GM_STAGED_ONLY'), true);
+  assert.equal(JSON.stringify(playerEvents.find(event => event.type === 'board')).includes('GM_STAGED_ONLY'), false);
+  assert.equal(JSON.stringify(presenterEvents.find(event => event.type === 'board')).includes('GM_STAGED_ONLY'), false);
   assert.equal(playerEvents.find(event => event.type === 'sheet').data.value.playbookId, null);
   assert.deepEqual(playerEvents.find(event => event.type === 'sheet').data.value.inventory, []);
   await env.withSecurityRulesDisabled(async context => {

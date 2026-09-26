@@ -4,7 +4,7 @@ Status: M1 contract for SB-02–07; the isolated SB-04 emulator implements the b
 
 ## Scope and routes
 
-M1 is one GM, two independently authenticated players and one independently authenticated presenter. GM publishes scenes and targeted A/B prompts; players respond once; presenter follows only published scene content. Character name, freely selected playbook, plain inventory entries and private notes persist across scene changes. No automatic mechanical effects, lifepath generation or public reveal of character information in M1.
+M1 is one GM, two independently authenticated players and one independently authenticated presenter. GM publishes scenes and targeted A/B prompts; players respond once; presenter follows only published scene content. Character name, freely selected playbook, plain inventory entries and private notes persist across scene changes. SB-09B adds an ordered clue board and six-segment Bleed clock without changing those privacy boundaries. No automatic mechanical effects, lifepath generation or public reveal of character information in M1.
 
 Scaffold development uses `/beta/gm/`, `/beta/play/`, `/beta/present/`. Eventual release routes are `/gm/`, `/play/`, `/present/`; SB-08 controls that switch after preserving the alpha GM reference at `/reference/gm/`. Alpha `/gm/` is not overwritten during scaffold work. Room identifiers in URLs locate rooms; they confer no authority. Fixture mode is visibly labeled and must not connect to production Firebase.
 
@@ -27,6 +27,8 @@ Use an isolated `betaRooms/v1/{roomId}` namespace. Paths below are logical adapt
 | `admissions/{uid}` | Applicant and GM | Applicant requests; GM decides; validate transitions |
 | `members/{uid}` | That admitted member and GM | GM admission/revocation only |
 | `shared/scene` | Admitted GM, players, presenter | GM only |
+| `shared/board` | Admitted GM, players, presenter | Trusted command only; contains only active/woven clues and Bleed |
+| `gm/board` | GM | Trusted command only; contains staged/active/woven/deep clues and Bleed |
 | `gm/notes` | GM | GM |
 | `decisions/{uid}/{promptId}` (prompt + response) | Recipient player and GM | GM creates/closes prompt; recipient creates immutable response |
 | `personal/{uid}/sheet` | Owner player | Owner player |
@@ -39,10 +41,15 @@ GM sees all admitted identities and sent prompts/responses, but not private char
 
 All entities use schemaVersion 1; all IDs are opaque validated identifiers. Strings render as text, never HTML. Reject unknown command fields, forbidden object keys, non-finite numbers, invalid enum values and oversized payloads. IDs: 1–128 ASCII letters/digits/underscore/hyphen, excluding `__proto__`, `prototype`, `constructor`; name/title/option labels <=200 characters; bodies/questions/notes <=2000; inventory <=100 entries, each label <=200 and quantity integer 0–999. Empty notes/inventory allowed. Playbook IDs must come from the canonical seven-playbook registry, with null permitted while choosing; rolls cannot filter that registry.
 
+The SB-09B board is `{ schemaVersion: 1, revision, bleed, clues }`. Bleed is an integer 0–6. A clue is `{ schemaVersion: 1, id, revision, text, state }`, with at most 100 clues and text <=2000 characters. States are `staged`, `active`, `woven`, and `deep`; only active/woven clues are copied to `shared/board`. Staged/deep clues must be absent from non-GM payloads, not masked in the UI. Ordering is array order. Every create/update/move/clock command compares the board revision; accepted mutations increment it once and use the existing exact-command receipt rules. State changes archive rather than delete clues.
+
 ```ts
 type Role = 'gm' | 'player' | 'presenter';
 type Choice = 'A' | 'B';
 type Scene = { schemaVersion: 1; epoch: number; title: string; body: string };
+type Clue = { schemaVersion: 1; id: string; revision: number; text: string;
+  state: 'staged' | 'active' | 'woven' | 'deep' };
+type Board = { schemaVersion: 1; revision: number; bleed: number; clues: Clue[] };
 type Prompt = {
   schemaVersion: 1; id: string; sceneEpoch: number; revision: number;
   question: string; a: string; b: string; closed: boolean;
@@ -64,6 +71,10 @@ type Command = { commandId: string } & (
   | { type: 'sheet.replace'; expectedRevision: number;
       name: string; playbookId: string | null; inventory: Sheet['inventory'] }
   | { type: 'notes.replace'; expectedRevision: number; text: string }
+  | { type: 'clue.create'; expectedRevision: number; clueId: string; text: string }
+  | { type: 'clue.update'; expectedRevision: number; clueId: string; text: string; state: 'staged' | 'active' | 'woven' | 'deep' }
+  | { type: 'clue.move'; expectedRevision: number; clueId: string; direction: 'up' | 'down' }
+  | { type: 'clock.bleed.set'; expectedRevision: number; value: number }
 );
 type Failure = 'UNAUTHENTICATED' | 'FORBIDDEN' | 'NOT_FOUND' | 'INVALID'
   | 'CONFLICT' | 'STALE_SCENE' | 'CLOSED' | 'ALREADY_ANSWERED'
@@ -91,6 +102,7 @@ type Admission = { schemaVersion: 1; revision: number; role: 'player' | 'present
 type SessionEvent =
   | { type: 'admission'; value: Admission }
   | { type: 'scene'; data: Delivery<Scene> }
+  | { type: 'board'; data: Delivery<Board> }
   | { type: 'decisions'; data: Delivery<Record<string, Prompt>> }
   | { type: 'sheet'; data: Delivery<Sheet> }
   | { type: 'notes'; data: Delivery<Notes> }
@@ -99,7 +111,7 @@ type SessionEvent =
   | { type: 'accessLost'; code: 'FORBIDDEN' | 'UNAUTHENTICATED' };
 ```
 
-`watch` chooses subscriptions from authenticated stored membership, never the route. GM receives scene/gmRoster/gmDecisions; player receives scene/decisions/sheet/notes; presenter receives scene only. Each admitted identity may also receive its own admission event. Pending applicants receive only admission. Access loss emits accessLost, clears cached views and unsubscribes. dispose is idempotent. The type union is a design aid; runtime role enforcement and backend rules remain required. GM draft notes remain local in M1; the reserved GM notes path need not be implemented yet.
+`watch` chooses subscriptions from authenticated stored membership, never the route. GM receives scene/full GM board/gmRoster/gmDecisions; player receives scene/public board/decisions/sheet/notes; presenter receives scene/public board only. Each admitted identity may also receive its own admission event. Pending applicants receive only admission. Access loss emits accessLost, clears cached views and unsubscribes. dispose is idempotent. The type union is a design aid; runtime role enforcement and backend rules remain required. GM draft notes remain local in M1; the reserved GM notes path need not be implemented yet.
 
 ## Concurrency, lifecycle and retries
 

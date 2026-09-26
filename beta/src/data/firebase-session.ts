@@ -4,7 +4,7 @@ import type { Database, DataSnapshot } from 'firebase/database';
 import { get, onValue, ref } from 'firebase/database';
 import type { Functions } from 'firebase/functions';
 import { httpsCallable } from 'firebase/functions';
-import type { Admission, Command, Delivery, Failure, Notes, Prompt, Result, Scene, SessionAdapter, SessionEvent, Sheet } from '../session/model.ts';
+import type { Admission, Board, Command, Delivery, Failure, Notes, Prompt, Result, Scene, SessionAdapter, SessionEvent, Sheet } from '../session/model.ts';
 
 export type RoomCommand = Command | { type: 'room.create' | 'room.close'; commandId: string } | { type: 'admission.request'; commandId: string; role: 'player' | 'presenter'; name: string } | { type: 'admission.decide'; commandId: string; uid: string; decision: 'admit' | 'deny'; expectedRevision: number } | { type: 'admission.revoke'; commandId: string; uid: string; expectedRevision: number };
 export type RoomStatus = { ok: true; closed: boolean; limits: { admissions: number; prompts: number; receipts: number; bytes: number; closeReserveBytes: number }; usage: { admissions: number; prompts: number; receipts: number; bytes: number } } | { ok: false; code: Failure };
@@ -33,6 +33,10 @@ const projection = (type: Projection['type'], value: unknown): unknown => {
   if (type === 'decisions') return promptMap(value);
   if (type === 'gmDecisions') return Object.fromEntries(Object.entries(value && typeof value === 'object' ? value : {}).map(([uid, prompts]) => [uid, promptMap(prompts)]));
   if (type === 'gmRoster') return value ?? {};
+  if (type === 'board') {
+    const board = value && typeof value === 'object' ? value as Board : null;
+    return board ? { ...board, clues: Array.isArray(board.clues) ? board.clues : [] } : null;
+  }
   if (type === 'sheet' && value && typeof value === 'object') {
     const sheet = value as Sheet;
     return { ...sheet, playbookId: sheet.playbookId ?? null, inventory: Array.isArray(sheet.inventory) ? sheet.inventory : [] };
@@ -124,6 +128,7 @@ export class FirebaseSessionAdapter implements SessionAdapter {
       if (closed || activeRole === role) return;
       clearPrivate(); activeRole = role;
       subscribe<Scene>('shared/scene', 'scene', privateStops);
+      subscribe<Board>(role === 'gm' ? 'gm/board' : 'shared/board', 'board', privateStops);
       if (role === 'gm') {
         subscribe<Record<string, Admission>>('admissions', 'gmRoster', privateStops);
         subscribe<Record<string, Record<string, Prompt>>>('decisions', 'gmDecisions', privateStops);

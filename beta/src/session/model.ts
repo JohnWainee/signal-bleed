@@ -5,12 +5,19 @@ export type Failure = 'UNAUTHENTICATED' | 'FORBIDDEN' | 'NOT_FOUND' | 'INVALID' 
 export type Result = { ok: true; commandId: string; entityRevision: number } | { ok: false; code: Failure };
 export type Delivery<T> = { status: 'loading' | 'live' | 'disconnected'; value: T | null };
 export type Scene = { schemaVersion: 1; epoch: number; title: string; body: string };
+export type ClueState = 'staged' | 'active' | 'woven' | 'deep';
+export type Clue = { schemaVersion: 1; id: string; revision: number; text: string; state: ClueState };
+export type Board = { schemaVersion: 1; revision: number; bleed: number; clues: Clue[] };
 export type Prompt = { schemaVersion: 1; id: string; sceneEpoch: number; revision: number; question: string; a: string; b: string; closed: boolean; response: null | { choice: Choice; commandId: string } };
 export type Sheet = { schemaVersion: 1; revision: number; name: string; playbookId: string | null; inventory: { id: string; label: string; quantity: number }[] };
 export type Notes = { schemaVersion: 1; revision: number; text: string };
 export type Admission = { schemaVersion: 1; revision: number; role: 'player' | 'presenter'; status: 'pending' | 'admitted' | 'denied' | 'revoked'; name: string; roomClosed?: boolean };
 export type Command = { commandId: string } & (
   | { type: 'scene.publish'; expectedEpoch: number; title: string; body: string }
+  | { type: 'clue.create'; expectedRevision: number; clueId: string; text: string }
+  | { type: 'clue.update'; expectedRevision: number; clueId: string; text: string; state: ClueState }
+  | { type: 'clue.move'; expectedRevision: number; clueId: string; direction: 'up' | 'down' }
+  | { type: 'clock.bleed.set'; expectedRevision: number; value: number }
   | { type: 'prompt.open'; recipientUid: string; promptId: string; sceneEpoch: number; question: string; a: string; b: string }
   | { type: 'prompt.close'; recipientUid: string; promptId: string; expectedRevision: number }
   | { type: 'response.submit'; promptId: string; sceneEpoch: number; expectedRevision: number; choice: Choice }
@@ -20,6 +27,7 @@ export type Command = { commandId: string } & (
 export type SessionEvent =
   | { type: 'admission'; value: Admission }
   | { type: 'scene'; data: Delivery<Scene> }
+  | { type: 'board'; data: Delivery<Board> }
   | { type: 'decisions'; data: Delivery<Record<string, Prompt>> }
   | { type: 'sheet'; data: Delivery<Sheet> }
   | { type: 'notes'; data: Delivery<Notes> }
@@ -38,7 +46,7 @@ export interface SessionAdapter {
 
 export const PLAYBOOK_IDS = ['splicer', 'registrar', 'operator', 'diver', 'inspector', 'salvage', 'watch'] as const;
 type Receipt = { payload: string; result: Result };
-type Room = { owner: string; epoch: number; scene: Scene | null; gmNote: string; admissions: Record<string, Admission>; decisions: Record<string, Record<string, Prompt>>; sheets: Record<string, Sheet>; notes: Record<string, Notes>; receipts: Record<string, Record<string, Receipt>>; usedPrompts: Set<string> };
+type Room = { owner: string; epoch: number; scene: Scene | null; board: Board; gmNote: string; admissions: Record<string, Admission>; decisions: Record<string, Record<string, Prompt>>; sheets: Record<string, Sheet>; notes: Record<string, Notes>; receipts: Record<string, Record<string, Receipt>>; usedPrompts: Set<string> };
 type Listener = { uid: string; emit: (event: SessionEvent) => void; admissionRevision?: number; admissionStatus?: Admission['status'] };
 const forbiddenKeys = new Set(['__proto__', 'prototype', 'constructor']);
 const clone = <T>(value: T): T => structuredClone(value);
@@ -53,11 +61,17 @@ const ok = (commandId: string, entityRevision: number): Result => ({ ok: true, c
 const fail = (code: Failure): { ok: false; code: Failure } => ({ ok: false, code });
 const emptySheet = (): Sheet => ({ schemaVersion: 1, revision: 0, name: '', playbookId: null, inventory: [] });
 const emptyNotes = (): Notes => ({ schemaVersion: 1, revision: 0, text: '' });
+const emptyBoard = (): Board => ({ schemaVersion: 1, revision: 0, bleed: 0, clues: [] });
+const publicBoard = (board: Board): Board => ({ ...clone(board), clues: board.clues.filter(clue => clue.state === 'active' || clue.state === 'woven') });
 
 function validCommand(value: unknown): value is Command {
   if (!object(value) || !id(value.commandId) || typeof value.type !== 'string') return false;
   switch (value.type) {
     case 'scene.publish': return keys(value, ['type', 'commandId', 'expectedEpoch', 'title', 'body']) && revision(value.expectedEpoch) && bounded(value.title, 200) && bounded(value.body, 2000);
+    case 'clue.create': return keys(value, ['type', 'commandId', 'expectedRevision', 'clueId', 'text']) && revision(value.expectedRevision) && id(value.clueId) && bounded(value.text, 2000);
+    case 'clue.update': return keys(value, ['type', 'commandId', 'expectedRevision', 'clueId', 'text', 'state']) && revision(value.expectedRevision) && id(value.clueId) && bounded(value.text, 2000) && ['staged', 'active', 'woven', 'deep'].includes(value.state as string);
+    case 'clue.move': return keys(value, ['type', 'commandId', 'expectedRevision', 'clueId', 'direction']) && revision(value.expectedRevision) && id(value.clueId) && (value.direction === 'up' || value.direction === 'down');
+    case 'clock.bleed.set': return keys(value, ['type', 'commandId', 'expectedRevision', 'value']) && revision(value.expectedRevision) && typeof value.value === 'number' && Number.isInteger(value.value) && value.value >= 0 && value.value <= 6;
     case 'prompt.open': return keys(value, ['type', 'commandId', 'recipientUid', 'promptId', 'sceneEpoch', 'question', 'a', 'b']) && id(value.recipientUid) && id(value.promptId) && revision(value.sceneEpoch) && bounded(value.question, 2000) && bounded(value.a, 200) && bounded(value.b, 200);
     case 'prompt.close': return keys(value, ['type', 'commandId', 'recipientUid', 'promptId', 'expectedRevision']) && id(value.recipientUid) && id(value.promptId) && revision(value.expectedRevision);
     case 'response.submit': return keys(value, ['type', 'commandId', 'promptId', 'sceneEpoch', 'expectedRevision', 'choice']) && id(value.promptId) && revision(value.sceneEpoch) && revision(value.expectedRevision) && (value.choice === 'A' || value.choice === 'B');
@@ -106,6 +120,7 @@ export class MockSessionStore {
     }
     const delivery = <T>(value: T | null): Delivery<T> => ({ status: this.status(roomId), value: this.status(roomId) === 'loading' ? null : clone(value) });
     listener.emit({ type: 'scene', data: delivery(room.scene) });
+    listener.emit({ type: 'board', data: delivery(listener.uid === room.owner ? room.board : publicBoard(room.board)) });
     if (listener.uid === room.owner) {
       listener.emit({ type: 'gmRoster', data: delivery(room.admissions) });
       listener.emit({ type: 'gmDecisions', data: delivery(room.decisions) });
@@ -151,7 +166,7 @@ class MockSessionAdapter implements SessionAdapter {
       const prior = this.receipt(existing, commandId, { type: 'room.create', roomId });
       return prior?.ok ? { ok: true, roomId } : prior ?? fail('CONFLICT');
     }
-    const room: Room = { owner: this.uid, epoch: 0, scene: null, gmNote: '', admissions: Object.create(null), decisions: Object.create(null), sheets: Object.create(null), notes: Object.create(null), receipts: Object.create(null), usedPrompts: new Set() };
+    const room: Room = { owner: this.uid, epoch: 0, scene: null, board: emptyBoard(), gmNote: '', admissions: Object.create(null), decisions: Object.create(null), sheets: Object.create(null), notes: Object.create(null), receipts: Object.create(null), usedPrompts: new Set() };
     this.store.create(roomId, room);
     this.save(room, commandId, { type: 'room.create', roomId }, ok(commandId, 0));
     return { ok: true, roomId };
@@ -201,7 +216,7 @@ class MockSessionAdapter implements SessionAdapter {
     const { room, code } = this.access(roomId); if (!room) return fail(code!);
     if (!this.authorized(room)) return fail('FORBIDDEN');
     if (object(command) && typeof command.type === 'string') {
-      const gmCommand = command.type === 'scene.publish' || command.type === 'prompt.open' || command.type === 'prompt.close';
+      const gmCommand = command.type === 'scene.publish' || command.type === 'prompt.open' || command.type === 'prompt.close' || command.type === 'clue.create' || command.type === 'clue.update' || command.type === 'clue.move' || command.type === 'clock.bleed.set';
       const playerCommand = command.type === 'response.submit' || command.type === 'sheet.replace' || command.type === 'notes.replace';
       if ((gmCommand && this.uid !== room.owner) || (playerCommand && (this.uid === room.owner || own(room.admissions, this.uid)?.role !== 'player'))) return fail('FORBIDDEN');
     }
@@ -213,6 +228,26 @@ class MockSessionAdapter implements SessionAdapter {
       case 'scene.publish':
         if (command.expectedEpoch !== room.epoch) return fail('CONFLICT');
         room.epoch++; room.scene = { schemaVersion: 1, epoch: room.epoch, title: command.title, body: command.body }; entityRevision = room.epoch; break;
+      case 'clue.create':
+        if (command.expectedRevision !== room.board.revision) return fail('CONFLICT');
+        if (room.board.clues.some(clue => clue.id === command.clueId)) return fail('CONFLICT');
+        if (room.board.clues.length >= 100) return fail('ROOM_FULL');
+        room.board.clues.push({ schemaVersion: 1, id: command.clueId, revision: 0, text: command.text, state: 'staged' });
+        entityRevision = ++room.board.revision; break;
+      case 'clue.update': {
+        if (command.expectedRevision !== room.board.revision) return fail('CONFLICT');
+        const clue = room.board.clues.find(value => value.id === command.clueId); if (!clue) return fail('NOT_FOUND');
+        clue.text = command.text; clue.state = command.state; clue.revision++; entityRevision = ++room.board.revision; break;
+      }
+      case 'clue.move': {
+        if (command.expectedRevision !== room.board.revision) return fail('CONFLICT');
+        const from = room.board.clues.findIndex(value => value.id === command.clueId); if (from < 0) return fail('NOT_FOUND');
+        const to = command.direction === 'up' ? from - 1 : from + 1; if (to < 0 || to >= room.board.clues.length) return fail('INVALID');
+        const clue = room.board.clues.splice(from, 1)[0]!; room.board.clues.splice(to, 0, clue); clue.revision++; entityRevision = ++room.board.revision; break;
+      }
+      case 'clock.bleed.set':
+        if (command.expectedRevision !== room.board.revision) return fail('CONFLICT');
+        room.board.bleed = command.value; entityRevision = ++room.board.revision; break;
       case 'prompt.open': {
         if (own(room.admissions, command.recipientUid)?.status !== 'admitted' || own(room.admissions, command.recipientUid)?.role !== 'player') return fail('FORBIDDEN');
         if (!room.scene || command.sceneEpoch !== room.epoch) return fail('STALE_SCENE');

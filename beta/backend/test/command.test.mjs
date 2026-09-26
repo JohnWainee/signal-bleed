@@ -26,6 +26,18 @@ test('room, admission, scene, concurrent answers and receipts commit atomically'
   success(await send('gm1', { type: 'room.create', commandId: 'create' }));
   success(await send('gm1', { type: 'room.create', commandId: 'create' }));
   error(await send('other', { type: 'room.create', commandId: 'create' }), 'FORBIDDEN');
+  success(await send('gm1', { type: 'clue.create', commandId: 'clueCreate1', expectedRevision: 0, clueId: 'clue1', text: 'GM_STAGED_ONLY' }));
+  assert.equal((await getRoom()).gm.board.clues[0].text, 'GM_STAGED_ONLY');
+  assert.equal((await getRoom()).shared.board.clues, undefined);
+  success(await send('gm1', { type: 'clue.update', commandId: 'clueReveal1', expectedRevision: 1, clueId: 'clue1', text: 'Public one', state: 'active' }));
+  success(await send('gm1', { type: 'clue.create', commandId: 'clueCreate2', expectedRevision: 2, clueId: 'clue2', text: 'Second' }));
+  success(await send('gm1', { type: 'clue.update', commandId: 'clueReveal2', expectedRevision: 3, clueId: 'clue2', text: 'Public two', state: 'woven' }));
+  success(await send('gm1', { type: 'clue.move', commandId: 'clueMove', expectedRevision: 4, clueId: 'clue2', direction: 'up' }));
+  success(await send('gm1', { type: 'clock.bleed.set', commandId: 'bleedSet', expectedRevision: 5, value: 3 }));
+  assert.deepEqual((await getRoom()).shared.board.clues.map(clue => clue.id), ['clue2', 'clue1']);
+  assert.equal((await getRoom()).shared.board.bleed, 3);
+  error(await send('p1', { type: 'clock.bleed.set', commandId: 'spoofBleed', expectedRevision: 6, value: 6 }), 'FORBIDDEN');
+  error(await send('gm1', { type: 'clock.bleed.set', commandId: 'staleBleed', expectedRevision: 5, value: 4 }), 'CONFLICT');
   for (const uid of ['p1', 'p2']) {
     success(await send(uid, { type: 'admission.request', commandId: `request_${uid}`, role: 'player', name: uid }));
     assert.equal((await getRoom()).admissions?.[uid]?.status, 'pending');
